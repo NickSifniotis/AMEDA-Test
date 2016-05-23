@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/tutorial_mnu"
+        android:title="Tutorial" />
+    <item android:id="@+id/famil_mnu"
+        android:title="Familiarisation" />
+    <item android:id="@+id/new_record_mnu"
+        android:title="New Record" />
+    <item android:id="@+id/stop_record_mnu"
+        android:title="Stop Record"/>
+    <item android:id="@+id/del_record_mnu"
+        android:title="Delete Record" />
+    <item android:id="@+id/calibrate_mnu"
+        android:title="Calibrate" />
+    <item android:id="@+id/manage_mnu"
+        android:title="Manage Data" />
+    <item android:id="@+id/help_mnu"
+        android:title="Help" />
+</menu>
