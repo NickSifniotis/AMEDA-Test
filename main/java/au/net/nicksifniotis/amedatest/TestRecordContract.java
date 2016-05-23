@@ -2,6 +2,8 @@ package au.net.nicksifniotis.amedatest;
 
 import android.provider.BaseColumns;
 
+import java.util.Date;
+
 /**
  * Created by nsifniotis on 23/05/16.
  */
@@ -18,5 +20,6 @@ public class TestRecordContract
         public static final String COL_ADDRESS = "Address";
         public static final String COL_HOBBIES = "Hobbies";
         public static final String COL_NOTES = "Notes";
+        public static final String COL_DATE = "DateTime";
     }
 }

@@ -134,6 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:onClick="btn_Done"
             android:id="@+id/btn_newrecord_done"
             android:text="Done" />
 
@@ -141,6 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:onClick="btn_Cancel"
             android:id="@+id/btn_newrecord_cancel"
             android:text="Cancel" />
 

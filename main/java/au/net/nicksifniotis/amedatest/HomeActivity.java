@@ -49,6 +49,9 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.famil_mnu:
                 Familiarise();
                 return true;
+            case R.id.manage_mnu:
+                ManageRecords();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -96,5 +99,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private void DeleteRecord() {
         status_bar.setText("Delete Record!");
+    }
+
+    private void ManageRecords() {
+        Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
+        startActivity(manageRecIntent);
     }
 }
