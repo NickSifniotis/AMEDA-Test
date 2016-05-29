@@ -13,9 +13,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class NewRecordActivity extends AppCompatActivity {
     private static DBOpenHelper testRecordDb;
@@ -43,8 +42,6 @@ public class NewRecordActivity extends AppCompatActivity {
             LinearLayout l;
             l = (LinearLayout)findViewById(R.id.newRec_hidden1);
             l.setVisibility(View.GONE);
-            l = (LinearLayout)findViewById(R.id.newRec_hidden2);
-            l.setVisibility(View.GONE);
 
             ((TextView)findViewById(R.id.txt_Name)).setText("record id is -1");
         }
@@ -59,28 +56,36 @@ public class NewRecordActivity extends AppCompatActivity {
             c.moveToFirst();
             while (!c.isAfterLast())
             {
-                String data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.NAME));
-                ((EditText)findViewById(R.id.txt_Name)).setText("record id is " + record_id);
+                try {
+                    String data;
 
-                data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.GENDER));
-                ((Spinner)findViewById(R.id.spn_Gender)).setSelection(0);
+                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.NAME));
+                    ((EditText) findViewById(R.id.txt_Name)).setText(data);
 
-                data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.EDUCATION));
-                ((EditText)findViewById(R.id.txt_Education)).setText(data);
+                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.GENDER));
+                    ((Spinner) findViewById(R.id.spn_Gender)).setSelection(0);
 
-                data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.ADDRESS));
-                ((EditText)findViewById(R.id.txt_Address)).setText(data);
+                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.EDUCATION));
+                    ((EditText) findViewById(R.id.txt_Education)).setText(data);
 
-                data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.HOBBIES));
-                ((EditText)findViewById(R.id.txt_Hobbies)).setText(data);
+                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.ADDRESS));
+                    ((EditText) findViewById(R.id.txt_Address)).setText(data);
 
-                data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.NOTES));
-                ((EditText)findViewById(R.id.txt_Notes)).setText(data);
+                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.HOBBIES));
+                    ((EditText) findViewById(R.id.txt_Hobbies)).setText(data);
 
-                data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.COL_DATE));
-                TextView date_box = (TextView)findViewById(R.id.record_date);
-                date_box.setText(date_box.getText() + " " + data);
+                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.NOTES));
+                    ((EditText) findViewById(R.id.txt_Notes)).setText(data);
+
+                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.DOB));
+                    ((EditText) findViewById(R.id.txt_DOB)).setText(data);
+                }
+                catch (Exception e) {
+                    Toast toastmaster = Toast.makeText(this, "Error loading record from database." + e.getMessage(), Toast.LENGTH_SHORT);
+                    toastmaster.show();
+                }
             }
+            c.close();
         }
     }
 
@@ -94,17 +99,20 @@ public class NewRecordActivity extends AppCompatActivity {
         SQLiteDatabase db = testRecordDb.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put (DB.PersonTable.NAME, ((EditText)findViewById(R.id.txt_Name)).getText().toString());
-        values.put (DB.PersonTable.GENDER, ((Spinner)findViewById(R.id.spn_Gender)).getSelectedItem().toString());
-        values.put (DB.PersonTable.EDUCATION, ((EditText)findViewById(R.id.txt_Education)).getText().toString());
-        values.put (DB.PersonTable.ADDRESS, ((EditText)findViewById(R.id.txt_Address)).getText().toString());
-        values.put (DB.PersonTable.HOBBIES, ((EditText)findViewById(R.id.txt_Hobbies)).getText().toString());
-        values.put (DB.PersonTable.NOTES, ((EditText)findViewById(R.id.txt_Notes)).getText().toString());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-
-        values.put (DB.PersonTable.COL_DATE, dateFormat.format(date));
+        try {
+            values.put(DB.PersonTable.NAME, ((EditText) findViewById(R.id.txt_Name)).getText().toString());
+            values.put(DB.PersonTable.DOB, ((EditText) findViewById(R.id.txt_DOB)).getText().toString());
+            values.put(DB.PersonTable.GENDER, ((Spinner) findViewById(R.id.spn_Gender)).getSelectedItem().toString());
+            values.put(DB.PersonTable.EDUCATION, ((EditText) findViewById(R.id.txt_Education)).getText().toString());
+            values.put(DB.PersonTable.ADDRESS, ((EditText) findViewById(R.id.txt_Address)).getText().toString());
+            values.put(DB.PersonTable.HOBBIES, ((EditText) findViewById(R.id.txt_Hobbies)).getText().toString());
+            values.put(DB.PersonTable.NOTES, ((EditText) findViewById(R.id.txt_Notes)).getText().toString());
+        }
+        catch (Exception e) {
+            Toast toastmaster = Toast.makeText(this, "Error saving record to database." + e.getMessage(), Toast.LENGTH_SHORT);
+            toastmaster.show();
+        }
 
         long newRowId;
         newRowId = db.insert(DB.PersonTable.TABLE_NAME, null, values);

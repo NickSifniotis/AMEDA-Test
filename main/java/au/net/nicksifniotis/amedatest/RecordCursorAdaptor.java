@@ -24,13 +24,13 @@ public class RecordCursorAdaptor extends CursorAdapter
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView tv_Name = (TextView)view.findViewById(R.id.record_name);
-        TextView tv_Date = (TextView)view.findViewById(R.id.record_date);
+        TextView tv_Name = (TextView)view.findViewById(R.id.record_date);
+        TextView tv_Date = (TextView)view.findViewById(R.id.record_score);
 
         String name = cursor.getString(cursor.getColumnIndexOrThrow(DB.PersonTable.NAME));
-        String date = cursor.getString(cursor.getColumnIndexOrThrow(DB.PersonTable.COL_DATE));
-
+        //String date = cursor.getString(cursor.getColumnIndexOrThrow(DB.PersonTable.COL_DATE));
+        //@TODO fix this
         tv_Name.setText(name);
-        tv_Date.setText(date);
+        tv_Date.setText("0");
     }
 }
