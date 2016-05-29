@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">AMEDA Test</string>
 
+    <string name="name">Name:</string>
+    <string name="dob">Date of Birth:</string>
+    <string name="gender">Gender:</string>
+    <string name="education">Education:</string>
+    <string name="address">Address:</string>
+    <string name="hobbies">Hobbies:</string>
+    <string name="notes">Notes:</string>
+
+    <string name="completed_tests">Completed Tests</string>
+    <string name="date_test">Date of Test:</string>
+
+    <string name="save">Done</string>
+    <string name="cancel">Cancel</string>
+
     <string-array name="genders">
         <item>Male</item>
         <item>Female</item>

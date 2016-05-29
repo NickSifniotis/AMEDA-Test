@@ -16,9 +16,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="Name:" />
+            android:text="@string/name" />
 
         <EditText
+            android:inputType="textPersonName"
             android:id="@+id/txt_Name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,7 +36,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="Gender:" />
+            android:text="@string/dob" />
+
+        <EditText
+            android:inputType="date"
+            android:id="@+id/txt_DOB"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:ems="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/gender" />
 
         <Spinner
             android:id="@+id/spn_Gender"
@@ -54,28 +75,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="Education:" />
+            android:text="@string/address" />
 
         <EditText
-            android:id="@+id/txt_Education"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.75"
-            android:ems="10" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:text="Address:" />
-
-        <EditText
+            android:inputType="textPostalAddress"
             android:id="@+id/txt_Address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -92,9 +95,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="Hobbies:" />
+            android:text="@string/education" />
 
         <EditText
+            android:inputType="text"
+            android:id="@+id/txt_Education"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:ems="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="@string/hobbies" />
+
+        <EditText
+            android:inputType="text"
             android:id="@+id/txt_Hobbies"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -112,7 +136,7 @@
             android:layout_gravity="top"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="Notes:" />
+            android:text="@string/notes" />
 
         <EditText
             android:id="@+id/txt_Notes"
@@ -136,11 +160,10 @@
             android:layout_gravity="top"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="Records:" />
+            android:text="@string/completed_tests" />
 
-        <TextView
+        <ListView
             android:id="@+id/txt_Records"
-            android:inputType="textMultiLine"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.75"
@@ -149,36 +172,28 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/newRec_hidden2">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="This is where the line graph will go." />
-
-    </LinearLayout>
-    <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:onClick="btn_Done"
             android:id="@+id/btn_newrecord_done"
-            android:text="Done" />
+            android:text="@string/save" />
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:onClick="btn_Cancel"
             android:id="@+id/btn_newrecord_cancel"
-            android:text="Cancel" />
+            android:text="@string/cancel" />
 
     </LinearLayout>
 </LinearLayout>

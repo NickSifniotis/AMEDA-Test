@@ -30,7 +30,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
         db.execSQL(DB.PersonTable.DestroySQL);
         db.execSQL(DB.TestTable.DestroySQL);
         db.execSQL(DB.QuestionTable.DestroySQL);
-        
+
         onCreate(db);
     }
 }

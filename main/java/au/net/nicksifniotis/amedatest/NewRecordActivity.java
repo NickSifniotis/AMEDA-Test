@@ -24,7 +24,7 @@ public class NewRecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_new_record);
+        setContentView(R.layout.manage_person_record);
 
         Spinner genders = (Spinner)findViewById(R.id.spn_Gender);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
