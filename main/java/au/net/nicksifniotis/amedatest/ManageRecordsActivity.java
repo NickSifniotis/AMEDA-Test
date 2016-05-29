@@ -17,7 +17,7 @@ public class ManageRecordsActivity extends AppCompatActivity {
                 DB.PersonTable.NAME,
                 DB.PersonTable.COL_DATE };
 
-        TestRecordOpenHelper testDB = new TestRecordOpenHelper(this);
+        DBOpenHelper testDB = new DBOpenHelper(this);
         SQLiteDatabase db = testDB.getReadableDatabase();
 
         Cursor c = db.query(DB.PersonTable.TABLE_NAME,

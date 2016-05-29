@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NewRecordActivity extends AppCompatActivity {
-    private static TestRecordOpenHelper testRecordDb;
+    private static DBOpenHelper testRecordDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class NewRecordActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genders.setAdapter(adapter);
 
-        testRecordDb = new TestRecordOpenHelper(this);
+        testRecordDb = new DBOpenHelper(this);
 
         Intent intent = getIntent();
         int record_id = intent.getIntExtra("id", -1);
