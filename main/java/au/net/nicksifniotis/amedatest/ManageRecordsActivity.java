@@ -13,14 +13,14 @@ public class ManageRecordsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_records);
 
-        String projection[] = {TestRecordContract.TestRecordEntry._ID,
-                TestRecordContract.TestRecordEntry.COL_NAME,
-                TestRecordContract.TestRecordEntry.COL_DATE };
+        String projection[] = {DB.PersonTable._ID,
+                DB.PersonTable.NAME,
+                DB.PersonTable.COL_DATE };
 
         TestRecordOpenHelper testDB = new TestRecordOpenHelper(this);
         SQLiteDatabase db = testDB.getReadableDatabase();
 
-        Cursor c = db.query(TestRecordContract.TestRecordEntry.TABLE_NAME,
+        Cursor c = db.query(DB.PersonTable.TABLE_NAME,
                 projection,
                 null,
                 null,

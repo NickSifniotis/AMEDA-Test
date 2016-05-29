@@ -11,16 +11,16 @@ public class TestRecordOpenHelper extends SQLiteOpenHelper
 {
     private static String DATABASE_NAME = "ameda.db";
     private static int DATABASE_VERSION = 2;
-    private static final String CREATE_SQL = "CREATE TABLE " + TestRecordContract.TestRecordEntry.TABLE_NAME
-            + " (" + TestRecordContract.TestRecordEntry._ID + " INTEGER PRIMARY KEY, "
-            + TestRecordContract.TestRecordEntry.COL_NAME + " TEXT, "
-            + TestRecordContract.TestRecordEntry.COL_GENDER + " TEXT, "
-            + TestRecordContract.TestRecordEntry.COL_EDUCATION + " TEXT, "
-            + TestRecordContract.TestRecordEntry.COL_ADDRESS + " TEXT, "
-            + TestRecordContract.TestRecordEntry.COL_HOBBIES + " TEXT, "
-            + TestRecordContract.TestRecordEntry.COL_NOTES + " TEXT, "
-            + TestRecordContract.TestRecordEntry.COL_DATE + " TEXT)";
-    private static final String DELETE_SQL = "DROP TABLE IF EXISTS " + TestRecordContract.TestRecordEntry.TABLE_NAME;
+    private static final String CREATE_SQL = "CREATE TABLE " + DB.PersonTable.TABLE_NAME
+            + " (" + DB.PersonTable._ID + " INTEGER PRIMARY KEY, "
+            + DB.PersonTable.NAME + " TEXT, "
+            + DB.PersonTable.GENDER + " TEXT, "
+            + DB.PersonTable.EDUCATION + " TEXT, "
+            + DB.PersonTable.ADDRESS + " TEXT, "
+            + DB.PersonTable.HOBBIES + " TEXT, "
+            + DB.PersonTable.NOTES + " TEXT, "
+            + DB.PersonTable.COL_DATE + " TEXT)";
+    private static final String DELETE_SQL = "DROP TABLE IF EXISTS " + DB.PersonTable.TABLE_NAME;
 
 
     public TestRecordOpenHelper(Context context)
