@@ -28,9 +28,11 @@ public class RecordCursorAdaptor extends CursorAdapter
         TextView tv_Date = (TextView)view.findViewById(R.id.record_score);
 
         String name = cursor.getString(cursor.getColumnIndexOrThrow(DB.PersonTable.NAME));
+        String id = cursor.getString(cursor.getColumnIndexOrThrow(DB.PersonTable._ID));
+
         //String date = cursor.getString(cursor.getColumnIndexOrThrow(DB.PersonTable.COL_DATE));
         //@TODO fix this
         tv_Name.setText(name);
-        tv_Date.setText("0");
+        tv_Date.setText(id);
     }
 }

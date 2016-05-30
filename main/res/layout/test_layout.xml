@@ -4,13 +4,79 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:name="@+id/test_plz_wait"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Please wait while the AMEDA moves into the next position."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:name="@+id/test_step_on"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:name="@+id/test_plz_wait"
-            android:text="Please wait while the AMEDA moves into the next position."
+            android:text="Step on to the plate. Press Next when you know what position the plate is in."
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:src="@drawable/step_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/save"
+            android:name="@+id/test_btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:name="@+id/test_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Step off the platform and select the position you felt while standing on it."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/test_1"
+            android:name="@+id/test_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/test_2"
+            android:name="@+id/test_button_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/test_3"
+            android:name="@+id/test_button_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/test_4"
+            android:name="@+id/test_button_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/test_5"
+            android:name="@+id/test_button_5"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
