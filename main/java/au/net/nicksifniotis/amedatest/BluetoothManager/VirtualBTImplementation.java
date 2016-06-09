@@ -59,7 +59,7 @@ public class VirtualBTImplementation implements BluetoothService
         // to simulate the AMEDA device, delay the transmission of the response message
         // by some random amount from 500 - 5000ms
 
-        int delay = _random.nextInt(5000) + 500;
+        int delay = 1000; //_random.nextInt(5000) + 500;
         Message m = _handler.obtainMessage(1);
         _handler.sendMessageDelayed(m, delay);
     }

@@ -1,6 +1,9 @@
 package au.net.nicksifniotis.amedatest;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
@@ -27,6 +30,8 @@ public class Test extends AppCompatActivity
     private int current_question;
     private TestState current_state;
     private AMEDA device;
+    private Handler _my_handler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +50,18 @@ public class Test extends AppCompatActivity
         current_question = -1;
         current_state = TestState.STARTING;
         updateState();
+        _my_handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                ameda_updated();
+                return true;
+            }
+        });
 
 
         try
         {
-            device = new AMEDAImplementation(this, true);
+            device = new AMEDAImplementation(this, _my_handler, false);
         }
         catch (Exception e)
         {
@@ -60,6 +72,32 @@ public class Test extends AppCompatActivity
         nextQuestion();
     }
 
+
+    private void ameda_updated()
+    {
+        if (device.Status() == AMEDAState.ERROR)
+        {
+            // we have a frikkin problem.
+            makeToast("AMEDA is reporting an error. Aborting test.");
+            finish();
+        }
+
+        switch (current_state)
+        {
+            case STARTING:
+                // wtf?
+                break;
+            case SETTING:
+                // have just finished moving to the position so set the next state.
+                current_state = TestState.STEPPING;
+                updateState();
+                break;
+            case STEPPING:
+                break;
+            case ANSWERING:
+                break;
+        }
+    }
 
     private void nextQuestion ()
     {
@@ -77,10 +115,6 @@ public class Test extends AppCompatActivity
         updateState();
 
         device.GoToPosition(pos);
-//        while (device.Status() == AMEDAState.TRANSITIONING) {}
-
-        current_state = TestState.STEPPING;
-        updateState();
     }
 
 
@@ -146,6 +180,62 @@ public class Test extends AppCompatActivity
         updateState();
     }
 
+
+    public void btn_1(View view)
+    {
+        // @TODO this should be a wtf
+        if (current_state != TestState.ANSWERING)
+            return;
+
+        user_responses[current_question] = 1;
+
+        nextQuestion();
+    }
+
+
+    public void btn_2(View view)
+    {
+        // @TODO this should be a wtf
+        if (current_state != TestState.ANSWERING)
+            return;
+
+        user_responses[current_question] = 2;
+
+        nextQuestion();
+    }
+
+    public void btn_3(View view)
+    {
+        // @TODO this should be a wtf
+        if (current_state != TestState.ANSWERING)
+            return;
+
+        user_responses[current_question] = 3;
+
+        nextQuestion();
+    }
+
+    public void btn_4(View view)
+    {
+        // @TODO this should be a wtf
+        if (current_state != TestState.ANSWERING)
+            return;
+
+        user_responses[current_question] = 4;
+
+        nextQuestion();
+    }
+
+    public void btn_5(View view)
+    {
+        // @TODO this should be a wtf
+        if (current_state != TestState.ANSWERING)
+            return;
+
+        user_responses[current_question] = 5;
+
+        nextQuestion();
+    }
 
     public void makeToast (String message)
     {

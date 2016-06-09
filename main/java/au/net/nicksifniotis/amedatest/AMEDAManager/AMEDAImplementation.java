@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,12 +22,16 @@ import au.net.nicksifniotis.amedatest.BluetoothManager.VirtualBTImplementation;
 public class AMEDAImplementation implements AMEDA {
     private AMEDAState _current_state;
     private Handler _message_handler;
+    private Handler _test_handler;
     private BluetoothService _service;
     private Context _view;
 
-    public AMEDAImplementation(Context view, boolean debug_mode) throws Exception {
+    public AMEDAImplementation(Context view, Handler h, boolean debug_mode) throws Exception {
         _current_state = AMEDAState.OFFLINE;
         _view = view;
+        _test_handler = h;
+
+
 
         // connect to the AMEDA device. Reset to position 1 and recalibrate.
         // throw an error if the device cannot be connected / read to
@@ -50,6 +53,9 @@ public class AMEDAImplementation implements AMEDA {
                     // this is an error state of some kind.
                     _current_state = AMEDAState.ERROR;
                 }
+
+                Message tmsg = _test_handler.obtainMessage(1);
+                _test_handler.sendMessage(tmsg);
 
                 return true;
             }
@@ -94,6 +100,11 @@ public class AMEDAImplementation implements AMEDA {
             _service.write(instruction.Build());
 
             _current_state = AMEDAState.TRANSITIONING;
+
+            // @TODO this override needs to be disabled when reading from the ameda is resolved
+            int delay = 1000; //_random.nextInt(5000) + 500;
+            Message m = _test_handler.obtainMessage(1);
+            _test_handler.sendMessageDelayed(m, delay);
         }
         catch (AMEDAException e)
         {
