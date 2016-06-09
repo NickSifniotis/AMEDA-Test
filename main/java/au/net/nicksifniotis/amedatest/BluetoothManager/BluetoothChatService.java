@@ -53,13 +53,7 @@ public class BluetoothChatService {
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
-    private int mState;
-
-    // BTConstants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
+    private BTState mState;
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -69,7 +63,7 @@ public class BluetoothChatService {
      */
     public BluetoothChatService(Context context, Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
-        mState = STATE_NONE;
+        mState = BTState.NONE;
         mHandler = handler;
     }
 
@@ -78,17 +72,17 @@ public class BluetoothChatService {
      *
      * @param state An integer defining the current connection state
      */
-    private synchronized void setState(int state) {
+    private synchronized void setState(BTState state) {
         mState = state;
 
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(BTConstants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        mHandler.obtainMessage(BTConstants.MESSAGE_STATE_CHANGE, state.ordinal(), -1).sendToTarget();
     }
 
     /**
      * Return the current connection state.
      */
-    public synchronized int getState() {
+    public synchronized BTState getState() {
         return mState;
     }
 
@@ -110,7 +104,7 @@ public class BluetoothChatService {
             mConnectedThread = null;
         }
 
-        setState(STATE_LISTEN);
+        setState(BTState.LISTEN);
 
         // Start the thread to listen on a BluetoothServerSocket
         if (mAcceptThread == null) {
@@ -123,12 +117,11 @@ public class BluetoothChatService {
      * Start the ConnectThread to initiate a connection to a remote device.
      *
      * @param device The BluetoothDevice to connect
-     * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
-    public synchronized void connect(BluetoothDevice device, boolean secure) {
+    public synchronized void connect(BluetoothDevice device) {
 
         // Cancel any thread attempting to make a connection
-        if (mState == STATE_CONNECTING) {
+        if (mState == BTState.CONNECTING) {
             if (mConnectThread != null) {
                 mConnectThread.cancel();
                 mConnectThread = null;
@@ -144,7 +137,7 @@ public class BluetoothChatService {
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device);
         mConnectThread.start();
-        setState(STATE_CONNECTING);
+        setState(BTState.CONNECTING);
     }
 
     /**
@@ -185,7 +178,7 @@ public class BluetoothChatService {
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
-        setState(STATE_CONNECTED);
+        setState(BTState.CONNECTED);
     }
 
     /**
@@ -207,7 +200,7 @@ public class BluetoothChatService {
             mAcceptThread.cancel();
             mAcceptThread = null;
         }
-        setState(STATE_NONE);
+        setState(BTState.NONE);
     }
 
     /**
@@ -221,7 +214,7 @@ public class BluetoothChatService {
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
+            if (mState != BTState.CONNECTED) return;
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
@@ -285,7 +278,7 @@ public class BluetoothChatService {
             BluetoothSocket socket = null;
 
             // Listen to the server socket if we're not connected
-            while (mState != STATE_CONNECTED) {
+            while (mState != BTState.CONNECTED) {
                 try {
                     // This is a blocking call and will only return on a
                     // successful connection or an exception
@@ -298,13 +291,13 @@ public class BluetoothChatService {
                 if (socket != null) {
                     synchronized (BluetoothChatService.this) {
                         switch (mState) {
-                            case STATE_LISTEN:
-                            case STATE_CONNECTING:
+                            case LISTEN:
+                            case CONNECTING:
                                 // Situation normal. Start the connected thread.
                                 connected(socket, socket.getRemoteDevice());
                                 break;
-                            case STATE_NONE:
-                            case STATE_CONNECTED:
+                            case NONE:
+                            case CONNECTED:
                                 // Either not ready or already connected. Terminate new socket.
                                 try {
                                     socket.close();
@@ -416,7 +409,7 @@ public class BluetoothChatService {
             int bytes;
 
             // Keep listening to the InputStream while connected
-            while (mState == STATE_CONNECTED) {
+            while (mState == BTState.CONNECTED) {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
