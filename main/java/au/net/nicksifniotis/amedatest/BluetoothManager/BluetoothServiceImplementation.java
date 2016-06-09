@@ -36,9 +36,9 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothChatService {
+public class BluetoothServiceImplementation implements BluetoothService {
     // Debugging
-    private static final String TAG = "BluetoothChatService";
+    private static final String TAG = "BluetoothServiceImplementation";
 
     // Name for the SDP record when creating server socket
     private static final String NAME_SDPREC = "BluetoothAMEDA";
@@ -61,7 +61,7 @@ public class BluetoothChatService {
      * @param context The UI Activity Context
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothChatService(Context context, Handler handler) {
+    public BluetoothServiceImplementation(Context context, Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = BTState.NONE;
         mHandler = handler;
@@ -82,6 +82,7 @@ public class BluetoothChatService {
     /**
      * Return the current connection state.
      */
+    @Override
     public synchronized BTState getState() {
         return mState;
     }
@@ -90,6 +91,7 @@ public class BluetoothChatService {
      * Start the chat service. Specifically start AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
+    @Override
     public synchronized void start() {
 
         // Cancel any thread attempting to make a connection
@@ -118,6 +120,7 @@ public class BluetoothChatService {
      *
      * @param device The BluetoothDevice to connect
      */
+    @Override
     public synchronized void connect(BluetoothDevice device) {
 
         // Cancel any thread attempting to make a connection
@@ -146,6 +149,7 @@ public class BluetoothChatService {
      * @param socket The BluetoothSocket on which the connection was made
      * @param device The BluetoothDevice that has been connected
      */
+    @Override
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice
             device) {
 
@@ -184,6 +188,7 @@ public class BluetoothChatService {
     /**
      * Stop all threads
      */
+    @Override
     public synchronized void stop() {
 
         if (mConnectThread != null) {
@@ -209,6 +214,7 @@ public class BluetoothChatService {
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
+    @Override
     public void write(byte[] out) {
         // Create temporary object
         ConnectedThread r;
@@ -233,7 +239,7 @@ public class BluetoothChatService {
         mHandler.sendMessage(msg);
 
         // Start the service over to restart listening mode
-        BluetoothChatService.this.start();
+        BluetoothServiceImplementation.this.start();
     }
 
     /**
@@ -248,7 +254,7 @@ public class BluetoothChatService {
         mHandler.sendMessage(msg);
 
         // Start the service over to restart listening mode
-        BluetoothChatService.this.start();
+        BluetoothServiceImplementation.this.start();
     }
 
     /**
@@ -289,7 +295,7 @@ public class BluetoothChatService {
 
                 // If a connection was accepted
                 if (socket != null) {
-                    synchronized (BluetoothChatService.this) {
+                    synchronized (BluetoothServiceImplementation.this) {
                         switch (mState) {
                             case LISTEN:
                             case CONNECTING:
@@ -363,7 +369,7 @@ public class BluetoothChatService {
             }
 
             // Reset the ConnectThread because we're done
-            synchronized (BluetoothChatService.this) {
+            synchronized (BluetoothServiceImplementation.this) {
                 mConnectThread = null;
             }
 
@@ -420,7 +426,7 @@ public class BluetoothChatService {
                 } catch (IOException e) {
                     connectionLost();
                     // Start the service over to restart listening mode
-                    BluetoothChatService.this.start();
+                    BluetoothServiceImplementation.this.start();
                     break;
                 }
             }

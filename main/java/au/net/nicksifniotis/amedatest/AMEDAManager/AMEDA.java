@@ -3,28 +3,17 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
 /**
  * Abstract interface for communicating with the AMEDA device.
  *
- * The implementation of the bluetooth connection and the AMEDA's data language are both buried in this class.
- * To the rest of the app, this is a black box that weaves special magic.
- *
- * The only time that this layering is broken is when there is an irrepairable break in the connection and the test
- * or procedure currently underway has to be terminated.
- *
+ * The implementation of the bluetooth connection and the AMEDA internals (such as the instruction
+ * set) are completely hidden to the outside world.
  * Created by nsifniotis on 29/05/16.
  */
-public class AMEDA
+public interface AMEDA
 {
-    public static boolean GoToPosition (int position)
-    {
-        return true;
-    }
+    public boolean GoToPosition (int position);
 
-    public static boolean GoHome()
-    {
-        return true;
-    }
+    public boolean GoHome();
 
-    public static boolean Calibrate()
-    {
-        return true;
-    }
+    public boolean Calibrate();
+
+    public AMEDAState Status();
 }
