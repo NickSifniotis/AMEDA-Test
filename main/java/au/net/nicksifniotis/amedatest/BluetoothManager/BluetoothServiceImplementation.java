@@ -20,7 +20,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -58,10 +57,9 @@ public class BluetoothServiceImplementation implements BluetoothService {
     /**
      * Constructor. Prepares a new BluetoothChat session.
      *
-     * @param context The UI Activity Context
      * @param handler A Handler to send messages back to the UI Activity
      */
-    public BluetoothServiceImplementation(Context context, Handler handler) {
+    public BluetoothServiceImplementation(Handler handler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = BTState.NONE;
         mHandler = handler;
