@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothService;
 import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothServiceImplementation;
+import au.net.nicksifniotis.amedatest.BluetoothManager.VirtualBTImplementation;
 
 /**
  * Created by nsifniotis on 9/06/16.
@@ -19,18 +20,17 @@ import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothServiceImplement
 public class AMEDAImplementation implements AMEDA {
     private AMEDAState _current_state;
     private Handler _message_handler;
-    private BluetoothService service;
+    private BluetoothService _service;
 
 
-    public AMEDAImplementation() throws Exception {
+    public AMEDAImplementation(boolean debug_mode) throws Exception {
         _current_state = AMEDAState.OFFLINE;
+
 
         // connect to the AMEDA device. Reset to position 1 and recalibrate.
         // throw an error if the device cannot be connected / read to
 
         String device_name = "AMEDA";
-        String device_address = "";
-
         _message_handler = new Handler(Looper.myLooper(), new Handler.Callback() {
             public boolean handleMessage(Message msg) {
                 if (msg.what == 1)
@@ -48,7 +48,10 @@ public class AMEDAImplementation implements AMEDA {
             }
         });
 
-        service = new BluetoothServiceImplementation(_message_handler);
+        if (debug_mode)
+            _service = new VirtualBTImplementation(_message_handler);
+        else
+            _service = new BluetoothServiceImplementation(_message_handler);
 
         // try to find the AMEDA device.
         // TODO fix the error state reporting here
@@ -65,12 +68,14 @@ public class AMEDAImplementation implements AMEDA {
             if (d.getName() == device_name)
                 ameda = d;
 
-        // @TOTO this
+        // @TODO this
         if (ameda == null)
             return;
 
-        service.connect(ameda);
+        _service.connect(ameda);
+        _current_state = AMEDAState.READY;
     }
+
 
     @Override
     public boolean GoToPosition(int position)
@@ -79,7 +84,7 @@ public class AMEDAImplementation implements AMEDA {
             AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                     .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
                     .N(position);
-            service.write(instruction.Build());
+            _service.write(instruction.Build());
 
             _current_state = AMEDAState.TRANSITIONING;
         }
@@ -97,7 +102,7 @@ public class AMEDAImplementation implements AMEDA {
             AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                     .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
                     .N(1);
-            service.write(instruction.Build());
+            _service.write(instruction.Build());
 
             _current_state = AMEDAState.TRANSITIONING;
         }
@@ -113,7 +118,7 @@ public class AMEDAImplementation implements AMEDA {
     public boolean Calibrate() {
         AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                 .Instruction(AMEDAInstructionEnum.CALIBRATE);
-        service.write(instruction.Build());
+        _service.write(instruction.Build());
 
         _current_state = AMEDAState.TRANSITIONING;
 
