@@ -1,5 +1,6 @@
 package au.net.nicksifniotis.amedatest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
@@ -21,7 +22,7 @@ public class ManageRecordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manage_records);
 
         DBOpenHelper testDB = new DBOpenHelper(this);
-        SQLiteDatabase db = testDB.getReadableDatabase();
+        final SQLiteDatabase db = testDB.getReadableDatabase();
 
 //        String query = "SELECT p." + DB.PersonTable.NAME + " AS name, p._ID AS id, COUNT(t." + DB.TestTable.DATE + ") AS count"
 //            + " FROM " + DB.PersonTable.TABLE_NAME + " p, " + DB.TestTable.TABLE_NAME + " t"
@@ -41,8 +42,12 @@ public class ManageRecordsActivity extends AppCompatActivity {
                 SQLiteCursor entry = (SQLiteCursor) parent.getAdapter().getItem(position);
                 int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
 
-                Intent manage_record_intent = new Intent(view.getContext(), NewRecordActivity.class);
+                Intent manage_record_intent = new Intent(getBaseContext(), NewRecordActivity.class);
                 manage_record_intent.putExtra("id", record_id);
+
+                entry.close();
+                db.close();
+
                 startActivity(manage_record_intent);
             }
         });

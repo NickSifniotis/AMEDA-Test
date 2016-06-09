@@ -35,6 +35,15 @@
         android:layout_below="@+id/famil_btn"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run Test"
+        android:id="@+id/btn_runtest"
+        android:onClick="btn_RunTest"
+        android:layout_below="@+id/btn_new"
+        android:layout_centerHorizontal="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

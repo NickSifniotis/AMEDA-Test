@@ -2,9 +2,12 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,11 +24,11 @@ public class AMEDAImplementation implements AMEDA {
     private AMEDAState _current_state;
     private Handler _message_handler;
     private BluetoothService _service;
+    private Context _view;
 
-
-    public AMEDAImplementation(boolean debug_mode) throws Exception {
+    public AMEDAImplementation(Context view, boolean debug_mode) throws Exception {
         _current_state = AMEDAState.OFFLINE;
-
+        _view = view;
 
         // connect to the AMEDA device. Reset to position 1 and recalibrate.
         // throw an error if the device cannot be connected / read to
@@ -33,6 +36,10 @@ public class AMEDAImplementation implements AMEDA {
         String device_name = "AMEDA";
         _message_handler = new Handler(Looper.myLooper(), new Handler.Callback() {
             public boolean handleMessage(Message msg) {
+                Toast t = Toast.makeText(_view, "Received message " + msg.what, Toast.LENGTH_SHORT);
+                t.show();
+
+
                 if (msg.what == 1)
                 {
                     // this means READY so advance the AMEDA state.

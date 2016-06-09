@@ -5,8 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.Random;
+
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAState;
 
 /**
  * Test activity. Launches a test and runs it from go to whoa.
@@ -21,11 +26,12 @@ public class Test extends AppCompatActivity
     private int [] user_responses;
     private int current_question;
     private TestState current_state;
-
+    private AMEDA device;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.test_layout);
 
         // righto, generate a test
         // @TODO replace this random number generator with the actual tests provided by the team
@@ -36,8 +42,45 @@ public class Test extends AppCompatActivity
         for (int i = 0; i < 50; i ++)
             test_questions[i] = r.nextInt(5);
 
-        current_question = 0;
+        current_question = -1;
         current_state = TestState.STARTING;
+        updateState();
+
+
+        try
+        {
+            device = new AMEDAImplementation(this, true);
+        }
+        catch (Exception e)
+        {
+            makeToast("Unable to create connection to AMEDA device, aborting.");
+            finish();
+        }
+
+        nextQuestion();
+    }
+
+
+    private void nextQuestion ()
+    {
+        current_question ++;
+
+        if (current_question >= 50)
+            finish();
+
+        setNewPosition(test_questions[current_question]);
+    }
+
+    private void setNewPosition (int pos)
+    {
+        current_state = TestState.SETTING;
+        updateState();
+
+        device.GoToPosition(pos);
+//        while (device.Status() == AMEDAState.TRANSITIONING) {}
+
+        current_state = TestState.STEPPING;
+        updateState();
     }
 
 
@@ -94,5 +137,19 @@ public class Test extends AppCompatActivity
             case FINISHING:
                 break;
         }
+    }
+
+
+    public void btn_Next (View view)
+    {
+        current_state = TestState.ANSWERING;
+        updateState();
+    }
+
+
+    public void makeToast (String message)
+    {
+        Toast t = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        t.show();
     }
 }

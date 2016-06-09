@@ -72,6 +72,8 @@ public class HomeActivity extends AppCompatActivity {
         NewRecord();
     }
 
+    public void btn_RunTest(View view) { RunTest(); }
+
     /*
         The action methods that do the things.
         Usually by loading up other activities and making them do the things.
@@ -104,5 +106,10 @@ public class HomeActivity extends AppCompatActivity {
     private void ManageRecords() {
         Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
         startActivity(manageRecIntent);
+    }
+
+    private void RunTest() {
+        Intent runTestIntent = new Intent (this, Test.class);
+        startActivity(runTestIntent);
     }
 }
