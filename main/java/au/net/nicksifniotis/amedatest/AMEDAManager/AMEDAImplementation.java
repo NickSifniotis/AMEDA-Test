@@ -2,6 +2,8 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
 
 /**
  * Created by nsifniotis on 9/06/16.
+ *
+ * Implementation of the AMEDA interface.
  */
 public class AMEDAImplementation implements AMEDA {
     private AMEDAState _current_state;
