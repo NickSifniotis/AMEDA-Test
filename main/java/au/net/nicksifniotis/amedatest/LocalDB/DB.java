@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest;
+package au.net.nicksifniotis.amedatest.LocalDB;
 
 import android.provider.BaseColumns;
 

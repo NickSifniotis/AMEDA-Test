@@ -20,5 +20,6 @@
             android:parentActivityName=".HomeActivity"></activity>
         <activity android:name=".ManageRecordsActivity"></activity>
     </application>
-
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 </manifest>

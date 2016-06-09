@@ -1,8 +1,10 @@
-package au.net.nicksifniotis.amedatest;
+package au.net.nicksifniotis.amedatest.LocalDB;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import au.net.nicksifniotis.amedatest.LocalDB.DB;
 
 /**
  * Database helper class that uses the contracts and strings inside of DB.

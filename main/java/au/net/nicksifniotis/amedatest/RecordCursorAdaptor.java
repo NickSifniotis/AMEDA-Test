@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import au.net.nicksifniotis.amedatest.LocalDB.DB;
+
 /**
  * Created by nsifniotis on 23/05/16.
  */

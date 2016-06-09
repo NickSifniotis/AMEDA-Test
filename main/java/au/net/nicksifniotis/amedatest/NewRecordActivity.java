@@ -15,6 +15,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import au.net.nicksifniotis.amedatest.LocalDB.DB;
+import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
+
 
 public class NewRecordActivity extends AppCompatActivity {
     private static DBOpenHelper testRecordDb;
