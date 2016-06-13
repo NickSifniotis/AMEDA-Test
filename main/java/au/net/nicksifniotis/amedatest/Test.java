@@ -23,7 +23,7 @@ import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAState;
  */
 public class Test extends AppCompatActivity
 {
-    private static final int NUM_QUESTIONS = 50;
+    private static final int NUM_QUESTIONS = 5;
 
     private int [] test_questions;
     private int [] user_responses;
@@ -40,12 +40,12 @@ public class Test extends AppCompatActivity
 
         // righto, generate a test
         // @TODO replace this random number generator with the actual tests provided by the team
-        test_questions = new int[50];
-        user_responses = new int[50];
+        test_questions = new int[NUM_QUESTIONS];
+        user_responses = new int[NUM_QUESTIONS];
 
         Random r = new Random();
-        for (int i = 0; i < 50; i ++)
-            test_questions[i] = r.nextInt(5);
+        for (int i = 0; i < NUM_QUESTIONS; i ++)
+            test_questions[i] = r.nextInt(5) + 1;
 
         current_question = -1;
         current_state = TestState.STARTING;
@@ -53,6 +53,7 @@ public class Test extends AppCompatActivity
         _my_handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
+                makeToast("Message received: " + msg.what);
                 ameda_updated();
                 return true;
             }
@@ -70,6 +71,32 @@ public class Test extends AppCompatActivity
         }
 
         nextQuestion();
+    }
+
+
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        device.Terminate();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        device.Terminate();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        device.Connect();
     }
 
 
@@ -103,14 +130,18 @@ public class Test extends AppCompatActivity
     {
         current_question ++;
 
-        if (current_question >= 50)
+        if (current_question >= NUM_QUESTIONS) {
+            device.Terminate();
             finish();
+            return;
+        }
 
         setNewPosition(test_questions[current_question]);
     }
 
     private void setNewPosition (int pos)
     {
+        makeToast("Setting device to position " + pos);
         current_state = TestState.SETTING;
         updateState();
 

@@ -3,6 +3,8 @@ package au.net.nicksifniotis.amedatest.BluetoothManager;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
+import java.io.IOException;
+
 /**
  * Created by nsifniotis on 9/06/16.
  *
@@ -14,8 +16,6 @@ import android.bluetooth.BluetoothSocket;
  */
 public interface BluetoothService {
     BTState getState();
-
-    void start();
 
     void connect(BluetoothDevice device);
 

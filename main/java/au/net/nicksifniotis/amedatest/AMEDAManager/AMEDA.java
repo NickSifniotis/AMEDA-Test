@@ -16,4 +16,10 @@ public interface AMEDA
     public boolean Calibrate();
 
     public AMEDAState Status();
+
+    public void Terminate();
+
+    public void Connect();
+
+    public boolean BeepTest(int num_beeps);
 }

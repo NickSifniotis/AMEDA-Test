@@ -61,7 +61,7 @@ public class AMEDAInstruction {
                 res = "HELLO";
                 break;
             case MOVE_TO_POSITION:
-                res = "MVPN" + Integer.toString(_n);
+                res = "GOPN" + Integer.toString(_n);
                 break;
             case BUZZER_LONG:
                 res = "BZLG" + Integer.toString(_n);

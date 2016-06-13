@@ -34,12 +34,6 @@ public class VirtualBTImplementation implements BluetoothService
     }
 
     @Override
-    public void start() {
-        // do not very much.
-        _my_state = BTState.LISTEN;
-    }
-
-    @Override
     public void connect(BluetoothDevice device) {
         _my_state = BTState.CONNECTING;
     }
@@ -60,7 +54,7 @@ public class VirtualBTImplementation implements BluetoothService
         // by some random amount from 500 - 5000ms
 
         int delay = 1000; //_random.nextInt(5000) + 500;
-        Message m = _handler.obtainMessage(1);
+        Message m = _handler.obtainMessage(6);
         _handler.sendMessageDelayed(m, delay);
     }
 }

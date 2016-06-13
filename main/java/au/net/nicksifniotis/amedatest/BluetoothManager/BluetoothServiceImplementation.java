@@ -27,6 +27,8 @@ import android.os.Message;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 /**
@@ -49,10 +51,11 @@ public class BluetoothServiceImplementation implements BluetoothService {
     // Member fields
     private final BluetoothAdapter mAdapter;
     private final Handler mHandler;
-    private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private BTState mState;
+    private Queue<byte[]> buffered_packets;
+
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -63,6 +66,7 @@ public class BluetoothServiceImplementation implements BluetoothService {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = BTState.NONE;
         mHandler = handler;
+        buffered_packets = new LinkedList<>();
     }
 
     /**
@@ -75,6 +79,13 @@ public class BluetoothServiceImplementation implements BluetoothService {
 
         // Give the new state to the Handler so the UI Activity can update
         mHandler.obtainMessage(BTConstants.MESSAGE_STATE_CHANGE, state.ordinal(), -1).sendToTarget();
+
+        // if there are buffered commands to send out, send them out.
+        if (mState == BTState.CONNECTED)
+            while (!buffered_packets.isEmpty()) {
+                byte [] out = buffered_packets.remove();
+                write(out);
+            }
     }
 
     /**
@@ -85,33 +96,6 @@ public class BluetoothServiceImplementation implements BluetoothService {
         return mState;
     }
 
-    /**
-     * Start the chat service. Specifically start AcceptThread to begin a
-     * session in listening (server) mode. Called by the Activity onResume()
-     */
-    @Override
-    public synchronized void start() {
-
-        // Cancel any thread attempting to make a connection
-        if (mConnectThread != null) {
-            mConnectThread.cancel();
-            mConnectThread = null;
-        }
-
-        // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
-            mConnectedThread.cancel();
-            mConnectedThread = null;
-        }
-
-        setState(BTState.LISTEN);
-
-        // Start the thread to listen on a BluetoothServerSocket
-        if (mAcceptThread == null) {
-            mAcceptThread = new AcceptThread();
-            mAcceptThread.start();
-        }
-    }
 
     /**
      * Start the ConnectThread to initiate a connection to a remote device.
@@ -163,12 +147,6 @@ public class BluetoothServiceImplementation implements BluetoothService {
             mConnectedThread = null;
         }
 
-        // Cancel the accept thread because we only want to connect to one device
-        if (mAcceptThread != null) {
-            mAcceptThread.cancel();
-            mAcceptThread = null;
-        }
-
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
@@ -199,10 +177,6 @@ public class BluetoothServiceImplementation implements BluetoothService {
             mConnectedThread = null;
         }
 
-        if (mAcceptThread != null) {
-            mAcceptThread.cancel();
-            mAcceptThread = null;
-        }
         setState(BTState.NONE);
     }
 
@@ -218,7 +192,14 @@ public class BluetoothServiceImplementation implements BluetoothService {
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != BTState.CONNECTED) return;
+            // If we aren't connected, rather than chucking way the bytes to send,
+            // add them to a queue for transmission.
+            if (mState != BTState.CONNECTED)
+            {
+                buffered_packets.add(out);
+                return;
+            }
+
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
@@ -235,9 +216,6 @@ public class BluetoothServiceImplementation implements BluetoothService {
         bundle.putString(BTConstants.TOAST, "Unable to connect device");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
-
-        // Start the service over to restart listening mode
-        BluetoothServiceImplementation.this.start();
     }
 
     /**
@@ -250,76 +228,6 @@ public class BluetoothServiceImplementation implements BluetoothService {
         bundle.putString(BTConstants.TOAST, "Device connection was lost");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
-
-        // Start the service over to restart listening mode
-        BluetoothServiceImplementation.this.start();
-    }
-
-    /**
-     * This thread runs while listening for incoming connections. It behaves
-     * like a server-side client. It runs until a connection is accepted
-     * (or until cancelled).
-     */
-    private class AcceptThread extends Thread {
-        // The local server socket
-        private final BluetoothServerSocket mmServerSocket;
-
-        public AcceptThread() {
-            BluetoothServerSocket tmp = null;
-
-            // Create a new listening server socket
-            try {
-                tmp = mAdapter.listenUsingInsecureRfcommWithServiceRecord(
-                        NAME_SDPREC, MY_UUID);
-            } catch (IOException e) {
-            }
-            mmServerSocket = tmp;
-        }
-
-        public void run() {
-            setName("AcceptThread");
-
-            BluetoothSocket socket = null;
-
-            // Listen to the server socket if we're not connected
-            while (mState != BTState.CONNECTED) {
-                try {
-                    // This is a blocking call and will only return on a
-                    // successful connection or an exception
-                    socket = mmServerSocket.accept();
-                } catch (IOException e) {
-                    break;
-                }
-
-                // If a connection was accepted
-                if (socket != null) {
-                    synchronized (BluetoothServiceImplementation.this) {
-                        switch (mState) {
-                            case LISTEN:
-                            case CONNECTING:
-                                // Situation normal. Start the connected thread.
-                                connected(socket, socket.getRemoteDevice());
-                                break;
-                            case NONE:
-                            case CONNECTED:
-                                // Either not ready or already connected. Terminate new socket.
-                                try {
-                                    socket.close();
-                                } catch (IOException e) {
-                                }
-                                break;
-                        }
-                    }
-                }
-            }
-        }
-
-        public void cancel() {
-            try {
-                mmServerSocket.close();
-            } catch (IOException e) {
-            }
-        }
     }
 
 
@@ -379,6 +287,7 @@ public class BluetoothServiceImplementation implements BluetoothService {
             try {
                 mmSocket.close();
             } catch (IOException e) {
+                mHandler.obtainMessage(BTConstants.MESSAGE_TOAST, e.getMessage()).sendToTarget();
             }
         }
     }
@@ -423,8 +332,7 @@ public class BluetoothServiceImplementation implements BluetoothService {
                             .sendToTarget();
                 } catch (IOException e) {
                     connectionLost();
-                    // Start the service over to restart listening mode
-                    BluetoothServiceImplementation.this.start();
+
                     break;
                 }
             }
@@ -438,11 +346,13 @@ public class BluetoothServiceImplementation implements BluetoothService {
         public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
+                mmOutStream.flush();
 
                 // Share the sent message back to the UI Activity
                 mHandler.obtainMessage(BTConstants.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();
             } catch (IOException e) {
+                mHandler.obtainMessage(BTConstants.MESSAGE_TOAST, e.getMessage()).sendToTarget();
             }
         }
 
@@ -450,6 +360,7 @@ public class BluetoothServiceImplementation implements BluetoothService {
             try {
                 mmSocket.close();
             } catch (IOException e) {
+                mHandler.obtainMessage(BTConstants.MESSAGE_TOAST, e.getMessage()).sendToTarget();
             }
         }
     }
