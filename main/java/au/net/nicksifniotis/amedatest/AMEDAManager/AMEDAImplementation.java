@@ -12,7 +12,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import au.net.nicksifniotis.amedatest.BluetoothManager.BTConstants;
+import au.net.nicksifniotis.amedatest.BluetoothManager.BTState;
 import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothService;
+import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothServiceImplementation;
 import au.net.nicksifniotis.amedatest.BluetoothManager.OldBluetoothServiceImplementation;
 
 /**
@@ -84,7 +86,9 @@ public class AMEDAImplementation implements AMEDA {
 //        if (debug_mode)
 //            _service = new VirtualBTImplementation(_message_handler);
 //        else
-            _service = new OldBluetoothServiceImplementation(_message_handler);
+        //    _service = new OldBluetoothServiceImplementation(_message_handler);
+
+        _service = new BluetoothServiceImplementation(view);
 
         Connect();
     }
@@ -215,6 +219,8 @@ public class AMEDAImplementation implements AMEDA {
         }
 
         _service.connect(ameda);
-        _current_state = AMEDAState.READY;
+
+        if (_service.getState() == BTState.CONNECTED)
+            _current_state = AMEDAState.READY;
     }
 }

@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -24,37 +25,105 @@ public class BluetoothServiceImplementation implements BluetoothService
     private Context _parent_context;
     private ReaderThread _thread;
     private Handler _handler;
+    private BluetoothSocket _bt_socket;
+    private BTState _state;
 
 
     public BluetoothServiceImplementation(Context p)
     {
         _parent_context = p;
+        _state = BTState.NONE;
+
+        _handler = new Handler() {
+            public void handleMessage (Message msg)
+            {
+                if (msg.what != 1)
+                    return;
+
+                if (msg.arg1 > 0)
+                    Toast.makeText(_parent_context, (String) msg.obj, Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
 
     @Override
-    public BTState getState() {
-        return null;
+    public BTState getState()
+    {
+        return _state;
     }
+
 
     @Override
-    public void connect(BluetoothDevice device) {
+    public void connect(BluetoothDevice device)
+    {
+        try
+        {
+            _bt_socket = createBluetoothSocket(device);
 
+            if (_bt_socket != null)
+                _bt_socket.connect();
+
+            _state = BTState.CONNECTED;
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(_parent_context,
+                    "Unable to create connection to Bluetooth device: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
+
+    /**
+     * Not implemented.
+     *
+     * @param socket
+     * @param device
+     */
     @Override
     public void connected(BluetoothSocket socket, BluetoothDevice device) {
 
     }
 
-    @Override
-    public void stop() {
 
+    /**
+     * Disconnect the device.
+     */
+    @Override
+    public void stop()
+    {
+        try
+        {
+            _bt_socket.close();
+            _thread.interrupt();
+            _thread = null;
+
+            _state = BTState.NONE;
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(_parent_context,
+                    "Unable to terminate connection: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        _state = BTState.NONE;
     }
 
-    @Override
-    public void write(byte[] out) {
 
+    /**
+     * Write out to the bluetooth socket.
+     *
+     * @param out The thing to write to the bluetooth socket.
+     */
+    @Override
+    public void write(byte[] out)
+    {
+        if (_state != BTState.CONNECTED || _thread == null)
+            return;
+
+        _thread.write(out);
     }
 
 
@@ -126,25 +195,26 @@ public class BluetoothServiceImplementation implements BluetoothService
         {
             byte[] buffer = new byte[0x100];
 
-            while (true) {
-                try {
+            while (!Thread.interrupted())
+            {
+                try
+                {
                     int bytes = mmInStream.read(buffer);
                     String readMessage = new String(buffer, 0, bytes);
                     _handler.obtainMessage(1, bytes, -1, readMessage).sendToTarget();
-                } catch (Exception e) {
-
+                }
+                catch (Exception e)
+                {
                 }
             }
         }
 
 
-        public void write(String message)
+        public void write(byte[] message)
         {
-            byte[] msgBuffer = message.getBytes();
-
             try
             {
-                mmOutStream.write(msgBuffer);
+                mmOutStream.write(message);
             }
             catch (Exception e)
             {
