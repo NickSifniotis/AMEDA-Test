@@ -58,7 +58,31 @@ public class Test extends AppCompatActivity
                 return true;
             }
         });
+    }
 
+
+    /**
+     * Disconnect from the AMEDA each time the user exits the activity. We don't want to be
+     * holding on to this resource.
+     *
+     */
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        device.Terminate();
+    }
+
+
+    /**
+     * (Re)connect to the AMEDA device when the activity is (resumed)shown.
+     *
+     */
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
 
         try
         {
@@ -71,32 +95,6 @@ public class Test extends AppCompatActivity
         }
 
         nextQuestion();
-    }
-
-
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        device.Terminate();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-
-        device.Terminate();
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        device.Connect();
     }
 
 
@@ -128,16 +126,25 @@ public class Test extends AppCompatActivity
 
     private void nextQuestion ()
     {
-        current_question ++;
+        if (device.Status() == AMEDAState.READY)
+        {
+            current_question++;
 
-        if (current_question >= NUM_QUESTIONS) {
-            device.Terminate();
-            finish();
-            return;
+            if (current_question >= NUM_QUESTIONS)
+            {
+                device.Terminate();
+                finish();
+                return;
+            }
+
+            setNewPosition(test_questions[current_question]);
         }
-
-        setNewPosition(test_questions[current_question]);
+        else
+        {
+            makeToast("AMEDA is not able to advance to the next question.");
+        }
     }
+
 
     private void setNewPosition (int pos)
     {
