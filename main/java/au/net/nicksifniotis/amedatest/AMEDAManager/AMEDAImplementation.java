@@ -13,8 +13,7 @@ import java.util.ArrayList;
 
 import au.net.nicksifniotis.amedatest.BluetoothManager.BTConstants;
 import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothService;
-import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothServiceImplementation;
-import au.net.nicksifniotis.amedatest.BluetoothManager.VirtualBTImplementation;
+import au.net.nicksifniotis.amedatest.BluetoothManager.OldBluetoothServiceImplementation;
 
 /**
  * Created by nsifniotis on 9/06/16.
@@ -85,7 +84,7 @@ public class AMEDAImplementation implements AMEDA {
 //        if (debug_mode)
 //            _service = new VirtualBTImplementation(_message_handler);
 //        else
-            _service = new BluetoothServiceImplementation(_message_handler);
+            _service = new OldBluetoothServiceImplementation(_message_handler);
 
         Connect();
     }
