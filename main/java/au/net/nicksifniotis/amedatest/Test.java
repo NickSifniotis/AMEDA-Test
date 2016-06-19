@@ -131,7 +131,7 @@ public class Test extends AppCompatActivity
     {
         super.onStop();
 
-        device.Terminate();
+        _abort_test();
     }
 
 
@@ -208,11 +208,11 @@ public class Test extends AppCompatActivity
 
     private void ameda_updated()
     {
-        if (device.Status() == AMEDAState.ERROR)
+        if (device.Status() == AMEDAState.CONNECTION_ERROR)
         {
             // we have a frikkin problem.
-            makeToast("AMEDA is reporting an error. Aborting test.");
-            finish();
+            _abort_test();
+            return;
         }
 
         switch (current_state)
@@ -231,24 +231,31 @@ public class Test extends AppCompatActivity
         }
     }
 
-    private void nextQuestion ()
+
+    private void _next_question()
     {
+        updateState(TestState.SETTING);
+
+        if (device.Status() == AMEDAState.CONNECTION_ERROR)
+        {
+            // abortive code is abortive.
+            makeToast("AMEDA connection error. This test is being aborted.");
+            _abort_test();
+            return;
+        }
+
         if (device.Status() == AMEDAState.READY)
         {
             _current_question++;
 
             if (_current_question >= _num_questions)
-            {
-                device.Terminate();
-                finish();
-                return;
-            }
-
-            setNewPosition(_test_questions[_current_question]);
+                _end_of_test();
+            else
+                setNewPosition(_test_questions[_current_question]);
         }
         else
         {
-            makeToast("AMEDA is not able to advance to the next question.");
+            makeToast("AMEDA is reporting an unusual state. " + device.Status().toString());
         }
     }
 
@@ -256,7 +263,7 @@ public class Test extends AppCompatActivity
     private void setNewPosition (int pos)
     {
         makeToast("Setting device to position " + pos);
-        updateState(TestState.SETTING);
+        updateState(TestState.SETTING_BLOCK);
 
         device.GoToPosition(pos);
     }
@@ -264,8 +271,7 @@ public class Test extends AppCompatActivity
 
     private void updateState(TestState new_state)
     {
-        current_state = new_state;
-        switch (current_state)
+        switch (new_state)
         {
             case STARTING:
                 _toggle_layout(TestState.STARTING, true);
@@ -273,6 +279,8 @@ public class Test extends AppCompatActivity
                 _toggle_layout(TestState.STEPPING, false);
                 _toggle_layout(TestState.ANSWERING, false);
                 _toggle_layout(TestState.FINISHING, false);
+
+                current_state = new_state;
                 break;
             case SETTING:
                 _toggle_layout(TestState.STARTING, false);
@@ -306,6 +314,11 @@ public class Test extends AppCompatActivity
     }
 
 
+    /**
+     * Button press event handlers.
+     *
+     * @param view
+     */
     public void btn_Next (View view)
     {
         updateState(TestState.ANSWERING);
@@ -316,7 +329,6 @@ public class Test extends AppCompatActivity
     {
         record_user_response(1);
     }
-
 
     public void btn_2(View view)
     {
@@ -341,13 +353,13 @@ public class Test extends AppCompatActivity
 
     public void btn_begin_test(View view)
     {
-        // @TODO implement
+        _next_question();
     }
 
 
     public void btn_end_test (View view)
     {
-        // TODO implement
+        finish();
     }
 
 
@@ -358,6 +370,11 @@ public class Test extends AppCompatActivity
     }
 
 
+    /**
+     * Saves the user's response to the test question in the database.
+     *
+     * @param response An integer that corresponds to the button that the user pressed.
+     */
     private void record_user_response(int response)
     {
         if (current_state != TestState.ANSWERING)
@@ -394,5 +411,52 @@ public class Test extends AppCompatActivity
         }
 
         // advance to the next question.
+    }
+
+
+    /**
+     * For whatever reason - except a database problem - the test has had to be aborted.
+     * So abort, save the interruption into the database, and disconnect the AMEDA device.
+     */
+    private void _abort_test()
+    {
+        ContentValues values = new ContentValues();
+        values.put(DB.TestTable.INTERRUPTED, 1);
+
+        SQLiteDatabase db = _database_helper.getWritableDatabase();
+        int success = db.update(DB.TestTable.TABLE_NAME, values, DB.TestTable._ID + " = " + _current_test_id, null);
+        db.close();
+
+        if (success == 0)
+        {
+            _database_helper.databaseError("Error updating test during abort operation. You will not be able to resume this test.");
+        }
+
+        // @TODO reference to ameda here.
+        device.Terminate();
+
+        finish();
+        return;
+    }
+
+
+    /**
+     * Function that is called when the end of the test is reached.
+     */
+    private void _end_of_test()
+    {
+        updateState(TestState.FINISHING);
+
+        ContentValues values = new ContentValues();
+        values.put(DB.TestTable.FINISHED, 1);
+
+        SQLiteDatabase db = _database_helper.getWritableDatabase();
+        int success = db.update(DB.TestTable.TABLE_NAME, values, DB.TestTable._ID + " = " + _current_test_id, null);
+        db.close();
+
+        if (success == 0)
+        {
+            _database_helper.databaseError("There has been an error recording that this test is finished.");
+        }
     }
 }

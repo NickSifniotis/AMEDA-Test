@@ -160,6 +160,6 @@ public class AMEDAImplementation implements AMEDA {
 
         _service.connect(ameda);
 
-        _current_state = (_service.getState() == BTState.CONNECTED) ? AMEDAState.READY : AMEDAState.ERROR;
+        _current_state = (_service.getState() == BTState.CONNECTED) ? AMEDAState.READY : AMEDAState.CONNECTION_ERROR;
     }
 }
