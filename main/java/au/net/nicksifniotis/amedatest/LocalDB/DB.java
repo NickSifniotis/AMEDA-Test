@@ -12,7 +12,7 @@ import java.util.Date;
 public class DB
 {
     public static final String filename = "AMEDA.db";
-    public static final int version = 3;
+    public static final int version = 4;
 
     /**
      * Blank constructor, to make sure nobody accidentally instantiates a copy of this non-object.
@@ -50,10 +50,16 @@ public class DB
 
         public static final String DATE = "Date";
         public static final String PERSON_ID = "PersonId";
+        public static final String STANDARD_TEST_ID = "StandardId";
+        public static final String INTERRUPTED = "Interrupted";
+        public static final String FINISHED = "Finished";
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
                                                 + _ID + " INTEGER PRIMARY KEY, "
                                                 + PERSON_ID + " INTEGER, "
+                                                + STANDARD_TEST_ID + " INTEGER, "
+                                                + INTERRUPTED + " INTEGER, "
+                                                + FINISHED + " INTEGER, "
                                                 + DATE + " TEXT)";
         public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
@@ -64,13 +70,25 @@ public class DB
 
         public static final String TEST_ID = "TestId";
         public static final String USER_ANSWER = "UserAnswer";
-        public static final String CORRECT_ANSWER = "CorrectAnswer";
+        public static final String QUESTION_NUMBER = "QuestionNumber";
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
                                                 + _ID + " INTEGER PRIMARY KEY, "
                                                 + TEST_ID + " INTEGER, "
                                                 + USER_ANSWER + " INTEGER, "
-                                                + CORRECT_ANSWER + " INTEGER)";
+                                                + QUESTION_NUMBER + " INTEGER)";
+        public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    }
+
+    public static abstract class StandardTestTable implements BaseColumns
+    {
+        public static final String TABLE_NAME = "_standard_test";
+
+        public static final String ANSWER_KEY = "AnswerKey";
+
+        public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
+                                                + _ID + " INTEGER PRIMARY KEY, "
+                                                + ANSWER_KEY + " TEXT)";
         public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 }

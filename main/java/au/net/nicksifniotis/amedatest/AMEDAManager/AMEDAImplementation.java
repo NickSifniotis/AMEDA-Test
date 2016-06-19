@@ -3,19 +3,14 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import au.net.nicksifniotis.amedatest.BluetoothManager.BTConstants;
 import au.net.nicksifniotis.amedatest.BluetoothManager.BTState;
 import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothService;
 import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothServiceImplementation;
-import au.net.nicksifniotis.amedatest.BluetoothManager.OldBluetoothServiceImplementation;
 
 /**
  * Created by nsifniotis on 9/06/16.
@@ -24,7 +19,6 @@ import au.net.nicksifniotis.amedatest.BluetoothManager.OldBluetoothServiceImplem
  */
 public class AMEDAImplementation implements AMEDA {
     private AMEDAState _current_state;
-    private Handler _message_handler;
     private Handler _test_handler;
     private BluetoothService _service;
     private Context _view;
@@ -33,60 +27,6 @@ public class AMEDAImplementation implements AMEDA {
         _current_state = AMEDAState.OFFLINE;
         _view = view;
         _test_handler = h;
-
-        _message_handler = new Handler(Looper.myLooper(), new Handler.Callback() {
-            public boolean handleMessage(Message msg) {
-                if (msg.what == 1)
-                {
-                    // this means READY so advance the AMEDA state.
-                    //_current_state = AMEDAState.READY;
-                    makeToast("State change: " + msg.arg1);
-                }
-                else if (msg.what == 2)
-                {
-                    // read message. What was read?
-                    byte[] data = (byte[]) msg.obj;
-                    String s = "";
-                    for (byte b: data)
-                        s += (char)b;
-
-                    makeToast ("Received " + s);
-                }
-                else if (msg.what == 3)
-                {
-                    // write message. What was sent?
-                    byte[] data = (byte[]) msg.obj;
-                    String s = "";
-                    for (byte b: data)
-                        s += (char)b;
-
-                    makeToast ("Sent " + s);
-
-                    Message test_message = _test_handler.obtainMessage(1);
-                    _test_handler.sendMessage(test_message);
-
-                }
-                else if (msg.what == BTConstants.MESSAGE_TOAST)
-                {
-                    Bundle bundle = msg.getData();
-                    makeToast (bundle.getString(BTConstants.TOAST));
-                }
-                else if (msg.what == 6)
-                {
-                    _current_state = AMEDAState.READY;
-                }
-
-//                Message tmsg = _test_handler.obtainMessage(1);
-//                _test_handler.sendMessage(tmsg);
-
-                return true;
-            }
-        });
-
-//        if (debug_mode)
-//            _service = new VirtualBTImplementation(_message_handler);
-//        else
-        //    _service = new OldBluetoothServiceImplementation(_message_handler);
 
         _service = new BluetoothServiceImplementation(view);
 
