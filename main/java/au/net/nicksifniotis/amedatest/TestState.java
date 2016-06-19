@@ -1,9 +1,10 @@
 package au.net.nicksifniotis.amedatest;
 
 /**
- * Created by nsifniotis on 30/05/16.
+ * Simple set of states for the AMEDA test state machine.
+ *
  */
 public enum TestState
 {
-    STARTING, SETTING, STEPPING, ANSWERING, FINISHING
+    STARTING, SETTING, SETTING_BLOCK, STEPPING, ANSWERING, FINISHING
 }

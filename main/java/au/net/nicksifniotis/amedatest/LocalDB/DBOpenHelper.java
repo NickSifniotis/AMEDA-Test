@@ -64,14 +64,24 @@ public class DBOpenHelper extends SQLiteOpenHelper
             newRowId = db.insert(DB.StandardTestTable.TABLE_NAME, null, values);
 
             if (newRowId == -1)
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(_my_context);
-                builder.setTitle("Error");
-                builder.setMessage("Unable to save record into the database.");
-                AlertDialog diag = builder.create();
-
-                diag.show();
-            }
+                databaseError ("Unable to save record into the database.");
         }
+    }
+
+
+    /**
+     * A database error has occured. Let the user know that the program isn't behaving the way
+     * it is supposed to.
+     *
+     * @param error The error message to display to the user.
+     */
+    public void databaseError (String error)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(_my_context);
+        builder.setTitle("Error");
+        builder.setMessage(error);
+        AlertDialog diag = builder.create();
+
+        diag.show();
     }
 }
