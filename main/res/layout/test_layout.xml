@@ -4,7 +4,27 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/test_plz_wait"
+        android:orientation="vertical"
+        android:id="@+id/test_starting_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Are you ready? Press the button to begin the test."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/save"
+            android:onClick="btn_begin_test"
+            android:id="@+id/test_btn_begin_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/test_setting_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -15,7 +35,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/test_step_on"
+        android:id="@+id/test_stepping_state"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -40,7 +60,7 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:id="@+id/test_question"
+        android:id="@+id/test_answering_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -85,4 +105,22 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/test_finishing_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="The test is finished. Your results have been saved and are available to be viewed."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/save"
+            android:onClick="btn_end_test"
+            android:id="@+id/test_btn_end_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

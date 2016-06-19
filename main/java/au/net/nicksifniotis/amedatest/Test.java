@@ -41,6 +41,8 @@ public class Test extends AppCompatActivity
     private int _current_test_id;
     private DBOpenHelper _database_helper;
 
+    private LinearLayout[] _state_layouts;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,9 +118,6 @@ public class Test extends AppCompatActivity
             finish();
             return;
         }
-
-
-        updateState(TestState.STARTING);
     }
 
 
@@ -155,8 +154,56 @@ public class Test extends AppCompatActivity
             finish();
         }
 
-        nextQuestion();
+        _connect_to_layouts();
+
+
+        updateState(TestState.STARTING);
     }
+
+
+    /**
+     * Finds the different layout controls on the UI and connects them to a bunch of local vars.
+     * This has been split into it's own function, so that the state controller can call it directly
+     * if it ever detects that a connection to one of these layouts is lost.
+     */
+    private void _connect_to_layouts()
+    {
+        _state_layouts = new LinearLayout[TestState.values().length];
+        _state_layouts[TestState.STARTING.ordinal()] = (LinearLayout)findViewById(R.id.test_starting_state);
+        _state_layouts[TestState.SETTING.ordinal()] = (LinearLayout)findViewById(R.id.test_setting_state);
+        _state_layouts[TestState.SETTING_BLOCK.ordinal()] = (LinearLayout)findViewById(R.id.test_setting_state);
+        _state_layouts[TestState.STEPPING.ordinal()] = (LinearLayout)findViewById(R.id.test_stepping_state);
+        _state_layouts[TestState.ANSWERING.ordinal()] = (LinearLayout)findViewById(R.id.test_answering_state);
+        _state_layouts[TestState.FINISHING.ordinal()] = (LinearLayout)findViewById(R.id.test_finishing_state);
+    }
+
+
+    /**
+     * Safely sets the 'visibility' parameter of the given LinearLayout.
+     *
+     * This function is called by updateState() only. It contains safety code to ensure that
+     * calls to null pointers are never made. It will try to 'reload' the pointers to the layouts,
+     * and only if it can't do that, will it crap out.
+     *
+     * @param target Which state layout to target.
+     * @param visibility True if the layout is to be made visible, false otherwise.
+     */
+    private void _toggle_layout (TestState target, boolean visibility)
+    {
+        if (_state_layouts[target.ordinal()] == null)
+            _connect_to_layouts();
+
+        // try it again.
+        if (_state_layouts[target.ordinal()] == null)
+        {
+            makeToast("Catastrophic failure connecting to layouts in the UI. This error should never ever be seen.");
+            finish();
+            return;
+        }
+
+        _state_layouts[target.ordinal()].setVisibility((visibility) ? View.VISIBLE : View.GONE);
+    }
+
 
 
     private void ameda_updated()
@@ -217,55 +264,43 @@ public class Test extends AppCompatActivity
 
     private void updateState(TestState new_state)
     {
-        LinearLayout l;
+        current_state = new_state;
         switch (current_state)
         {
             case STARTING:
-                l = (LinearLayout)findViewById(R.id.test_plz_wait);
-                l.setVisibility(View.GONE);
-
-                l = (LinearLayout)findViewById(R.id.test_step_on);
-                l.setVisibility(View.GONE);
-
-                l = (LinearLayout)findViewById(R.id.test_question);
-                l.setVisibility(View.GONE);
-
-//                l = (LinearLayout)findViewById(R.id.test_plz_wait);
-//                l.setVisibility(View.GONE);
+                _toggle_layout(TestState.STARTING, true);
+                _toggle_layout(TestState.SETTING, false);
+                _toggle_layout(TestState.STEPPING, false);
+                _toggle_layout(TestState.ANSWERING, false);
+                _toggle_layout(TestState.FINISHING, false);
                 break;
             case SETTING:
-                l = (LinearLayout)findViewById(R.id.test_plz_wait);
-                l.setVisibility(View.VISIBLE);
-
-                l = (LinearLayout)findViewById(R.id.test_step_on);
-                l.setVisibility(View.GONE);
-
-                l = (LinearLayout)findViewById(R.id.test_question);
-                l.setVisibility(View.GONE);
-
+                _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.SETTING, true);
+                _toggle_layout(TestState.STEPPING, false);
+                _toggle_layout(TestState.ANSWERING, false);
+                _toggle_layout(TestState.FINISHING, false);
                 break;
             case STEPPING:
-                l = (LinearLayout)findViewById(R.id.test_plz_wait);
-                l.setVisibility(View.GONE);
-
-                l = (LinearLayout)findViewById(R.id.test_step_on);
-                l.setVisibility(View.VISIBLE);
-
-                l = (LinearLayout)findViewById(R.id.test_question);
-                l.setVisibility(View.GONE);
+                _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.SETTING, false);
+                _toggle_layout(TestState.STEPPING, true);
+                _toggle_layout(TestState.ANSWERING, false);
+                _toggle_layout(TestState.FINISHING, false);
                 break;
             case ANSWERING:
-                l = (LinearLayout)findViewById(R.id.test_plz_wait);
-                l.setVisibility(View.GONE);
-
-                l = (LinearLayout)findViewById(R.id.test_step_on);
-                l.setVisibility(View.GONE);
-
-                l = (LinearLayout)findViewById(R.id.test_question);
-                l.setVisibility(View.VISIBLE);
-
+                _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.SETTING, false);
+                _toggle_layout(TestState.STEPPING, false);
+                _toggle_layout(TestState.ANSWERING, true);
+                _toggle_layout(TestState.FINISHING, false);
                 break;
             case FINISHING:
+                _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.SETTING, false);
+                _toggle_layout(TestState.STEPPING, false);
+                _toggle_layout(TestState.ANSWERING, false);
+                _toggle_layout(TestState.FINISHING, true);
                 break;
         }
     }
@@ -302,6 +337,19 @@ public class Test extends AppCompatActivity
     {
         record_user_response(5);
     }
+
+
+    public void btn_begin_test(View view)
+    {
+        // @TODO implement
+    }
+
+
+    public void btn_end_test (View view)
+    {
+        // TODO implement
+    }
+
 
     public void makeToast (String message)
     {
