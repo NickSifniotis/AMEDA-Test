@@ -6,5 +6,5 @@ package au.net.nicksifniotis.amedatest;
  */
 public enum TestState
 {
-    STARTING, SETTING, SETTING_BLOCK, STEPPING, ANSWERING, FINISHING
+    STARTING, MIDDLE, SETTING, STEPPING, ANSWERING, FINISHING
 }

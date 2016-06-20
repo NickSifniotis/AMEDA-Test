@@ -19,6 +19,7 @@ import java.util.Random;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAState;
+import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 
@@ -37,7 +38,6 @@ public class Test extends AppCompatActivity
 
     private TestState current_state;
     private AMEDA device;
-    private Handler _my_handler;
     private int _current_test_id;
     private DBOpenHelper _database_helper;
 
@@ -60,17 +60,6 @@ public class Test extends AppCompatActivity
             finish();
             return;
         }
-
-
-        _my_handler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                makeToast("Message received: " + msg.what);
-                ameda_updated();
-                return true;
-            }
-        });
-
 
         _database_helper = new DBOpenHelper(this);
         Random r = new Random();
@@ -146,7 +135,8 @@ public class Test extends AppCompatActivity
 
         try
         {
-            device = new AMEDAImplementation(this, _my_handler, false);
+            //device = new AMEDAImplementation(this, _my_handler, false);
+            device = new VirtualAMEDA();
         }
         catch (Exception e)
         {
@@ -171,7 +161,6 @@ public class Test extends AppCompatActivity
         _state_layouts = new LinearLayout[TestState.values().length];
         _state_layouts[TestState.STARTING.ordinal()] = (LinearLayout)findViewById(R.id.test_starting_state);
         _state_layouts[TestState.SETTING.ordinal()] = (LinearLayout)findViewById(R.id.test_setting_state);
-        _state_layouts[TestState.SETTING_BLOCK.ordinal()] = (LinearLayout)findViewById(R.id.test_setting_state);
         _state_layouts[TestState.STEPPING.ordinal()] = (LinearLayout)findViewById(R.id.test_stepping_state);
         _state_layouts[TestState.ANSWERING.ordinal()] = (LinearLayout)findViewById(R.id.test_answering_state);
         _state_layouts[TestState.FINISHING.ordinal()] = (LinearLayout)findViewById(R.id.test_finishing_state);
@@ -205,85 +194,60 @@ public class Test extends AppCompatActivity
     }
 
 
-
-    private void ameda_updated()
-    {
-        if (device.Status() == AMEDAState.CONNECTION_ERROR)
-        {
-            // we have a frikkin problem.
-            _abort_test();
-            return;
-        }
-
-        switch (current_state)
-        {
-            case STARTING:
-                // wtf?
-                break;
-            case SETTING:
-                // have just finished moving to the position so set the next state.
-                updateState(TestState.STEPPING);
-                break;
-            case STEPPING:
-                break;
-            case ANSWERING:
-                break;
-        }
-    }
-
-
+    /**
+     * Proceed to the next question in the test.
+     *
+     * Move the AMEDA to the next position (block until the device reports ready) and advance
+     * to the STEP state.
+     */
     private void _next_question()
     {
         updateState(TestState.SETTING);
 
-        if (device.Status() == AMEDAState.CONNECTION_ERROR)
-        {
-            // abortive code is abortive.
-            makeToast("AMEDA connection error. This test is being aborted.");
-            _abort_test();
-            return;
-        }
+        _current_question++;
 
-        if (device.Status() == AMEDAState.READY)
-        {
-            _current_question++;
-
-            if (_current_question >= _num_questions)
-                _end_of_test();
-            else
-                setNewPosition(_test_questions[_current_question]);
-        }
+        if (_current_question >= _num_questions)
+            _end_of_test();
         else
         {
-            makeToast("AMEDA is reporting an unusual state. " + device.Status().toString());
+            makeToast("Setting device to position " + _test_questions[_current_question]);
+
+            boolean success;
+
+            success = device.GoHome();
+            if (!success)
+                _abort_test();
+
+            success = device.GoToPosition(_test_questions[_current_question]);
+            if (!success)
+                _abort_test();
+
+            updateState(TestState.STEPPING);
         }
     }
 
 
-    private void setNewPosition (int pos)
-    {
-        makeToast("Setting device to position " + pos);
-        updateState(TestState.SETTING_BLOCK);
-
-        device.GoToPosition(pos);
-    }
-
-
+    /**
+     * Update the GUI components to match the current state of the test state machine.
+     *@TODO tomorrow morning add the 'middle' state to this
+     * @param new_state The new state to advance to.
+     */
     private void updateState(TestState new_state)
     {
+        current_state = new_state;
         switch (new_state)
         {
             case STARTING:
                 _toggle_layout(TestState.STARTING, true);
+                _toggle_layout(TestState.MIDDLE, false);
                 _toggle_layout(TestState.SETTING, false);
                 _toggle_layout(TestState.STEPPING, false);
                 _toggle_layout(TestState.ANSWERING, false);
                 _toggle_layout(TestState.FINISHING, false);
-
-                current_state = new_state;
                 break;
             case SETTING:
                 _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.MIDDLE, false);
                 _toggle_layout(TestState.SETTING, true);
                 _toggle_layout(TestState.STEPPING, false);
                 _toggle_layout(TestState.ANSWERING, false);
@@ -291,6 +255,7 @@ public class Test extends AppCompatActivity
                 break;
             case STEPPING:
                 _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.MIDDLE, false);
                 _toggle_layout(TestState.SETTING, false);
                 _toggle_layout(TestState.STEPPING, true);
                 _toggle_layout(TestState.ANSWERING, false);
@@ -298,6 +263,7 @@ public class Test extends AppCompatActivity
                 break;
             case ANSWERING:
                 _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.MIDDLE, false);
                 _toggle_layout(TestState.SETTING, false);
                 _toggle_layout(TestState.STEPPING, false);
                 _toggle_layout(TestState.ANSWERING, true);
@@ -305,6 +271,7 @@ public class Test extends AppCompatActivity
                 break;
             case FINISHING:
                 _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.MIDDLE, false);
                 _toggle_layout(TestState.SETTING, false);
                 _toggle_layout(TestState.STEPPING, false);
                 _toggle_layout(TestState.ANSWERING, false);
@@ -324,6 +291,10 @@ public class Test extends AppCompatActivity
         updateState(TestState.ANSWERING);
     }
 
+    public void btn_Next_Middle (View view)
+    {
+        //@TODO
+    }
 
     public void btn_1(View view)
     {
@@ -411,6 +382,7 @@ public class Test extends AppCompatActivity
         }
 
         // advance to the next question.
+        _next_question();
     }
 
 

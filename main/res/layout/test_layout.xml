@@ -24,6 +24,29 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/test_middle_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Step onto the middle of the plate so that the board is horizontal."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:src="@drawable/step_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="@string/save"
+            android:onClick="btn_Next_Middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/test_setting_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
