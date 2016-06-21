@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,86 +11,100 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 
 
-public class NewRecordActivity extends AppCompatActivity {
-    private static DBOpenHelper testRecordDb;
+public class NewRecordActivity extends AppCompatActivity
+{
+    private EditText _name;
+    private EditText _address;
+    private EditText _dob;
+    private EditText _education;
+    private EditText _hobbies;
+    private EditText _notes;
+    private Spinner _gender;
+    private ArrayAdapter<CharSequence> _gender_adapter;
+    private LinearLayout _tests_taken_layout;
 
+    private static DBOpenHelper _database_helper;
+    private int _user_id;
+
+
+    /**
+     * OnCreation of the activity, do set up stuff.
+     *
+     * This includes initialising those parts of the GUI that need to be initialised, establishing
+     * a database connection and extracting whatever information has been passed through to
+     * this activity.
+     *
+     * @param savedInstanceState Any data that might be passed to this method by the caller.
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.manage_person_record);
 
-        Spinner genders = (Spinner)findViewById(R.id.spn_Gender);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        _gender = (Spinner)findViewById(R.id.spn_Gender);
+        _gender_adapter = ArrayAdapter.createFromResource(this,
                 R.array.genders, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genders.setAdapter(adapter);
+        _gender_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (_gender != null)
+            _gender.setAdapter(_gender_adapter);
 
-        testRecordDb = new DBOpenHelper(this);
+
+        _database_helper = new DBOpenHelper(this);
 
         Intent intent = getIntent();
-        int record_id = intent.getIntExtra("id", -1);
-        ((EditText)findViewById(R.id.txt_Name)).setText("record id is " + record_id);
-        if (record_id == -1)
-        {
-            // setting up for a new record
-            LinearLayout l;
-            l = (LinearLayout)findViewById(R.id.newRec_hidden1);
-            l.setVisibility(View.GONE);
+        _user_id = intent.getIntExtra("id", -1);
+    }
 
-            ((TextView)findViewById(R.id.txt_Name)).setText("record id is -1");
-        }
+
+    /**
+     * OnStart method call - populate the GUI components with relevant data.
+     * Link the GUI components to this class's member variables.
+     */
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        _get_gui_components();
+
+
+        // If we have been given an existing user record to edit, load the data from the 'base
+        // and populate the GUI components.
+        if (_user_id == -1)
+            _tests_taken_layout.setVisibility(View.GONE);
         else
         {
-            // loading data for an existing record
-            SQLiteDatabase db = testRecordDb.getReadableDatabase();
-
-            String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME + " WHERE " + DB.PersonTable._ID + " = " + record_id;
-            Cursor c = db.rawQuery(query, null);
+            SQLiteDatabase db = _database_helper.getReadableDatabase();
+            Cursor c = db.query(DB.PersonTable.TABLE_NAME, null,
+                    DB.PersonTable._ID + " = " + _user_id,
+                    null, null, null, null);
 
             c.moveToFirst();
-            while (!c.isAfterLast())
-            {
-                try {
-                    String data;
 
-                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.NAME));
-                    ((EditText) findViewById(R.id.txt_Name)).setText(data);
+            _name.setText     (c.getString(c.getColumnIndex(DB.PersonTable.NAME)));
+            _address.setText  (c.getString(c.getColumnIndex(DB.PersonTable.ADDRESS)));
+            _dob.setText      (c.getString(c.getColumnIndex(DB.PersonTable.DOB)));
+            _education.setText(c.getString(c.getColumnIndex(DB.PersonTable.EDUCATION)));
+            _hobbies.setText  (c.getString(c.getColumnIndex(DB.PersonTable.HOBBIES)));
+            _notes.setText    (c.getString(c.getColumnIndex(DB.PersonTable.NOTES)));
 
-                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.GENDER));
-                    ((Spinner) findViewById(R.id.spn_Gender)).setSelection(0);
+            _set_gender_spinner(c.getString(c.getColumnIndex(DB.PersonTable.GENDER)));
 
-                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.EDUCATION));
-                    ((EditText) findViewById(R.id.txt_Education)).setText(data);
-
-                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.ADDRESS));
-                    ((EditText) findViewById(R.id.txt_Address)).setText(data);
-
-                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.HOBBIES));
-                    ((EditText) findViewById(R.id.txt_Hobbies)).setText(data);
-
-                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.NOTES));
-                    ((EditText) findViewById(R.id.txt_Notes)).setText(data);
-
-                    data = c.getString(c.getColumnIndexOrThrow(DB.PersonTable.DOB));
-                    ((EditText) findViewById(R.id.txt_DOB)).setText(data);
-                }
-                catch (Exception e) {
-                    Toast toastmaster = Toast.makeText(this, "Error loading record from database." + e.getMessage(), Toast.LENGTH_SHORT);
-                    toastmaster.show();
-                }
-            }
             c.close();
+
+            _tests_taken_layout.setVisibility(View.VISIBLE);
         }
     }
 
+
+    /**
+     * Button press event handlers.
+     */
     public void btn_Cancel(View view)
     {
         finish();
@@ -99,35 +112,92 @@ public class NewRecordActivity extends AppCompatActivity {
 
     public void btn_Done(View view)
     {
-        SQLiteDatabase db = testRecordDb.getWritableDatabase();
+        _save_data();
+    }
 
-        ContentValues values = new ContentValues();
 
-        try {
-            values.put(DB.PersonTable.NAME, ((EditText) findViewById(R.id.txt_Name)).getText().toString());
-            values.put(DB.PersonTable.DOB, ((EditText) findViewById(R.id.txt_DOB)).getText().toString());
-            values.put(DB.PersonTable.GENDER, ((Spinner) findViewById(R.id.spn_Gender)).getSelectedItem().toString());
-            values.put(DB.PersonTable.EDUCATION, ((EditText) findViewById(R.id.txt_Education)).getText().toString());
-            values.put(DB.PersonTable.ADDRESS, ((EditText) findViewById(R.id.txt_Address)).getText().toString());
-            values.put(DB.PersonTable.HOBBIES, ((EditText) findViewById(R.id.txt_Hobbies)).getText().toString());
-            values.put(DB.PersonTable.NOTES, ((EditText) findViewById(R.id.txt_Notes)).getText().toString());
-        }
-        catch (Exception e) {
-            Toast toastmaster = Toast.makeText(this, "Error saving record to database." + e.getMessage(), Toast.LENGTH_SHORT);
-            toastmaster.show();
-        }
+    /**
+     * Create the links to the GUI components for easy referencing.
+     */
+    private void _get_gui_components()
+    {
+        _name      = (EditText) findViewById(R.id.txt_Name);
+        _dob       = (EditText) findViewById(R.id.txt_DOB);
+        _address   = (EditText) findViewById(R.id.txt_Address);
+        _education = (EditText) findViewById(R.id.txt_Education);
+        _hobbies   = (EditText) findViewById(R.id.txt_Hobbies);
+        _notes     = (EditText) findViewById(R.id.txt_Notes);
 
-        long newRowId;
-        newRowId = db.insert(DB.PersonTable.TABLE_NAME, null, values);
+        _gender    = (Spinner)  findViewById(R.id.spn_Gender);
 
-        if (newRowId == -1)
+        _tests_taken_layout = (LinearLayout) findViewById(R.id.newRec_tests_taken_list);
+    }
+
+
+    /**
+     * Set the gender spinner to have selected a particular value.
+     *
+     * @param value The value to set. If this value doesn't exist in the spinner, this function
+     *              does nothing.
+     */
+    private void _set_gender_spinner (String value)
+    {
+        int position = _gender_adapter.getPosition(value);
+
+        if (position >= 0)
+            _gender.setSelection(position);
+    }
+
+
+    /**
+     * Creates and returns a ContentValues object that contains the stack of data that
+     * is to be saved into the database.
+     *
+     * Replicating code is really fucking stupid so both the insert() and update() methods
+     * call this code.
+     *
+     * @return A ContentValues object that has been populated with the data that the user provided.
+     */
+    private ContentValues _get_responses_for_saving()
+    {
+        ContentValues res = new ContentValues();
+
+        res.put(DB.PersonTable.NAME     , _name.getText().toString());
+        res.put(DB.PersonTable.ADDRESS  , _address.getText().toString());
+        res.put(DB.PersonTable.GENDER   , _gender.getSelectedItem().toString());
+        res.put(DB.PersonTable.DOB      , _dob.getText().toString());
+        res.put(DB.PersonTable.EDUCATION, _education.getText().toString());
+        res.put(DB.PersonTable.HOBBIES  , _hobbies.getText().toString());
+        res.put(DB.PersonTable.NOTES    , _notes.getText().toString());
+
+        return res;
+    }
+
+
+    /**
+     * Save the data to the persistent storage device.
+     *
+     * It's an INSERT for a new record and UPDATE for existing.
+     */
+    private void _save_data()
+    {
+        SQLiteDatabase db = _database_helper.getWritableDatabase();
+        ContentValues values = _get_responses_for_saving();
+
+        if (_user_id > 0)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Error");
-            builder.setMessage("Unable to save record into the database.");
-            AlertDialog diag = builder.create();
+            int victory = db.update(DB.PersonTable.TABLE_NAME, values,
+                    DB.PersonTable._ID + " = " + _user_id, null);
 
-            diag.show();
+            if (victory == 0)       // Victory? What victory???
+                _database_helper.databaseError("Unable to update user data in the database.");
+        }
+        else
+        {
+            long newRowId = db.insert(DB.PersonTable.TABLE_NAME, null, values);
+
+            if (newRowId == -1)
+                _database_helper.databaseError("Unable to save new person record in database.");
         }
 
         finish();

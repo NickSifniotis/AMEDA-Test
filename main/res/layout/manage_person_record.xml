@@ -150,7 +150,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/newRec_hidden1"
+        android:id="@+id/newRec_tests_taken_list"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
