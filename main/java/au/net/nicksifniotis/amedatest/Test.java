@@ -197,33 +197,37 @@ public class Test extends AppCompatActivity
     /**
      * Proceed to the next question in the test.
      *
-     * Move the AMEDA to the next position (block until the device reports ready) and advance
-     * to the STEP state.
      */
     private void _next_question()
     {
-        updateState(TestState.SETTING);
-
         _current_question++;
 
         if (_current_question >= _num_questions)
             _end_of_test();
-        else
-        {
-            makeToast("Setting device to position " + _test_questions[_current_question]);
 
-            boolean success;
+        updateState(TestState.MIDDLE);
+    }
 
-            success = device.GoHome();
-            if (!success)
-                _abort_test();
 
-            success = device.GoToPosition(_test_questions[_current_question]);
-            if (!success)
-                _abort_test();
+    /**
+     * Move the AMEDA to the next position (block until the device reports ready) and advance
+     * to the STEP state.
+     */
+    private void _move_to_next_pos()
+    {
+        updateState(TestState.SETTING);
+        makeToast("Setting device to position " + _test_questions[_current_question]);
 
-            updateState(TestState.STEPPING);
-        }
+        boolean success;
+        success = device.GoHome();
+        if (!success)
+            _abort_test();
+
+        success = device.GoToPosition(_test_questions[_current_question]);
+        if (!success)
+            _abort_test();
+
+        updateState(TestState.STEPPING);
     }
 
 
@@ -240,6 +244,14 @@ public class Test extends AppCompatActivity
             case STARTING:
                 _toggle_layout(TestState.STARTING, true);
                 _toggle_layout(TestState.MIDDLE, false);
+                _toggle_layout(TestState.SETTING, false);
+                _toggle_layout(TestState.STEPPING, false);
+                _toggle_layout(TestState.ANSWERING, false);
+                _toggle_layout(TestState.FINISHING, false);
+                break;
+            case MIDDLE:
+                _toggle_layout(TestState.STARTING, false);
+                _toggle_layout(TestState.MIDDLE, true);
                 _toggle_layout(TestState.SETTING, false);
                 _toggle_layout(TestState.STEPPING, false);
                 _toggle_layout(TestState.ANSWERING, false);
@@ -293,7 +305,7 @@ public class Test extends AppCompatActivity
 
     public void btn_Next_Middle (View view)
     {
-        //@TODO
+        _move_to_next_pos();
     }
 
     public void btn_1(View view)

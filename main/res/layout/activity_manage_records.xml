@@ -17,6 +17,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="New"
+            android:onClick="btn_manage_record_new">
+
+        </Button>
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

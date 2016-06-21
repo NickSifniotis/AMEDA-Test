@@ -97,7 +97,6 @@ public class AMEDAImplementation implements AMEDA {
         return true;
     }
 
-    @Override
     public AMEDAState Status() {
         return _current_state;
     }
@@ -114,7 +113,6 @@ public class AMEDAImplementation implements AMEDA {
         t.show();
     }
 
-    @Override
     public boolean BeepTest(int num_beeps) {
         try {
             AMEDAInstruction instruction = AMEDAInstructionFactory.Create()

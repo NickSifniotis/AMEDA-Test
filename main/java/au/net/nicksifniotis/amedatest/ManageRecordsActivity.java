@@ -42,7 +42,7 @@ public class ManageRecordsActivity extends AppCompatActivity {
                 SQLiteCursor entry = (SQLiteCursor) parent.getAdapter().getItem(position);
                 int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
 
-                Intent manage_record_intent = new Intent(getBaseContext(), NewRecordActivity.class);
+                Intent manage_record_intent = new Intent(parent.getContext(), NewRecordActivity.class);
                 manage_record_intent.putExtra("id", record_id);
 
                 entry.close();
@@ -51,5 +51,17 @@ public class ManageRecordsActivity extends AppCompatActivity {
                 startActivity(manage_record_intent);
             }
         });
+    }
+
+
+    /**
+     * Event handler for the 'new record' button.
+     *
+     * @param view
+     */
+    public void btn_manage_record_new(View view)
+    {
+        Intent new_record_intent = new Intent (this, NewRecordActivity.class);
+        startActivity(new_record_intent);
     }
 }
