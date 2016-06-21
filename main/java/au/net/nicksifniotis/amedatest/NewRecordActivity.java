@@ -105,9 +105,14 @@ public class NewRecordActivity extends AppCompatActivity
     /**
      * Button press event handlers.
      */
-    public void btn_Cancel(View view)
+    public void btn_newRecord_Cancel(View view)
     {
         finish();
+    }
+
+    public void btn_newRecord_Delete(View view)
+    {
+        _delete_record();
     }
 
     public void btn_Done(View view)
@@ -201,5 +206,29 @@ public class NewRecordActivity extends AppCompatActivity
         }
 
         finish();
+    }
+
+
+    /**
+     * Delete the existing record from the system - including all tests that this person may
+     * have taken.
+     *
+     */
+    private void _delete_record()
+    {
+        // @TODO finish this tomorrow morning. Remember the point of this SQL is to delete
+        // entries from the Test and Question tables as well. So grab all the relevant test ids.
+        if (_user_id == -1)
+        {
+            /// this should never happen
+            _database_helper.databaseError("Error deleting non-existent user.");
+            finish();
+        }
+        else
+        {
+            // this is actually a fairly large deletion process.
+            SQLiteDatabase db = _database_helper.getReadableDatabase();
+          //  Cursor c = db.rawQuery("SELECT ")
+        }
     }
 }

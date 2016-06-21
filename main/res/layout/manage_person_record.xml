@@ -191,8 +191,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:onClick="btn_Cancel"
-            android:id="@+id/btn_newrecord_cancel"
+            android:onClick="btn_newRecord_Delete"
+            android:id="@+id/btn_newrecord_delete"
+            android:text="@string/save" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:onClick="btn_newRecord_Cancel"
+            android:id="@+id/btn_newRecord_cancel"
             android:text="@string/cancel" />
 
     </LinearLayout>

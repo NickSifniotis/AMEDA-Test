@@ -2,7 +2,6 @@ package au.net.nicksifniotis.amedatest;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -65,24 +65,27 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void btn_Tute(View view)
+
+    /**
+     * Button click event handlers.
+     *
+     * @param view
+     */
+    public void btn_home_tutorial(View view)
     {
         Tutorial();
     }
 
-    public void btn_Famil(View view)
+    public void btn_home_familiarise(View view)
     {
         Familiarise();
     }
 
-    public void btn_NewRec(View view)
+    public void btn_home_new_user(View view)
     {
         NewRecord();
     }
 
-    public void btn_RunTest(View view) { RunTest(); }
-
-    public void btn_Connect (View view) { Connect(); }
 
     /*
         The action methods that do the things.
@@ -106,8 +109,24 @@ public class HomeActivity extends AppCompatActivity {
         startActivity (familiarisationIntent);
     }
 
-    private void Calibrate() {
-        status_bar.setText("Calibrate");
+
+    /**
+     * Calibrate the AMEDA device. The call is a blocking call that will suspend execution
+     * until the AMEDA confirms that it has succeeded (or otherwise..)
+     *
+     */
+    private void Calibrate()
+    {
+        makeToast("Calibrating ..");
+
+        AMEDA device = new VirtualAMEDA();
+
+        if (!device.Calibrate())
+            makeToast ("Calibration failed. Try again.");
+        else
+            makeToast ("Calibration succeeded.");
+
+        device.Terminate();
     }
 
     private void DeleteRecord() {
@@ -117,65 +136,6 @@ public class HomeActivity extends AppCompatActivity {
     private void ManageRecords() {
         Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
         startActivity(manageRecIntent);
-    }
-
-    private void RunTest() {
-        Intent runTestIntent = new Intent (this, Test.class);
-        startActivity(runTestIntent);
-
-        // run an actual connection test
-//        Handler h = new Handler(Looper.getMainLooper());
-//        AMEDA device = null;
-//        try {
-////            device = new AMEDAImplementation(this, h, false);
-////            makeToast("AMEDA connected!");
-//
-//       //     _device.Calibrate();
-//       //     makeToast("Calibration command sent!");
-//       //     Thread.sleep(2000);
-//
-//       //     _device.BeepTest(3);
-//
-//            _device.GoToPosition(1);
-//            makeToast ("Moved to position 1");
-//          //  Thread.sleep (2000);
-//
-//            _device.BeepTest(3);
-//
-//            _device.GoToPosition(3);
-//            makeToast ("Moved to position 3");
-//          //  Thread.sleep (2000);
-//
-//            _device.BeepTest(3);
-//
-//            _device.GoToPosition(5);
-//            makeToast ("Moved to position 5");
-//          //  Thread.sleep (2000);
-//
-//            _device.Terminate();
-//        }
-//        catch (Exception e)
-//        {
-//            makeToast("Error connecting to AMEDA");
-//            return;
-//        }
-
-
-    }
-
-    public void Connect ()
-    {
-        _handler = new Handler(Looper.getMainLooper());
-        try
-        {
-            _device = new AMEDAImplementation(this, _handler, false);
-        }
-        catch (Exception e)
-        {
-            makeToast (e.getMessage());
-        }
-
-        makeToast ("AMEDA seems to be connected");
     }
 
 

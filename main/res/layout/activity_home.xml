@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Tutorial"
         android:id="@+id/tute_btn"
-        android:onClick="btn_Tute"
+        android:onClick="btn_home_tutorial"
         android:layout_centerHorizontal="true" />
 
     <Button
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="Familiarisation Task"
         android:id="@+id/famil_btn"
-        android:onClick="btn_Famil"
+        android:onClick="btn_home_familiarise"
         android:layout_below="@+id/tute_btn"
         android:layout_centerHorizontal="true" />
 
@@ -31,27 +31,10 @@
         android:layout_height="wrap_content"
         android:text="New Record"
         android:id="@+id/btn_new"
-        android:onClick="btn_NewRec"
+        android:onClick="btn_home_new_user"
         android:layout_below="@+id/famil_btn"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run Test"
-        android:id="@+id/btn_runtest"
-        android:onClick="btn_RunTest"
-        android:layout_below="@+id/btn_new"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Connect"
-        android:id="@+id/btn_connect"
-        android:onClick="btn_Connect"
-        android:layout_below="@+id/btn_runtest"
-        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
