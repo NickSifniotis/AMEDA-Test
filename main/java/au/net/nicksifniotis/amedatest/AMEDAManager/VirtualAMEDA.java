@@ -70,4 +70,19 @@ public class VirtualAMEDA implements AMEDA
     public void Connect()
     {
     }
+
+
+    /**
+     * Implementation of 'beep'.
+     *
+     * It should actually play a 'beep' sound I reckon.
+     *
+     * @param num_beeps The number of beeps to emit.
+     * @return True if successful, false otherwise.
+     */
+    @Override
+    public boolean Beep(int num_beeps)
+    {
+        return true;
+    }
 }

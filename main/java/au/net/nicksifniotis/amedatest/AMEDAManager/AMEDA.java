@@ -21,5 +21,5 @@ public interface AMEDA
 
     public void Connect();
 
-  //  public boolean BeepTest(int num_beeps);
+    public boolean Beep(int num_beeps);
 }

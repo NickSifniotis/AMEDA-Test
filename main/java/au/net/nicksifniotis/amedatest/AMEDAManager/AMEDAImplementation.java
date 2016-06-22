@@ -138,7 +138,10 @@ public class AMEDAImplementation implements AMEDA {
         t.show();
     }
 
-    public boolean BeepTest(int num_beeps) {
+
+    @Override
+    public boolean Beep(int num_beeps)
+    {
         try {
             AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                     .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
