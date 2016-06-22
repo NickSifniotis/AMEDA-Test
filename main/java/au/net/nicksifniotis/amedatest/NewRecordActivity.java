@@ -174,6 +174,7 @@ public class NewRecordActivity extends AppCompatActivity
         res.put(DB.PersonTable.EDUCATION, _education.getText().toString());
         res.put(DB.PersonTable.HOBBIES  , _hobbies.getText().toString());
         res.put(DB.PersonTable.NOTES    , _notes.getText().toString());
+        res.put(DB.PersonTable.ACTIVE   , Integer.toString(1));
 
         return res;
     }

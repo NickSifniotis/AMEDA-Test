@@ -12,7 +12,7 @@ import java.util.Date;
 public class DB
 {
     public static final String filename = "AMEDA.db";
-    public static final int version = 4;
+    public static final int version = 5;
 
     /**
      * Blank constructor, to make sure nobody accidentally instantiates a copy of this non-object.
@@ -30,6 +30,7 @@ public class DB
         public static final String ADDRESS = "Address";
         public static final String HOBBIES = "Hobbies";
         public static final String NOTES = "Notes";
+        public static final String ACTIVE = "Active";
 
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
@@ -40,7 +41,8 @@ public class DB
                                                 + EDUCATION + " TEXT, "
                                                 + ADDRESS + " TEXT, "
                                                 + HOBBIES + " TEXT, "
-                                                + NOTES + " TEXT)";
+                                                + NOTES + " TEXT, "
+                                                + ACTIVE + " INTEGER)";
         public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 
@@ -53,6 +55,7 @@ public class DB
         public static final String STANDARD_TEST_ID = "StandardId";
         public static final String INTERRUPTED = "Interrupted";
         public static final String FINISHED = "Finished";
+        public static final String ACTIVE = "Active";
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
                                                 + _ID + " INTEGER PRIMARY KEY, "
@@ -60,7 +63,8 @@ public class DB
                                                 + STANDARD_TEST_ID + " INTEGER, "
                                                 + INTERRUPTED + " INTEGER, "
                                                 + FINISHED + " INTEGER, "
-                                                + DATE + " TEXT)";
+                                                + DATE + " TEXT, "
+                                                + ACTIVE + " INTEGER)";
         public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
 

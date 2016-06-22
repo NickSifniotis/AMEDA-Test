@@ -23,34 +23,34 @@ public class ManageRecordsActivity extends AppCompatActivity {
 
         DBOpenHelper testDB = new DBOpenHelper(this);
         final SQLiteDatabase db = testDB.getReadableDatabase();
-
-//        String query = "SELECT p." + DB.PersonTable.NAME + " AS name, p._ID AS id, COUNT(t." + DB.TestTable.DATE + ") AS count"
-//            + " FROM " + DB.PersonTable.TABLE_NAME + " p, " + DB.TestTable.TABLE_NAME + " t"
-//            + " WHERE p._ID = t._ID";
-
-        String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME;
+        String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME + " WHERE " + DB.PersonTable.ACTIVE + " = 1";
 
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
 
         RecordCursorAdaptor rca = new RecordCursorAdaptor(this, c, 0);
         ListView list = (ListView) findViewById(R.id.list_Records);
-        list.setAdapter(rca);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SQLiteCursor entry = (SQLiteCursor) parent.getAdapter().getItem(position);
-                int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
+        if (list != null)
+        {
+            list.setAdapter(rca);
 
-                Intent manage_record_intent = new Intent(parent.getContext(), NewRecordActivity.class);
-                manage_record_intent.putExtra("id", record_id);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    SQLiteCursor entry = (SQLiteCursor) parent.getAdapter().getItem(position);
+                    int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
 
-                entry.close();
-                db.close();
+                    Intent manage_record_intent = new Intent(parent.getContext(), NewRecordActivity.class);
+                    manage_record_intent.putExtra("id", record_id);
 
-                startActivity(manage_record_intent);
-            }
-        });
+                    entry.close();
+                    db.close();
+
+                    startActivity(manage_record_intent);
+                }
+            });
+        }
+        c.close();
     }
 
 
