@@ -1,10 +1,8 @@
 package au.net.nicksifniotis.amedatest;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,8 +13,6 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
-
-import java.net.URI;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
@@ -31,6 +27,8 @@ public class HomeActivity extends AppCompatActivity
 {
     private static TextView _status_bar;
     private static VideoView _tutorial_viewer;
+    private int _tutorial_position = 0;
+    private boolean _tutorial_on = false;
 
 
     @Override
@@ -123,21 +121,13 @@ public class HomeActivity extends AppCompatActivity
      */
     private void Tutorial()
     {
-       // _tutorial_viewer.setVideoURI(android.net.Uri.parse(android/+R.raw.tutorial));
-
         MediaController mediaControls = new MediaController(this);
-
-        // create a progress bar while the video file is loading
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Test dialog plxz wait");
-        progressDialog.setMessage("Loading...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
         try
         {
             _tutorial_viewer.setMediaController(mediaControls);
-            _tutorial_viewer.setVideoURI(Uri.parse("https://www.youtube.com/watch?v=tT9gT5bqi6Y"));
+            _tutorial_viewer.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/"
+                                    + R.raw.tutorial));
         }
         catch (Exception e)
         {
@@ -149,23 +139,71 @@ public class HomeActivity extends AppCompatActivity
 
             public void onPrepared(MediaPlayer mediaPlayer)
             {
-                progressDialog.dismiss();
-                _tutorial_viewer.seekTo(0);
+                _tutorial_viewer.seekTo(_tutorial_position);
                 _tutorial_viewer.start();
+                _tutorial_on = true;
             }
         });
     }
 
-    private void Help() {
-        _status_bar.setText("Help Screen");
+
+    /**
+     * Screen rotation - pause the video and remember where we were.
+     *
+     * @param savedInstanceState The very tool that shall remember where we were.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState)
+    {
+        super.onSaveInstanceState(savedInstanceState);
+
+        //we use onSaveInstanceState in order to store the video playback position for orientation change
+        savedInstanceState.putInt("Position", _tutorial_viewer.getCurrentPosition());
+        savedInstanceState.putInt("tute_on", _tutorial_on ? 1 : 0);
+        _tutorial_viewer.pause();
     }
 
+
+    /**
+     * Screen rotation - resume video playback.
+     *
+     * @param savedInstanceState Where we were up to.
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        //we use onRestoreInstanceState in order to play the video playback from the stored position
+        _tutorial_position = savedInstanceState.getInt("Position");
+        _tutorial_on = (savedInstanceState.getInt("tute_on") == 1);
+
+        if (_tutorial_on)
+            Tutorial();
+    }
+
+
+    /**
+     * Show the app help, when that's implemented.
+     */
+    private void Help() {
+        _status_bar.setText("Help screen - not implemented yet.");
+    }
+
+
+    /**
+     * Jump straight to the new record activity.
+     */
     private void NewRecord()
     {
         Intent newRecIntent = new Intent(this, NewRecordActivity.class);
         startActivity(newRecIntent);
     }
 
+
+    /**
+     * Launch the familiarisation activity.
+     */
     private void Familiarise()
     {
         Intent familiarisationIntent = new Intent (this, FamiliarisationActivity.class);
