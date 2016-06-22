@@ -9,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -27,6 +29,9 @@ public class HomeActivity extends AppCompatActivity
 {
     private static TextView _status_bar;
     private static VideoView _tutorial_viewer;
+    private static RelativeLayout _control_panel;
+    private static LinearLayout _video_panel;
+
     private int _tutorial_position = 0;
     private boolean _tutorial_on = false;
 
@@ -38,7 +43,10 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
         _connect_gui();
+        _control_panel.setVisibility(View.VISIBLE);
+        _video_panel.setVisibility(View.GONE);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -58,6 +66,8 @@ public class HomeActivity extends AppCompatActivity
     {
         _status_bar = (TextView)findViewById(R.id.txtStatus);
         _tutorial_viewer = (VideoView)findViewById(R.id.tutorial_viewer);
+        _control_panel = (RelativeLayout)findViewById(R.id.home_control_panel);
+        _video_panel = (LinearLayout)findViewById(R.id.tutorial_video_layout);
     }
 
 
@@ -73,17 +83,14 @@ public class HomeActivity extends AppCompatActivity
             case R.id.help_mnu:
                 Help();
                 return true;
-            case R.id.del_record_mnu:
-                DeleteRecord();
-                return true;
             case R.id.new_record_mnu:
-                NewRecord();
+                _launch_newRecord();
                 return true;
             case R.id.tutorial_mnu:
-                Tutorial();
+                _start_tutorial();
                 return true;
             case R.id.famil_mnu:
-                Familiarise();
+                _launch_familiarisation();
                 return true;
             case R.id.manage_mnu:
                 ManageRecords();
@@ -101,17 +108,22 @@ public class HomeActivity extends AppCompatActivity
      */
     public void btn_home_tutorial(View view)
     {
-        Tutorial();
+        _start_tutorial();
     }
 
     public void btn_home_familiarise(View view)
     {
-        Familiarise();
+        _launch_familiarisation();
     }
 
     public void btn_home_new_user(View view)
     {
-        NewRecord();
+        _launch_newRecord();
+    }
+
+    public void btn_home_tute_finished(View view)
+    {
+        _end_tutorial();
     }
 
 
@@ -119,7 +131,7 @@ public class HomeActivity extends AppCompatActivity
         The action methods that do the things.
         Usually by loading up other activities and making them do the things.
      */
-    private void Tutorial()
+    private void _start_tutorial()
     {
         MediaController mediaControls = new MediaController(this);
 
@@ -134,6 +146,9 @@ public class HomeActivity extends AppCompatActivity
             makeToast("Error: " + e.getMessage());
         }
 
+        _control_panel.setVisibility(View.GONE);
+        _video_panel.setVisibility(View.VISIBLE);
+
         _tutorial_viewer.requestFocus();
         _tutorial_viewer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
@@ -144,6 +159,20 @@ public class HomeActivity extends AppCompatActivity
                 _tutorial_on = true;
             }
         });
+    }
+
+
+    /**
+     * Terminates the tutorial viewing.
+     */
+    private void _end_tutorial()
+    {
+        _tutorial_on = false;
+        _tutorial_viewer.stopPlayback();
+        _tutorial_viewer.setMediaController(null);
+
+        _video_panel.setVisibility(View.GONE);
+        _control_panel.setVisibility(View.VISIBLE);
     }
 
 
@@ -179,7 +208,7 @@ public class HomeActivity extends AppCompatActivity
         _tutorial_on = (savedInstanceState.getInt("tute_on") == 1);
 
         if (_tutorial_on)
-            Tutorial();
+            _start_tutorial();
     }
 
 
@@ -194,7 +223,7 @@ public class HomeActivity extends AppCompatActivity
     /**
      * Jump straight to the new record activity.
      */
-    private void NewRecord()
+    private void _launch_newRecord()
     {
         Intent newRecIntent = new Intent(this, NewRecordActivity.class);
         startActivity(newRecIntent);
@@ -204,7 +233,7 @@ public class HomeActivity extends AppCompatActivity
     /**
      * Launch the familiarisation activity.
      */
-    private void Familiarise()
+    private void _launch_familiarisation()
     {
         Intent familiarisationIntent = new Intent (this, FamiliarisationActivity.class);
         startActivity (familiarisationIntent);
@@ -235,12 +264,6 @@ public class HomeActivity extends AppCompatActivity
         {
             makeToast ("Unable to connect to AMEDA device.");
         }
-    }
-
-
-    private void DeleteRecord()
-    {
-        _status_bar.setText("Delete Record!");
     }
 
 

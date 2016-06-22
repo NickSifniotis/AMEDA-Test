@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AMEDA Test</string>
+    <string name="app_name">AMEDA App</string>
 
     <string name="name">Name:</string>
     <string name="dob">Date of Birth:</string>
