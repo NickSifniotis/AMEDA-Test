@@ -1,5 +1,10 @@
 package au.net.nicksifniotis.amedatest.AMEDAManager;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+
+import au.net.nicksifniotis.amedatest.R;
+
 /**
  * Implementation of a virtual AMEDA device, for testing purposes.
  *
@@ -8,6 +13,15 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
  */
 public class VirtualAMEDA implements AMEDA
 {
+    private Context _context;
+
+
+    public VirtualAMEDA(Context context)
+    {
+        _context = context;
+    }
+
+
     /**
      * Moves the AMEDA plate to the given position.
      *
@@ -83,6 +97,9 @@ public class VirtualAMEDA implements AMEDA
     @Override
     public boolean Beep(int num_beeps)
     {
+        MediaPlayer mp = MediaPlayer.create(_context, R.raw.virtual_ameda);
+        mp.start();
+
         return true;
     }
 }

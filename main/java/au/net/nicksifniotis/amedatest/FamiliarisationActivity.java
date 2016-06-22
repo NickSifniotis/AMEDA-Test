@@ -36,7 +36,7 @@ public class FamiliarisationActivity extends AppCompatActivity
 
         try
         {
-            _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA() : new AMEDAImplementation(this);
+            _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
             _device.Connect();
         }
         catch (Exception e)
