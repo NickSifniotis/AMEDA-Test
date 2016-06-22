@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -103,6 +107,36 @@ public class Test extends AppCompatActivity
             _database_helper.databaseError("Error saving new test into database.");
             finish();
             return;
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.test_menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle item selection
+        switch (item.getItemId())
+        {
+            case R.id.test_pause_mnu:
+                makeToast("Pause test selected.");
+                return true;
+            case R.id.test_stop_mnu:
+                _abort_test();
+                return true;
+            case R.id.help_mnu:
+                makeToast("Help option selected.");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

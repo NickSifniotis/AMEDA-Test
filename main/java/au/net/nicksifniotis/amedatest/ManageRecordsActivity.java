@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
@@ -33,6 +34,7 @@ public class ManageRecordsActivity extends AppCompatActivity
     private SQLiteDatabase _db;
     private RecordCursorAdaptor _adaptor;
     private Class _activity_to_call;
+    private TextView _title;
 
 
     @Override
@@ -41,13 +43,21 @@ public class ManageRecordsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_records);
 
+        _title = (TextView)findViewById(R.id.manage_records_title);
+
         Intent intent = getIntent();
         int activity_code = intent.getIntExtra("activity", -1);
 
         if (activity_code == 1)
+        {
             _activity_to_call = Test.class;
+            _title.setText("Select User To Test");
+        }
         else
+        {
             _activity_to_call = NewRecordActivity.class;
+            _title.setText("Select User To Edit");
+        }
 
 
         _database_helper = new DBOpenHelper(this);
@@ -104,6 +114,11 @@ public class ManageRecordsActivity extends AppCompatActivity
         _launch_newRecord_activity(-1, NewRecordActivity.class);
     }
 
+    public void btn_manage_close(View view)
+    {
+        _finish();
+    }
+
 
     /**
      * Launches the 'new / edit user record' activity over this one.
@@ -116,6 +131,12 @@ public class ManageRecordsActivity extends AppCompatActivity
         Intent intent = new Intent (this, activity);
         intent.putExtra("id", user_id);
         startActivity(intent);
+    }
+
+
+    private void _finish()
+    {
+        finish();
     }
 
 

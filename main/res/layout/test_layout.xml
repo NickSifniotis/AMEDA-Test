@@ -31,16 +31,24 @@
 
         <TextView
             android:text="Step onto the middle of the plate so that the board is horizontal."
+            android:id="@+id/test001"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:src="@drawable/step_on"
+            android:src="@drawable/horizontal"
+            android:id="@+id/test002"
+            android:layout_below="@+id/test001"
+            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <Button
             android:text="@string/save"
+            android:layout_below="@+id/test002"
+            android:layout_centerHorizontal="true"
             android:onClick="btn_Next_Middle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -66,11 +74,15 @@
 
         <TextView
             android:text="Step on to the plate. Press Next when you know what position the plate is in."
+            android:id="@+id/t004"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <ImageView
             android:src="@drawable/step_on"
+            android:id="@+id/t005"
+            android:layout_below="@+id/t004"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -78,6 +90,7 @@
             android:text="@string/save"
             android:onClick="btn_Next"
             android:id="@+id/test_btn_next"
+            android:layout_below="@+id/t005"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
