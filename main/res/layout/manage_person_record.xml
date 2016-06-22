@@ -193,7 +193,7 @@
             android:layout_weight="0.5"
             android:onClick="btn_newRecord_Delete"
             android:id="@+id/btn_newrecord_delete"
-            android:text="@string/save" />
+            android:text="@string/delete" />
 
         <Button
             style="?android:attr/buttonBarButtonStyle"

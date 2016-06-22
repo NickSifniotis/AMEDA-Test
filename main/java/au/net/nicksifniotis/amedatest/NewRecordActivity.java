@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -27,6 +28,7 @@ public class NewRecordActivity extends AppCompatActivity
     private Spinner _gender;
     private ArrayAdapter<CharSequence> _gender_adapter;
     private LinearLayout _tests_taken_layout;
+    private Button _delete_record;
 
     private static DBOpenHelper _database_helper;
     private int _user_id;
@@ -76,7 +78,10 @@ public class NewRecordActivity extends AppCompatActivity
         // If we have been given an existing user record to edit, load the data from the 'base
         // and populate the GUI components.
         if (_user_id == -1)
+        {
             _tests_taken_layout.setVisibility(View.GONE);
+            _delete_record.setVisibility(View.GONE);
+        }
         else
         {
             SQLiteDatabase db = _database_helper.getReadableDatabase();
@@ -136,6 +141,8 @@ public class NewRecordActivity extends AppCompatActivity
         _gender    = (Spinner)  findViewById(R.id.spn_Gender);
 
         _tests_taken_layout = (LinearLayout) findViewById(R.id.newRec_tests_taken_list);
+
+        _delete_record = (Button) findViewById(R.id.btn_newrecord_delete);
     }
 
 
@@ -239,7 +246,7 @@ public class NewRecordActivity extends AppCompatActivity
 
             db.close();
         }
-        
+
         finish();
     }
 }
