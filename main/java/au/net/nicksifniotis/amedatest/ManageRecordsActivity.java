@@ -17,7 +17,7 @@ import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 public class ManageRecordsActivity extends AppCompatActivity
 {
     private DBOpenHelper _database_helper;
-    private Cursor _record_cursor;
+    private SQLiteDatabase _db;
     private RecordCursorAdaptor _adaptor;
 
 
@@ -28,14 +28,9 @@ public class ManageRecordsActivity extends AppCompatActivity
         setContentView(R.layout.activity_manage_records);
 
         _database_helper = new DBOpenHelper(this);
+        _db = _database_helper.getReadableDatabase();
 
-        final SQLiteDatabase db = _database_helper.getReadableDatabase();
-        String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME + " WHERE " + DB.PersonTable.ACTIVE + " = 1";
-
-        _record_cursor = db.rawQuery(query, null);
-        _record_cursor.moveToFirst();
-
-       _adaptor = new RecordCursorAdaptor(this, _record_cursor, 0);
+        _adaptor = new RecordCursorAdaptor(this, null, 0);
         ListView list = (ListView) findViewById(R.id.list_Records);
         if (list != null)
         {
@@ -53,7 +48,12 @@ public class ManageRecordsActivity extends AppCompatActivity
     {
         super.onResume();
 
-        _record_cursor.requery();
+        String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME + " WHERE " + DB.PersonTable.ACTIVE + " = 1";
+
+        Cursor _record_cursor = _db.rawQuery(query, null);
+        _record_cursor.moveToFirst();
+
+        _adaptor.swapCursor(_record_cursor);
     }
 
 
@@ -65,7 +65,7 @@ public class ManageRecordsActivity extends AppCompatActivity
     {
         super.onDestroy();
 
-        _record_cursor.close();
+        _db.close();
         _database_helper.close();
     }
 
