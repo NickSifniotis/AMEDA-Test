@@ -220,16 +220,26 @@ public class NewRecordActivity extends AppCompatActivity
         // @TODO finish this tomorrow morning. Remember the point of this SQL is to delete
         // entries from the Test and Question tables as well. So grab all the relevant test ids.
         if (_user_id == -1)
-        {
-            /// this should never happen
             _database_helper.databaseError("Error deleting non-existent user.");
-            finish();
-        }
         else
         {
-            // this is actually a fairly large deletion process.
-            SQLiteDatabase db = _database_helper.getReadableDatabase();
-          //  Cursor c = db.rawQuery("SELECT ")
+            SQLiteDatabase db = _database_helper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(DB.TestTable.ACTIVE, Integer.toString(0));
+
+            db.update(DB.TestTable.TABLE_NAME, values,
+                    DB.TestTable.PERSON_ID + " = " + _user_id, null);
+
+            values = new ContentValues();
+            values.put(DB.PersonTable.ACTIVE, Integer.toString(0));
+
+            db.update(DB.PersonTable.TABLE_NAME, values,
+                    DB.PersonTable._ID + " = " + _user_id, null);
+
+            db.close();
         }
+        
+        finish();
     }
 }
