@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -135,8 +132,8 @@ public class Test extends AppCompatActivity
 
         try
         {
-            //device = new AMEDAImplementation(this, _my_handler, false);
-            device = new VirtualAMEDA();
+            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA() : new AMEDAImplementation(this);
+            device.Connect();
         }
         catch (Exception e)
         {

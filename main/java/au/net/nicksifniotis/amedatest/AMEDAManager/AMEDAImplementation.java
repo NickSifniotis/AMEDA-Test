@@ -19,18 +19,23 @@ import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothServiceImplement
  */
 public class AMEDAImplementation implements AMEDA {
     private AMEDAState _current_state;
-    private Handler _test_handler;
     private BluetoothService _service;
     private Context _view;
 
-    public AMEDAImplementation(Context view, Handler h, boolean debug_mode) throws Exception {
+
+    /**
+     * Construct the AMEDA device - don't attempt to connect though, that's something
+     * that the activites direct.
+     *
+     * @param view The activity that this AMEDA implementation lives in.
+     * @throws Exception if the shit hits the fan.
+     */
+    public AMEDAImplementation(Context view) throws Exception
+    {
         _current_state = AMEDAState.OFFLINE;
         _view = view;
-        _test_handler = h;
 
         _service = new BluetoothServiceImplementation(view);
-
-        Connect();
     }
 
 
@@ -68,8 +73,15 @@ public class AMEDAImplementation implements AMEDA {
         return true;
     }
 
+
+    /**
+     * Returns the AMEDA to its horizontal / home position.
+     *
+     * @return True if the operation was successful, false if the AMEDA couldn't behave as directed.
+     */
     @Override
-    public boolean GoHome() {
+    public boolean GoHome()
+    {
         try {
             AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                     .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
@@ -86,8 +98,15 @@ public class AMEDAImplementation implements AMEDA {
         return true;
     }
 
+
+    /**
+     * Instructs the AMEDA device to calibrate itself.
+     *
+     * @return True if the AMEDA reports everything ok, false otherwise.
+     */
     @Override
-    public boolean Calibrate() {
+    public boolean Calibrate()
+    {
         AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                 .Instruction(AMEDAInstructionEnum.CALIBRATE);
         _service.write(instruction.Build());
@@ -101,6 +120,12 @@ public class AMEDAImplementation implements AMEDA {
         return _current_state;
     }
 
+
+    /**
+     * Disconnect from the AMEDA device.
+     *
+     * This method could probably use a more accurate name.
+     */
     @Override
     public void Terminate()
     {
@@ -130,6 +155,10 @@ public class AMEDAImplementation implements AMEDA {
     }
 
 
+    /**
+     * Connects to the AMEDA device.
+     *
+     */
     @Override
     public void Connect()
     {
