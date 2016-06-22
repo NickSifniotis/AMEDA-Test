@@ -50,7 +50,7 @@ public class Test extends AppCompatActivity
         // Get the user id of the person who is taking this test.
         // If no user_id has been passed, abort.
         Intent intent = getIntent();
-        int user_id = intent.getIntExtra("user_id", -1);
+        int user_id = intent.getIntExtra("id", -1);
         if (user_id == -1)
         {
             makeToast("Unable to launch test. No user_id received.");
@@ -157,6 +157,7 @@ public class Test extends AppCompatActivity
     {
         _state_layouts = new LinearLayout[TestState.values().length];
         _state_layouts[TestState.STARTING.ordinal()] = (LinearLayout)findViewById(R.id.test_starting_state);
+        _state_layouts[TestState.MIDDLE.ordinal()] = (LinearLayout)findViewById(R.id.test_middle_state);
         _state_layouts[TestState.SETTING.ordinal()] = (LinearLayout)findViewById(R.id.test_setting_state);
         _state_layouts[TestState.STEPPING.ordinal()] = (LinearLayout)findViewById(R.id.test_stepping_state);
         _state_layouts[TestState.ANSWERING.ordinal()] = (LinearLayout)findViewById(R.id.test_answering_state);
@@ -201,8 +202,8 @@ public class Test extends AppCompatActivity
 
         if (_current_question >= _num_questions)
             _end_of_test();
-
-        updateState(TestState.MIDDLE);
+        else
+            updateState(TestState.MIDDLE);
     }
 
 

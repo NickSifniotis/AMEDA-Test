@@ -78,7 +78,7 @@ public class HomeActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.calibrate_mnu:
-                Calibrate();
+                _calibrate();
                 return true;
             case R.id.help_mnu:
                 Help();
@@ -93,7 +93,7 @@ public class HomeActivity extends AppCompatActivity
                 _launch_familiarisation();
                 return true;
             case R.id.manage_mnu:
-                ManageRecords();
+                _launch_manage_records();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -104,7 +104,7 @@ public class HomeActivity extends AppCompatActivity
     /**
      * Button click event handlers.
      *
-     * @param view
+     * @param view Not used.
      */
     public void btn_home_tutorial(View view)
     {
@@ -116,9 +116,9 @@ public class HomeActivity extends AppCompatActivity
         _launch_familiarisation();
     }
 
-    public void btn_home_new_user(View view)
+    public void btn_home_start_test(View view)
     {
-        _launch_newRecord();
+        _launch_test();
     }
 
     public void btn_home_tute_finished(View view)
@@ -221,6 +221,17 @@ public class HomeActivity extends AppCompatActivity
 
 
     /**
+     * Launches the 'select a person' activity with a view towards beginning the test instead
+     * of editing their details.
+     */
+    private void _launch_test()
+    {
+        Intent testIntent = new Intent(this, ManageRecordsActivity.class);
+        testIntent.putExtra("activity", 1);
+        startActivity(testIntent);
+    }
+
+    /**
      * Jump straight to the new record activity.
      */
     private void _launch_newRecord()
@@ -245,7 +256,7 @@ public class HomeActivity extends AppCompatActivity
      * until the AMEDA confirms that it has succeeded (or otherwise..)
      *
      */
-    private void Calibrate()
+    private void _calibrate()
     {
         makeToast("Calibrating ..");
 
@@ -270,9 +281,10 @@ public class HomeActivity extends AppCompatActivity
     /**
      * Launch the 'look at a list of every user' activity.
      */
-    private void ManageRecords()
+    private void _launch_manage_records()
     {
         Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
+        manageRecIntent.putExtra("activity", 0);
         startActivity(manageRecIntent);
     }
 

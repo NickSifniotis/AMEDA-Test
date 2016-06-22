@@ -44,9 +44,9 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Record"
+            android:text="Begin Test"
             android:id="@+id/btn_new"
-            android:onClick="btn_home_new_user"
+            android:onClick="btn_home_start_test"
             android:layout_below="@+id/famil_btn"
             android:layout_centerHorizontal="true" />
 

@@ -14,11 +14,25 @@ import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 
 
+/**
+ * ManageRecordsActivity
+ *
+ * Lists the user records (includes a new button) and launches a new activity when the user makes
+ * a selection.
+ *
+ * Note that the new button will always launch NewRecord Activity!
+ *
+ * However selecting a record from the listview will open the activity that has been provided
+ * when this very activity was intent-ed.
+ *
+ * Version 1 - identifying activities by enumeration (int codes) @todo this could be so much better
+ */
 public class ManageRecordsActivity extends AppCompatActivity
 {
     private DBOpenHelper _database_helper;
     private SQLiteDatabase _db;
     private RecordCursorAdaptor _adaptor;
+    private Class _activity_to_call;
 
 
     @Override
@@ -26,6 +40,15 @@ public class ManageRecordsActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_records);
+
+        Intent intent = getIntent();
+        int activity_code = intent.getIntExtra("activity", -1);
+
+        if (activity_code == 1)
+            _activity_to_call = Test.class;
+        else
+            _activity_to_call = NewRecordActivity.class;
+
 
         _database_helper = new DBOpenHelper(this);
         _db = _database_helper.getReadableDatabase();
@@ -78,7 +101,7 @@ public class ManageRecordsActivity extends AppCompatActivity
      */
     public void btn_manage_record_new(View view)
     {
-        _launch_newRecord_activity(-1);
+        _launch_newRecord_activity(-1, NewRecordActivity.class);
     }
 
 
@@ -88,11 +111,11 @@ public class ManageRecordsActivity extends AppCompatActivity
      *
      * @param user_id The database ID of the record to edit, or -1 if creating a new record.
      */
-    private void _launch_newRecord_activity(int user_id)
+    private void _launch_newRecord_activity(int user_id, Class activity)
     {
-        Intent new_record_intent = new Intent (this, NewRecordActivity.class);
-        new_record_intent.putExtra("id", user_id);
-        startActivity(new_record_intent);
+        Intent intent = new Intent (this, activity);
+        intent.putExtra("id", user_id);
+        startActivity(intent);
     }
 
 
@@ -107,7 +130,7 @@ public class ManageRecordsActivity extends AppCompatActivity
             SQLiteCursor entry = (SQLiteCursor) parent.getAdapter().getItem(position);
             int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
 
-            _launch_newRecord_activity(record_id);
+            _launch_newRecord_activity(record_id, _activity_to_call);
         }
     }
 }
