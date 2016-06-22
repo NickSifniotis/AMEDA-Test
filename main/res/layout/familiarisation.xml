@@ -3,6 +3,19 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center_horizontal"
+        android:text="Familiarisation Activity"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Use these buttons to move the AMEDA to different positions. Press down on the plate to get a feel for what each position is like. Please note that the board needs to be in the horizontal position before the AMEDA will respond to a move command." />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

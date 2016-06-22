@@ -151,7 +151,7 @@ public class FamiliarisationActivity extends AppCompatActivity
                 _device.GoToPosition(1);
                 _device.GoToPosition(5);
                 _device.GoToPosition(num);
-                _device.Beep (3);
+                _device.Beep(1);
 
                 _fields[num].setText (String.format("%d", curr_value));
             }

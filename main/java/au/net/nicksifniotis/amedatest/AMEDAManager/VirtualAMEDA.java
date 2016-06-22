@@ -34,6 +34,14 @@ public class VirtualAMEDA implements AMEDA
     @Override
     public boolean GoToPosition(int position)
     {
+        try
+        {
+            Thread.sleep(250);
+        }
+        catch (Exception e)
+        {
+        }
+
         return true;
     }
 

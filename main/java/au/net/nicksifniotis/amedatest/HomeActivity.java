@@ -133,6 +133,7 @@ public class HomeActivity extends AppCompatActivity
      */
     private void _start_tutorial()
     {
+        makeToast("in start tute");
         MediaController mediaControls = new MediaController(this);
 
         try
@@ -155,8 +156,17 @@ public class HomeActivity extends AppCompatActivity
             public void onPrepared(MediaPlayer mediaPlayer)
             {
                 _tutorial_viewer.seekTo(_tutorial_position);
-                _tutorial_viewer.start();
+               // _tutorial_viewer.start(); @TODO what the hell is going on here
                 _tutorial_on = true;
+            }
+        });
+        _tutorial_viewer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp)
+            {
+                //_end_tutorial();
+                _tutorial_on = false;
+                makeToast("tutorial off");
             }
         });
     }
@@ -202,13 +212,14 @@ public class HomeActivity extends AppCompatActivity
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-
+    makeToast ("in restore");
         //we use onRestoreInstanceState in order to play the video playback from the stored position
         _tutorial_position = savedInstanceState.getInt("Position");
         _tutorial_on = (savedInstanceState.getInt("tute_on") == 1);
 
-        if (_tutorial_on)
+        if (_tutorial_on) {
             _start_tutorial();
+        }
     }
 
 
