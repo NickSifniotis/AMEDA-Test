@@ -20,10 +20,9 @@ import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 public class NewRecordActivity extends AppCompatActivity
 {
     private EditText _name;
-    private EditText _address;
+    private EditText _weight;
     private EditText _dob;
-    private EditText _education;
-    private EditText _hobbies;
+    private EditText _height;
     private EditText _notes;
     private Spinner _gender;
     private ArrayAdapter<CharSequence> _gender_adapter;
@@ -49,7 +48,7 @@ public class NewRecordActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_person_record);
 
-        _gender = (Spinner)findViewById(R.id.spn_Gender);
+        _gender = (Spinner)findViewById(R.id.mpr_spn_gender);
         _gender_adapter = ArrayAdapter.createFromResource(this,
                 R.array.genders, android.R.layout.simple_spinner_item);
         _gender_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,10 +91,9 @@ public class NewRecordActivity extends AppCompatActivity
             c.moveToFirst();
 
             _name.setText     (c.getString(c.getColumnIndex(DB.PersonTable.NAME)));
-            _address.setText  (c.getString(c.getColumnIndex(DB.PersonTable.ADDRESS)));
             _dob.setText      (c.getString(c.getColumnIndex(DB.PersonTable.DOB)));
-            _education.setText(c.getString(c.getColumnIndex(DB.PersonTable.EDUCATION)));
-            _hobbies.setText  (c.getString(c.getColumnIndex(DB.PersonTable.HOBBIES)));
+            _height.setText(c.getString(c.getColumnIndex(DB.PersonTable.HEIGHT)));
+            _weight.setText  (c.getString(c.getColumnIndex(DB.PersonTable.WEIGHT)));
             _notes.setText    (c.getString(c.getColumnIndex(DB.PersonTable.NOTES)));
 
             _set_gender_spinner(c.getString(c.getColumnIndex(DB.PersonTable.GENDER)));
@@ -110,17 +108,17 @@ public class NewRecordActivity extends AppCompatActivity
     /**
      * Button press event handlers.
      */
-    public void btn_newRecord_Cancel(View view)
+    public void mpr_btn_cancel(View view)
     {
         finish();
     }
 
-    public void btn_newRecord_Delete(View view)
+    public void mpr_btn_delete(View view)
     {
         _delete_record();
     }
 
-    public void btn_Done(View view)
+    public void mpr_btn_done(View view)
     {
         _save_data();
     }
@@ -131,18 +129,15 @@ public class NewRecordActivity extends AppCompatActivity
      */
     private void _get_gui_components()
     {
-        _name      = (EditText) findViewById(R.id.txt_Name);
-        _dob       = (EditText) findViewById(R.id.txt_DOB);
-        _address   = (EditText) findViewById(R.id.txt_Address);
-        _education = (EditText) findViewById(R.id.txt_Education);
-        _hobbies   = (EditText) findViewById(R.id.txt_Hobbies);
-        _notes     = (EditText) findViewById(R.id.txt_Notes);
-
-        _gender    = (Spinner)  findViewById(R.id.spn_Gender);
+        _name   = (EditText) findViewById(R.id.mpr_txt_name);
+        _dob    = (EditText) findViewById(R.id.mpr_txt_dob);
+        _gender = (Spinner)  findViewById(R.id.mpr_spn_gender);
+        _height = (EditText) findViewById(R.id.mpr_txt_height);
+        _weight = (EditText) findViewById(R.id.mpr_txt_weight);
+        _notes  = (EditText) findViewById(R.id.mpr_txt_notes);
 
         _tests_taken_layout = (LinearLayout) findViewById(R.id.newRec_tests_taken_list);
-
-        _delete_record = (Button) findViewById(R.id.btn_newrecord_delete);
+        _delete_record = (Button) findViewById(R.id.mpr_btn_delete);
     }
 
 
@@ -174,14 +169,13 @@ public class NewRecordActivity extends AppCompatActivity
     {
         ContentValues res = new ContentValues();
 
-        res.put(DB.PersonTable.NAME     , _name.getText().toString());
-        res.put(DB.PersonTable.ADDRESS  , _address.getText().toString());
-        res.put(DB.PersonTable.GENDER   , _gender.getSelectedItem().toString());
-        res.put(DB.PersonTable.DOB      , _dob.getText().toString());
-        res.put(DB.PersonTable.EDUCATION, _education.getText().toString());
-        res.put(DB.PersonTable.HOBBIES  , _hobbies.getText().toString());
-        res.put(DB.PersonTable.NOTES    , _notes.getText().toString());
-        res.put(DB.PersonTable.ACTIVE   , Integer.toString(1));
+        res.put(DB.PersonTable.NAME  , _name.getText().toString());
+        res.put(DB.PersonTable.DOB   , _dob.getText().toString());
+        res.put(DB.PersonTable.GENDER, _gender.getSelectedItem().toString());
+        res.put(DB.PersonTable.HEIGHT, _height.getText().toString());
+        res.put(DB.PersonTable.WEIGHT, _weight.getText().toString());
+        res.put(DB.PersonTable.NOTES , _notes.getText().toString());
+        res.put(DB.PersonTable.ACTIVE, Integer.toString(1));
 
         return res;
     }
@@ -224,8 +218,6 @@ public class NewRecordActivity extends AppCompatActivity
      */
     private void _delete_record()
     {
-        // @TODO finish this tomorrow morning. Remember the point of this SQL is to delete
-        // entries from the Test and Question tables as well. So grab all the relevant test ids.
         if (_user_id == -1)
             _database_helper.databaseError("Error deleting non-existent user.");
         else

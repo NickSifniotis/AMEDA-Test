@@ -2,8 +2,6 @@ package au.net.nicksifniotis.amedatest.LocalDB;
 
 import android.provider.BaseColumns;
 
-import java.util.Date;
-
 /**
  * Holds all the database 'contracts' used by the application.
  *
@@ -12,7 +10,7 @@ import java.util.Date;
 public class DB
 {
     public static final String filename = "AMEDA.db";
-    public static final int version = 5;
+    public static final int version = 6;
 
     /**
      * Blank constructor, to make sure nobody accidentally instantiates a copy of this non-object.
@@ -26,9 +24,8 @@ public class DB
         public static final String NAME = "Name";
         public static final String DOB = "DateOfBirth";
         public static final String GENDER = "Gender";
-        public static final String EDUCATION = "Education";
-        public static final String ADDRESS = "Address";
-        public static final String HOBBIES = "Hobbies";
+        public static final String HEIGHT = "Height";
+        public static final String WEIGHT = "Weight";
         public static final String NOTES = "Notes";
         public static final String ACTIVE = "Active";
 
@@ -38,9 +35,8 @@ public class DB
                                                 + NAME + " TEXT, "
                                                 + DOB + " TEXT, "
                                                 + GENDER + " TEXT, "
-                                                + EDUCATION + " TEXT, "
-                                                + ADDRESS + " TEXT, "
-                                                + HOBBIES + " TEXT, "
+                                                + HEIGHT + " INTEGER, "
+                                                + WEIGHT + " INTEGER, "
                                                 + NOTES + " TEXT, "
                                                 + ACTIVE + " INTEGER)";
         public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
