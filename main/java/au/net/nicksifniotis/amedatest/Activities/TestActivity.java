@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest;
+package au.net.nicksifniotis.amedatest.Activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -13,21 +13,25 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
+import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
+import au.net.nicksifniotis.amedatest.R;
+import au.net.nicksifniotis.amedatest.TestState;
 
 /**
- * Test activity. Launches a test and runs it from go to whoa.
+ * TestActivity activity. Launches a test and runs it from go to whoa.
  *
  * Created by nsifniotis on 29/05/16.
  */
-public class Test extends AppCompatActivity
+public class TestActivity extends AppCompatActivity
 {
     private static final int NUM_TESTS = 5;
 
@@ -91,7 +95,7 @@ public class Test extends AppCompatActivity
 
         // having made it this far, prepare to begin the test.
         ContentValues values = new ContentValues();
-        values.put(DB.TestTable.DATE, new Date().toString());
+        values.put(DB.TestTable.DATE, Calendar.getInstance().getTimeInMillis());
         values.put(DB.TestTable.FINISHED, 0);
         values.put(DB.TestTable.INTERRUPTED, 0);
         values.put(DB.TestTable.PERSON_ID, user_id);

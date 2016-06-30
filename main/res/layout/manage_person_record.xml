@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="au.net.nicksifniotis.amedatest.NewRecordActivity">
+    tools:context=".Activities.NewRecordActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"

@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest;
+package au.net.nicksifniotis.amedatest.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.Toast;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
+import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.R;
 
 
 /**

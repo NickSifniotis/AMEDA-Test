@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest;
+package au.net.nicksifniotis.amedatest.Activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -12,9 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
+import au.net.nicksifniotis.amedatest.R;
 
 
 public class NewRecordActivity extends AppCompatActivity
@@ -201,6 +203,7 @@ public class NewRecordActivity extends AppCompatActivity
         }
         else
         {
+            Toast.makeText(this, "Saving..", Toast.LENGTH_LONG).show();
             long newRowId = db.insert(DB.PersonTable.TABLE_NAME, null, values);
 
             if (newRowId == -1)

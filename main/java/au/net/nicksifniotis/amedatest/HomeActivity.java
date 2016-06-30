@@ -17,8 +17,11 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
-import au.net.nicksifniotis.amedatest.AMEDAManager.OldAMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
+import au.net.nicksifniotis.amedatest.Activities.FamiliarisationActivity;
+import au.net.nicksifniotis.amedatest.Activities.ManageRecordsActivity;
+import au.net.nicksifniotis.amedatest.Activities.NewRecordActivity;
 
 
 /**
@@ -238,7 +241,7 @@ public class HomeActivity extends AppCompatActivity
     private void _launch_test()
     {
         Intent testIntent = new Intent(this, ManageRecordsActivity.class);
-        testIntent.putExtra("activity", 1);
+        testIntent.putExtra("activity", ManageRecordsEnum.START_TEST.ordinal());
         startActivity(testIntent);
     }
 
@@ -273,7 +276,7 @@ public class HomeActivity extends AppCompatActivity
 
         try
         {
-            AMEDA device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new OldAMEDAImplementation(this);
+            AMEDA device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
 
             if (!device.Calibrate())
                 makeToast("Calibration failed. Try again.");
@@ -295,7 +298,7 @@ public class HomeActivity extends AppCompatActivity
     private void _launch_manage_records()
     {
         Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
-        manageRecIntent.putExtra("activity", 0);
+        manageRecIntent.putExtra("activity", ManageRecordsEnum.EDIT_RECORD.ordinal());
         startActivity(manageRecIntent);
     }
 

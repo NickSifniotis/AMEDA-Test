@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 public class DB
 {
     public static final String filename = "AMEDA.db";
-    public static final int version = 7;
+    public static final int version = 8;
 
     /**
      * Blank constructor, to make sure nobody accidentally instantiates a copy of this non-object.
@@ -21,13 +21,13 @@ public class DB
     {
         public static final String TABLE_NAME = "_person";
 
-        public static final String NAME = "Name";
-        public static final String DOB = "DateOfBirth";
-        public static final String GENDER = "Gender";
-        public static final String HEIGHT = "Height";
-        public static final String WEIGHT = "Weight";
-        public static final String NOTES = "Notes";
-        public static final String ACTIVE = "Active";
+        public static final String NAME = "Name" + TABLE_NAME;
+        public static final String DOB = "DateOfBirth" + TABLE_NAME;
+        public static final String GENDER = "Gender" + TABLE_NAME;
+        public static final String HEIGHT = "Height" + TABLE_NAME;
+        public static final String WEIGHT = "Weight" + TABLE_NAME;
+        public static final String NOTES = "Notes" + TABLE_NAME;
+        public static final String ACTIVE = "Active" + TABLE_NAME;
 
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
@@ -46,12 +46,12 @@ public class DB
     {
         public static final String TABLE_NAME = "_test";
 
-        public static final String DATE = "Date";
-        public static final String PERSON_ID = "PersonId";
-        public static final String STANDARD_TEST_ID = "StandardId";
-        public static final String INTERRUPTED = "Interrupted";
-        public static final String FINISHED = "Finished";
-        public static final String ACTIVE = "Active";
+        public static final String DATE = "Date" + TABLE_NAME;
+        public static final String PERSON_ID = "PersonId" + TABLE_NAME;
+        public static final String STANDARD_TEST_ID = "StandardId" + TABLE_NAME;
+        public static final String INTERRUPTED = "Interrupted" + TABLE_NAME;
+        public static final String FINISHED = "Finished" + TABLE_NAME;
+        public static final String ACTIVE = "Active" + TABLE_NAME;
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
                                                 + _ID + " INTEGER PRIMARY KEY, "
@@ -59,7 +59,7 @@ public class DB
                                                 + STANDARD_TEST_ID + " INTEGER, "
                                                 + INTERRUPTED + " INTEGER, "
                                                 + FINISHED + " INTEGER, "
-                                                + DATE + " TEXT, "
+                                                + DATE + " INTEGER, "
                                                 + ACTIVE + " INTEGER)";
         public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;
     }
@@ -68,9 +68,9 @@ public class DB
     {
         public static final String TABLE_NAME = "_question";
 
-        public static final String TEST_ID = "TestId";
-        public static final String USER_ANSWER = "UserAnswer";
-        public static final String QUESTION_NUMBER = "QuestionNumber";
+        public static final String TEST_ID = "TestId" + TABLE_NAME;
+        public static final String USER_ANSWER = "UserAnswer" + TABLE_NAME;
+        public static final String QUESTION_NUMBER = "QuestionNumber" + TABLE_NAME;
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
                                                 + _ID + " INTEGER PRIMARY KEY, "
@@ -84,7 +84,7 @@ public class DB
     {
         public static final String TABLE_NAME = "_standard_test";
 
-        public static final String ANSWER_KEY = "AnswerKey";
+        public static final String ANSWER_KEY = "AnswerKey" + TABLE_NAME;
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
                                                 + _ID + " INTEGER PRIMARY KEY, "

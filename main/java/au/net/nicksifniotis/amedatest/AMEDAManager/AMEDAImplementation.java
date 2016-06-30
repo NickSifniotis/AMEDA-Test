@@ -219,7 +219,7 @@ public class AMEDAImplementation implements AMEDA
                 return;
             }
 
-            
+
             byte[] msgBuffer = message.getBytes();
             try
             {
