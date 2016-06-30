@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 public class DB
 {
     public static final String filename = "AMEDA.db";
-    public static final int version = 6;
+    public static final int version = 7;
 
     /**
      * Blank constructor, to make sure nobody accidentally instantiates a copy of this non-object.

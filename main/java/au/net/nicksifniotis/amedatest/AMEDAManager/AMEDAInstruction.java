@@ -52,7 +52,7 @@ public class AMEDAInstruction {
         return this;
     }
 
-    public byte[] Build()
+    public String Build()
     {
         String res = "XXXXX";
         switch (_instruction)
@@ -77,7 +77,8 @@ public class AMEDAInstruction {
                 break;
         }
 
-        return packetize(res);
+        return res;
+        //return packetize(res);
     }
 
 

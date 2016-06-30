@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.NewAmeda;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 
 
@@ -36,7 +37,7 @@ public class FamiliarisationActivity extends AppCompatActivity
 
         try
         {
-            _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
+            _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new NewAmeda(this);
             _device.Connect();
         }
         catch (Exception e)

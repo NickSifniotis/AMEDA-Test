@@ -20,6 +20,7 @@ import java.util.Random;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAState;
+import au.net.nicksifniotis.amedatest.AMEDAManager.NewAmeda;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
@@ -166,7 +167,7 @@ public class Test extends AppCompatActivity
 
         try
         {
-            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
+            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new NewAmeda(this);
             device.Connect();
         }
         catch (Exception e)

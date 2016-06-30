@@ -56,7 +56,7 @@ public class AMEDAImplementation implements AMEDA {
             AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                     .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
                     .N(position);
-            _service.write(instruction.Build());
+        //    _service.write(instruction.Build());
 
 //            _current_state = AMEDAState.TRANSITIONING;
 //
@@ -86,7 +86,7 @@ public class AMEDAImplementation implements AMEDA {
             AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                     .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
                     .N(1);
-            _service.write(instruction.Build());
+          //  _service.write(instruction.Build());
 
             _current_state = AMEDAState.TRANSITIONING;
         }
@@ -109,7 +109,7 @@ public class AMEDAImplementation implements AMEDA {
     {
         AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                 .Instruction(AMEDAInstructionEnum.CALIBRATE);
-        _service.write(instruction.Build());
+   //     _service.write(instruction.Build());
 
         _current_state = AMEDAState.TRANSITIONING;
 
@@ -147,7 +147,7 @@ public class AMEDAImplementation implements AMEDA {
                     .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
                     .N(num_beeps);
 
-            _service.write(instruction.Build());
+      //      _service.write(instruction.Build());
             return true;
         }
         catch (AMEDAException e)
