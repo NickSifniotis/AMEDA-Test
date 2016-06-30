@@ -17,8 +17,8 @@ import au.net.nicksifniotis.amedatest.BluetoothManager.BluetoothServiceImplement
  *
  * Implementation of the AMEDA interface.
  */
-public class OldAMEDAImplementation implements AMEDA {
-    private AMEDAState _current_state;
+public class OldAMEDAImplementation implements AMEDA
+{
     private BluetoothService _service;
     private Context _view;
 
@@ -32,9 +32,7 @@ public class OldAMEDAImplementation implements AMEDA {
      */
     public OldAMEDAImplementation(Context view) throws Exception
     {
-        _current_state = AMEDAState.OFFLINE;
         _view = view;
-
         _service = new BluetoothServiceImplementation(view);
     }
 
@@ -86,8 +84,6 @@ public class OldAMEDAImplementation implements AMEDA {
                     .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
                     .N(1);
           //  _service.write(instruction.Build());
-
-            _current_state = AMEDAState.TRANSITIONING;
         }
         catch (AMEDAException e)
         {
@@ -109,8 +105,6 @@ public class OldAMEDAImplementation implements AMEDA {
         AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
                 .Instruction(AMEDAInstructionEnum.CALIBRATE);
    //     _service.write(instruction.Build());
-
-        _current_state = AMEDAState.TRANSITIONING;
 
         return true;
     }
@@ -183,7 +177,5 @@ public class OldAMEDAImplementation implements AMEDA {
         }
 
         _service.connect(ameda);
-
-        _current_state = (_service.getState() == BTState.CONNECTED) ? AMEDAState.READY : AMEDAState.CONNECTION_ERROR;
     }
 }
