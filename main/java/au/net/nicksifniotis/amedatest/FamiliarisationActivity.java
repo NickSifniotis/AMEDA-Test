@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
-import au.net.nicksifniotis.amedatest.AMEDAManager.NewAmeda;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 
 
@@ -37,8 +36,7 @@ public class FamiliarisationActivity extends AppCompatActivity
 
         try
         {
-            _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new NewAmeda(this);
-            _device.Connect();
+            _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
         }
         catch (Exception e)
         {
@@ -52,21 +50,21 @@ public class FamiliarisationActivity extends AppCompatActivity
     {
         super.onDestroy();
 
-        _device.Terminate();
+        _device.Disconnect();
     }
 
     @Override
-    protected void onPause()
+    protected void onStop()
     {
-        super.onPause();
+        super.onStop();
 
-        _device.Terminate();
+        _device.Disconnect();
     }
 
     @Override
-    protected void onResume()
+    protected void onStart()
     {
-        super.onResume();
+        super.onStart();
 
         _device.Connect();
     }

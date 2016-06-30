@@ -47,19 +47,6 @@ public class VirtualAMEDA implements AMEDA
 
 
     /**
-     * Returns the AMEDA device to it's home position. Effectively, this is a call to
-     * GoToPosition(1).
-     *
-     * @return True on success, false if the AMEDA is unable to execute the task.
-     */
-    @Override
-    public boolean GoHome()
-    {
-        return GoToPosition(1);
-    }
-
-
-    /**
      * Calibration should occur before the AMEDA device is used.
      * The virtual AMEDA doesn't need to calibrate, so always indicate success
      * by returning a true.
@@ -79,7 +66,7 @@ public class VirtualAMEDA implements AMEDA
      * So do nothing.
      */
     @Override
-    public void Terminate()
+    public void Disconnect()
     {
     }
 

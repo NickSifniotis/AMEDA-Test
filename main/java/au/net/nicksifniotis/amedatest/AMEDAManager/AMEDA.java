@@ -11,13 +11,9 @@ public interface AMEDA
 {
     public boolean GoToPosition (int position);
 
-    public boolean GoHome();
-
     public boolean Calibrate();
 
-  //  public AMEDAState Status();
-
-    public void Terminate();
+    public void Disconnect();
 
     public void Connect();
 

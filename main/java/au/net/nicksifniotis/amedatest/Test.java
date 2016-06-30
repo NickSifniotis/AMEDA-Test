@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,8 +18,6 @@ import java.util.Random;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAState;
-import au.net.nicksifniotis.amedatest.AMEDAManager.NewAmeda;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
@@ -167,7 +164,7 @@ public class Test extends AppCompatActivity
 
         try
         {
-            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new NewAmeda(this);
+            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
             device.Connect();
         }
         catch (Exception e)
@@ -252,7 +249,7 @@ public class Test extends AppCompatActivity
         makeToast("Setting device to position " + _test_questions[_current_question]);
 
         boolean success;
-        success = device.GoHome();
+        success = device.GoToPosition(1);
         if (!success)
             _abort_test();
 
@@ -450,7 +447,7 @@ public class Test extends AppCompatActivity
         }
 
         // @TODO reference to ameda here.
-        device.Terminate();
+        device.Disconnect();
 
         finish();
         return;

@@ -17,7 +17,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.OldAMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 
 
@@ -273,14 +273,14 @@ public class HomeActivity extends AppCompatActivity
 
         try
         {
-            AMEDA device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
+            AMEDA device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new OldAMEDAImplementation(this);
 
             if (!device.Calibrate())
                 makeToast("Calibration failed. Try again.");
             else
                 makeToast("Calibration succeeded.");
 
-            device.Terminate();
+            device.Disconnect();
         }
         catch (Exception e)
         {
