@@ -1,14 +1,17 @@
 package au.net.nicksifniotis.amedatest.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionFactory;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
@@ -53,7 +56,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
                     AMEDAResponse response = (AMEDAResponse) msg.obj;
                     DebugToast("Handling message " + response.toString());
 
-                    ProcessAMEDAResponse(_instruction_buffer.Current().GetInstruction(), response);
+                    ProcessAMEDAResponse(_instruction_buffer.Current(), response);
                 }
                 return true;
             }
@@ -143,13 +146,14 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
     /**
      * Sends a request to the AMEDA for the current angle of the wobble board.
+     * @TODO implementation disabled as no way to correctly process this.
      */
     protected void RequestAngle ()
     {
-        _instruction_buffer.Enqueue(
-                AMEDAInstructionFactory.Create()
-                .Instruction(AMEDAInstructionEnum.REQUEST_ANGLE)
-        );
+//        _instruction_buffer.Enqueue(
+//                AMEDAInstructionFactory.Create()
+//                .Instruction(AMEDAInstructionEnum.REQUEST_ANGLE)
+//        );
     }
 
 
@@ -212,7 +216,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      * @param instruction The instruction that was sent to the AMEDA.
      * @param response The AMEDA's response to that instruction.
      */
-    protected abstract void ProcessAMEDAResponse (AMEDAInstructionEnum instruction, AMEDAResponse response);
+    protected abstract void ProcessAMEDAResponse (AMEDAInstruction instruction, AMEDAResponse response);
 
 
     /**
@@ -245,5 +249,51 @@ public abstract class AMEDAActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+
+    /**
+     * Produces a dialog box warning the user against fooling around with the wobble board
+     * while the device is trying to move itself.
+     *
+     * Clears the instruction queue if the user selects cancel,
+     * re-executes the last instruction if they select try again.
+     */
+    protected void CannotMoveDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error")
+                .setMessage("Unable to move the AMEDA device. Please make sure the plate is horizontal.")
+                .setCancelable(false)
+                .setPositiveButton("Try Again", new DialogInterface.OnClickListener()
+                {
+                    /**
+                     * Try again - resend the last instruction to the AMEDA.
+                     *
+                     * @param dialog Unused
+                     * @param which Unused
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        RepeatInstruction();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    /**
+                     * Cancel - so clear the instruction buffer.
+                     *
+                     * @param dialog Unused
+                     * @param which Unused
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        ClearInstructions();
+                    }
+                });
+
+        builder.create().show();
     }
 }

@@ -2,6 +2,8 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
 
 /**
  * Enumeration class for the various response codes that the AMEDA device generates.
+ *
+ * @TODO: This setup is not going to work for 'angle request' responses. Refactor
  */
 public enum AMEDAResponse
 {

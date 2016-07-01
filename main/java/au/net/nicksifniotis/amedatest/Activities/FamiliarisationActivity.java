@@ -42,12 +42,9 @@ import au.net.nicksifniotis.amedatest.R;
 /**
  * Familiarisation task activity.
  */
-public class FamiliarisationActivity extends AppCompatActivity
+public class FamiliarisationActivity extends AMEDAActivity
 {
-    private AMEDA _device;
     private TextView[] _fields;
-    private Handler _response_handler;
-    private AMEDAInstructionQueue _instruction_buffer;
 
 
     /**
@@ -63,53 +60,6 @@ public class FamiliarisationActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.familiarisation);
         _connect_gui();
-
-        _instruction_buffer = new AMEDAInstructionQueue();
-        _response_handler = new Handler(new Handler.Callback()
-        {
-            /**
-             * Handle responses received from the AMEDA device.
-             *
-             * At the moment, there is only one sort of message that this method handles, the
-             * 'response received' message with a @TODO magic number of 1
-             *
-             * @param msg The message received from the AMEDA reader.
-             * @return True if succesful, true otherwise @TODO come on what
-             */
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                makeToast ("Message received.");
-
-                int what = msg.what;
-                if (what == 1)
-                {
-                    AMEDAResponse response = (AMEDAResponse) msg.obj;
-                    _response_received(response);
-                }
-
-                return true;
-            }
-        });
-
-        _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this, _response_handler);
-    }
-
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        _device.Disconnect();
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        _device.Connect();
     }
 
 
@@ -190,121 +140,48 @@ public class FamiliarisationActivity extends AppCompatActivity
             {
                 curr_value++;
 
-                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
-                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
-                        .N(1));
 
-                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
-                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
-                        .N(5));
-
-                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
-                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
-                        .N(num));
-
-                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
-                        .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
-                        .N(1));
-
-                _next_instruction();
-                //_fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
+                _fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
             }
             else
                 makeToast ("Sorry, you've already used up your five moves to this position.");
         }
         else
-            makeToast ("Strange error in that execute has been invoked with num=" + num);
+            DebugToast ("Strange error in that execute has been invoked with num=" + num);
     }
 
 
     /**
-     * The AMEDA has responded to the instruction just sent to it.
-     * Advance to the appropriate state based on the device's response.
+     * Interpret and respond to the AMEDA's response to the last instruction.
      *
-     * @param response The response code received.
+     * @param instruction The instruction that was sent to the AMEDA.
+     * @param response The AMEDA's response to that instruction.
      */
-    private void _response_received(AMEDAResponse response)
+    @Override
+    protected void ProcessAMEDAResponse (AMEDAInstruction instruction, AMEDAResponse response)
     {
-        switch (response)
+        if (instruction.GetInstruction().IsValidResponse(response))
         {
-            case READY:
-                _next_instruction();
-                break;
-            case CANNOT_MOVE:
-                _cannot_move_handler();
-                break;
-            case CALIBRATION_FAIL:
-            case UNKNOWN_COMMAND:
-            case NO_RESPONSE_ANGLE:
-                makeToast("Received unknown response code for current command.");
-                break;
+            switch (response)
+            {
+                case READY:
+                    ExecuteNextInstruction();
+                    break;
+                case CANNOT_MOVE:
+                    CannotMoveDialog();
+                    break;
+                case CALIBRATION_FAIL:
+                case UNKNOWN_COMMAND:
+                case NO_RESPONSE_ANGLE:
+                    makeToast("Received unknown response code for current command.");
+                    break;
+            }
         }
-    }
-
-
-    /**
-     * Sends the next instruction to the AMEDA device.
-     *
-     * If the instruction queue is empty, then do nothing.
-     */
-    private void _next_instruction()
-    {
-        _instruction_buffer.Advance();
-        _repeat_instruction();
-    }
-
-
-    /**
-     * Retransmits the last instruction to the AMEDA device.
-     */
-    private void _repeat_instruction()
-    {
-        makeToast("Executing " + _instruction_buffer.Current().Build());
-        ((AMEDAImplementation) _device).SendInstruction(_instruction_buffer.Current());
-    }
-
-
-    /**
-     * Method called when the AMEDA reports that it is unable to move to the next position.
-     * Display a dialog box complaining about it to the user, and then re-try sending the
-     * instruction again.
-     */
-    private void _cannot_move_handler()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Error")
-                .setMessage("Unable to move the AMEDA device. Please make sure the plate is horizontal.")
-                .setCancelable(false)
-                .setPositiveButton("Try Again", new DialogInterface.OnClickListener()
-                {
-                    /**
-                     * Try again - resend the last instruction to the AMEDA.
-                     *
-                     * @param dialog Unused
-                     * @param which Unused
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        _repeat_instruction();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    /**
-                     * Cancel - so clear the instruction buffer.
-                     *
-                     * @param dialog Unused
-                     * @param which Unused
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        _instruction_buffer.Clear();
-                    }
-                });
-
-        builder.create().show();
+        else
+        {
+            DebugToast ("Received response " + response.toString() + " to command " + instruction.Build());
+            finish();
+        }
     }
 
 
