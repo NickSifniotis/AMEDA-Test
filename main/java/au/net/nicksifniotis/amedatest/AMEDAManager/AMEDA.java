@@ -15,9 +15,25 @@ public interface AMEDA
 
     public boolean Calibrate();
 
+
+    /**
+     * Disconnects the device, if it's currently connected.
+     */
     public void Disconnect();
 
+
+    /**
+     * Creates the connection to the device, if no such connection exists.
+     */
     public void Connect();
 
     public boolean Beep(int num_beeps);
+
+
+    /**
+     * Transmits the given instruction to the AMEDA.
+     *
+     * @param instruction The instruction to transmit.
+     */
+    public void SendInstruction (AMEDAInstruction instruction);
 }

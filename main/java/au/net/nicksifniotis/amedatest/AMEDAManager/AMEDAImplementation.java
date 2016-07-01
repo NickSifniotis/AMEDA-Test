@@ -28,7 +28,6 @@ public class AMEDAImplementation implements AMEDA
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private Context _parent;
     private String dataReceived;
-    private boolean _blocked;
     private boolean _connected;
 
     private BluetoothAdapter btAdaptor = null;
@@ -48,7 +47,6 @@ public class AMEDAImplementation implements AMEDA
      */
     public AMEDAImplementation(Context context, Handler responses)
     {
-        _blocked = false;
         _connected = false;
         _response_handler = responses;
         _parent = context;
@@ -217,12 +215,6 @@ public class AMEDAImplementation implements AMEDA
         {
             makeToast("Write called: " + message);
 
-//            if (_blocked)
-//            {
-//                makeToast ("Unable to post message - AMEDA blocked. " + _blocked + ": " + message);
-//                return;
-//            }
-
             if (!_connected)
             {
                 makeToast ("Unable to post message - AMEDA not connected.");
@@ -234,7 +226,6 @@ public class AMEDAImplementation implements AMEDA
             try
             {
                 mmOutStream.write(msgBuffer);
-                _blocked = true;
                 makeToast("Blocked set to true, message " + message);
             }
             catch (Exception e)
@@ -329,8 +320,7 @@ public class AMEDAImplementation implements AMEDA
 
     /**
      * Sends the instruction to the device.
-     * @TODO it's looking like instruction creation is being moved out of AMEDAImplementation and into the activities
-     * @TODO address this design issue - creation belongs in here, return the instruction to the activity
+     *
      * @param i The instruction to execute.
      */
     public void SendInstruction (AMEDAInstruction i)

@@ -62,7 +62,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
             }
         });
 
-        _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this, _response_handler);
+        _device = (Globals.AMEDA_FREE)
+                ? new VirtualAMEDA(this, _response_handler)
+                : new AMEDAImplementation(this, _response_handler);
     }
 
 
@@ -189,12 +191,11 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
     /**
      * Retransmits the last instruction to the AMEDA device.
-     * @TODO obvious unnecessary casting is obvious. Fix the interface
      */
     protected void RepeatInstruction()
     {
         DebugToast("Executing " + _instruction_buffer.Current().Build());
-        ((AMEDAImplementation) _device).SendInstruction(_instruction_buffer.Current());
+        _device.SendInstruction(_instruction_buffer.Current());
     }
 
 

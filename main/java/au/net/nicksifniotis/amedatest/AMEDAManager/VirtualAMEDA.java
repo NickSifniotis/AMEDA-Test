@@ -2,6 +2,8 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Message;
 
 import au.net.nicksifniotis.amedatest.R;
 
@@ -14,11 +16,19 @@ import au.net.nicksifniotis.amedatest.R;
 public class VirtualAMEDA implements AMEDA
 {
     private Context _context;
+    private Handler _response_handler;
 
 
-    public VirtualAMEDA(Context context)
+    /**
+     * Construct this virtual AMEDA device.
+     *
+     * @param context The activity that owns this device.
+     * @param handler The handler to send response messages through to.
+     */
+    public VirtualAMEDA(Context context, Handler handler)
     {
         _context = context;
+        _response_handler = handler;
     }
 
 
@@ -34,13 +44,6 @@ public class VirtualAMEDA implements AMEDA
     @Override
     public boolean GoToPosition(int position)
     {
-        try
-        {
-            Thread.sleep(250);
-        }
-        catch (Exception e)
-        {
-        }
 
         return true;
     }
@@ -92,9 +95,39 @@ public class VirtualAMEDA implements AMEDA
     @Override
     public boolean Beep(int num_beeps)
     {
+        return true;
+    }
+
+
+    /**
+     * Sends the instruction to the make-believe AMEDA.
+     *
+     * So - beep, if we were asked to beep.
+     * Send a delay of about 100ms and a READY message back if the
+     * instruction was anything else.
+     *
+     * @param instruction The instruction to transmit.
+     */
+    @Override
+    public void SendInstruction(AMEDAInstruction instruction)
+    {
+        if (instruction.GetInstruction() == AMEDAInstructionEnum.BUZZER_LONG
+                || instruction.GetInstruction() == AMEDAInstructionEnum.BUZZER_SHORT)
+            _beep();
+        else
+        {
+            Message msg = _response_handler.obtainMessage(AMEDA.RESPONSE, AMEDAResponse.READY);
+            _response_handler.sendMessageDelayed(msg, 100);
+        }
+    }
+
+
+    /**
+     * Beep.
+     */
+    private void _beep()
+    {
         MediaPlayer mp = MediaPlayer.create(_context, R.raw.virtual_ameda);
         mp.start();
-
-        return true;
     }
 }

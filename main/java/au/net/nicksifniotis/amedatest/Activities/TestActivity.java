@@ -169,7 +169,7 @@ public class TestActivity extends AppCompatActivity
         try
         {
             // @TODO implement a response code handler
-            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this, null);
+            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this, null) : new AMEDAImplementation(this, null);
             device.Connect();
         }
         catch (Exception e)
