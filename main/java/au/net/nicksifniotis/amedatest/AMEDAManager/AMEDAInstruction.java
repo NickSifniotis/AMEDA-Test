@@ -25,11 +25,6 @@ public class AMEDAInstruction {
     }
 
 
-    public AMEDAInstruction CreatePacket()
-    {
-        return new AMEDAInstruction();
-    }
-
     public AMEDAInstruction Instruction (AMEDAInstructionEnum in)
     {
         this._instruction = in;
@@ -77,8 +72,18 @@ public class AMEDAInstruction {
                 break;
         }
 
-        //return res;
         return packetize(res);
+    }
+
+
+    /**
+     * Accessor method for the instruction enumeration.
+     *
+     * @return This instance's instruction enum.
+     */
+    public AMEDAInstructionEnum GetInstruction()
+    {
+        return _instruction;
     }
 
 
@@ -98,46 +103,5 @@ public class AMEDAInstruction {
         String res = "[" + ins + (char)(chk % 256) + "]";
 
         return res;
-    }
-
-
-    /**
-     * Converts a packet received from the device into a response that the AMEDA controller
-     * can understand.
-     *
-     * @param ins The packet received from the device.
-     * @throws AMEDAException If the packet is unreadable or contains an unrecognised instruction.
-     */
-    private void depacketise (String ins) throws AMEDAException
-    {
-        // test for the easy wins first
-        if (ins.length() == 8 && ins.charAt(0) == '[' && ins.charAt(7) == ']')
-        {
-            String instruction = ins.substring(1, 6);
-            int checksum = (int) ins.charAt(6);
-
-            int chk = 0;
-            for (char c: instruction.toCharArray())
-                chk += (int) c;
-
-            if (checksum == (chk % 256))
-            {
-                // passes the checksum test, so now lets see what we have received.
-                // @TODO this needs to be processed properly, not using throws here and there
-                if (instruction == "READY")
-                {}
-                else if (instruction == "NEGAK")
-                    throw new AMEDAException ("AMEDA reports NEGAK - instruction transmission failure.");
-                else if (instruction == "ERR01")
-                    throw new AMEDAException ("AMEDA reports ERR01 - failed to set new position.");
-                else if (instruction == "ERR02")
-                    throw new AMEDAException ("AMEDA reports ERR02 - failed to contact wobble board.");
-                else if (instruction == "ERR03")
-                    throw new AMEDAException ("AMEDA reports ERR03 - failed to calibrate.");
-
-            }
-            else throw new AMEDAException("Invalid packet received from device: " + ins);
-        }
-        else throw new AMEDAException("Invalid packet received from device: " + ins);
     }
 }

@@ -9,6 +9,8 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
  */
 public interface AMEDA
 {
+    public static final int RESPONSE = 1;
+
     public boolean GoToPosition (int position);
 
     public boolean Calibrate();

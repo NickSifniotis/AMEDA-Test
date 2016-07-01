@@ -1,0 +1,249 @@
+package au.net.nicksifniotis.amedatest.Activities;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
+
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionFactory;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
+import au.net.nicksifniotis.amedatest.Globals;
+
+/**
+ * Extension of the default activity class, which hides boilerplate code
+ * for accessing the AMEDA device.
+ *
+ * Connectivity is dealt with in this layer.
+ *
+ */
+public abstract class AMEDAActivity extends AppCompatActivity
+{
+    private AMEDA _device;
+    private AMEDAInstructionQueue _instruction_buffer;
+    private Handler _response_handler;
+
+
+    /**
+     * Create the message handlers and an instance of the correct AMEDA device to connect to.
+     *
+     * @param savedInstanceState Not used.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        _instruction_buffer = new AMEDAInstructionQueue();
+        _response_handler = new Handler(new Handler.Callback()
+        {
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                int msg_type = msg.what;
+
+                if (msg_type == AMEDA.RESPONSE)
+                {
+                    AMEDAResponse response = (AMEDAResponse) msg.obj;
+                    DebugToast("Handling message " + response.toString());
+
+                    ProcessAMEDAResponse(_instruction_buffer.Current().GetInstruction(), response);
+                }
+                return true;
+            }
+        });
+
+        _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this, _response_handler);
+    }
+
+
+    /**
+     * Connectivity is automatically taken care of when the activity starts.
+     */
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        _device.Connect();
+    }
+
+
+    /**
+     * Disconnections happen automatically when the activity is asked to stop.
+     */
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        _device.Disconnect();
+    }
+
+
+    /**
+     * Empty out the message handler on destruction.
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        _response_handler.removeCallbacksAndMessages(null);
+    }
+
+
+    /**
+     * Enqueues an instruction directing the AMEDA to move to a position.
+     *
+     * @param position The position to set the AMEDA to. Must be an integer between 1 and 5 inclusive.
+     */
+    protected void GoToPosition (int position)
+    {
+        if (position >= 1 && position <= 5)
+        {
+            _instruction_buffer.Enqueue(
+                    AMEDAInstructionFactory.Create()
+                    .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
+                    .N(position)
+            );
+        }
+    }
+
+
+    /**
+     * Enqueues an instruction to begin the AMEDA's self calibration process.
+     */
+    protected void Calibrate ()
+    {
+        _instruction_buffer.Enqueue(
+                AMEDAInstructionFactory.Create()
+                .Instruction(AMEDAInstructionEnum.CALIBRATE)
+        );
+    }
+
+
+    /**
+     * Sends a ping message to the AMEDA. Keep alive!
+     */
+    protected void Ping ()
+    {
+        _instruction_buffer.Enqueue(
+                AMEDAInstructionFactory.Create()
+                .Instruction(AMEDAInstructionEnum.HELLO)
+        );
+    }
+
+
+    /**
+     * Sends a request to the AMEDA for the current angle of the wobble board.
+     */
+    protected void RequestAngle ()
+    {
+        _instruction_buffer.Enqueue(
+                AMEDAInstructionFactory.Create()
+                .Instruction(AMEDAInstructionEnum.REQUEST_ANGLE)
+        );
+    }
+
+
+    /**
+     * Instructs the AMEDA to beep num_times times, capped at nine beeps.
+     *
+     * @param num_times The number of beeps to beep.
+     */
+    protected void Beep (int num_times)
+    {
+        if (num_times > 9)
+            num_times = 9;
+
+        _instruction_buffer.Enqueue(
+                AMEDAInstructionFactory.Create()
+                .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
+                .N(num_times)
+        );
+    }
+
+
+    /**
+     * Sends the next instruction to the AMEDA device.
+     *
+     * If the instruction queue is empty, then do nothing.
+     */
+    protected void ExecuteNextInstruction()
+    {
+        _instruction_buffer.Advance();
+        RepeatInstruction();
+    }
+
+
+    /**
+     * Retransmits the last instruction to the AMEDA device.
+     * @TODO obvious unnecessary casting is obvious. Fix the interface
+     */
+    protected void RepeatInstruction()
+    {
+        DebugToast("Executing " + _instruction_buffer.Current().Build());
+        ((AMEDAImplementation) _device).SendInstruction(_instruction_buffer.Current());
+    }
+
+
+    /**
+     * Clear the instruction buffer. Could be used when failing or no response from machine.
+     */
+    protected void ClearInstructions()
+    {
+        _instruction_buffer.Clear();
+    }
+
+
+    /**
+     * Process the AMEDA's response to the instruction that it just received.
+     *
+     * This abstract method needs to be implemented by every Activity that sends commands
+     * to the AMEDA device.
+     *
+     * @param instruction The instruction that was sent to the AMEDA.
+     * @param response The AMEDA's response to that instruction.
+     */
+    protected abstract void ProcessAMEDAResponse (AMEDAInstructionEnum instruction, AMEDAResponse response);
+
+
+    /**
+     * Sends a toasty message to the screen. The call to Toast.makeText is run through the UI thread
+     * since there is no guarantee that the caller of this method is working in that thread.
+     *
+     * [Toast needs to run through the UI thread because just because.]
+     *
+     * Messages are only displayed if debug mode is on - if not, they are suppressed.
+     *
+     * This method is designed to be used for debugging only - do not send messages through this
+     * method that you want the user to see.
+     *
+     * @param message The message to display.
+     */
+    protected void DebugToast (String message)
+    {
+        if (Globals.DEBUG_MODE)
+        {
+            final String msg = message;
+            final Context parent = this;
+
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    Toast t = Toast.makeText(parent, msg, Toast.LENGTH_SHORT);
+                    t.show();
+                }
+            });
+        }
+    }
+}
