@@ -36,17 +36,17 @@ public class AMEDAInstruction {
         return this;
     }
 
-    public AMEDAInstruction N (int n) throws AMEDAException
+    public AMEDAInstruction N (int n)
     {
-        if (n < 1 || n > 9)
-            throw new AMEDAException("Invalid n passed to packet factory.");
-
-        if (_instruction == AMEDAInstructionEnum.NONE
-                || _instruction == AMEDAInstructionEnum.HELLO
-                || _instruction == AMEDAInstructionEnum.REQUEST_ANGLE
-                || _instruction == AMEDAInstructionEnum.CALIBRATE)
-            throw new AMEDAException("Attempting to set data byte on instruction" +
-                    " that doesn't use it");
+//        if (n < 1 || n > 9)
+//            throw new AMEDAException("Invalid n passed to packet factory.");
+//
+//        if (_instruction == AMEDAInstructionEnum.NONE
+//                || _instruction == AMEDAInstructionEnum.HELLO
+//                || _instruction == AMEDAInstructionEnum.REQUEST_ANGLE
+//                || _instruction == AMEDAInstructionEnum.CALIBRATE)
+//            throw new AMEDAException("Attempting to set data byte on instruction" +
+//                    " that doesn't use it");
 
         this._n = n;
         return this;

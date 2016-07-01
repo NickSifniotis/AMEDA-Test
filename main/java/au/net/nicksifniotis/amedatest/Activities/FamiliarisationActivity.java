@@ -32,6 +32,7 @@ import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionFactory;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.Globals;
@@ -46,6 +47,7 @@ public class FamiliarisationActivity extends AppCompatActivity
     private AMEDA _device;
     private TextView[] _fields;
     private Handler _response_handler;
+    private AMEDAInstructionQueue _instruction_buffer;
 
 
     /**
@@ -62,6 +64,7 @@ public class FamiliarisationActivity extends AppCompatActivity
         setContentView(R.layout.familiarisation);
         _connect_gui();
 
+        _instruction_buffer = new AMEDAInstructionQueue();
         _response_handler = new Handler(new Handler.Callback()
         {
             /**
@@ -76,12 +79,13 @@ public class FamiliarisationActivity extends AppCompatActivity
             @Override
             public boolean handleMessage(Message msg)
             {
+                makeToast ("Message received.");
+
                 int what = msg.what;
                 if (what == 1)
                 {
                     AMEDAResponse response = (AMEDAResponse) msg.obj;
-
-
+                    _response_received(response);
                 }
 
                 return true;
@@ -186,11 +190,24 @@ public class FamiliarisationActivity extends AppCompatActivity
             {
                 curr_value++;
 
-                _device.GoToPosition(1);
-                _device.GoToPosition(5);
-                _device.GoToPosition(num);
+                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
+                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
+                        .N(1));
 
-                _fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
+                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
+                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
+                        .N(5));
+
+                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
+                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
+                        .N(num));
+
+                _instruction_buffer.Enqueue(AMEDAInstructionFactory.Create()
+                        .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
+                        .N(1));
+
+                _next_instruction();
+                //_fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
             }
             else
                 makeToast ("Sorry, you've already used up your five moves to this position.");
@@ -208,7 +225,20 @@ public class FamiliarisationActivity extends AppCompatActivity
      */
     private void _response_received(AMEDAResponse response)
     {
-
+        switch (response)
+        {
+            case READY:
+                _next_instruction();
+                break;
+            case CANNOT_MOVE:
+                _cannot_move_handler();
+                break;
+            case CALIBRATION_FAIL:
+            case UNKNOWN_COMMAND:
+            case NO_RESPONSE_ANGLE:
+                makeToast("Received unknown response code for current command.");
+                break;
+        }
     }
 
 
@@ -219,7 +249,8 @@ public class FamiliarisationActivity extends AppCompatActivity
      */
     private void _next_instruction()
     {
-
+        _instruction_buffer.Advance();
+        _repeat_instruction();
     }
 
 
@@ -228,7 +259,8 @@ public class FamiliarisationActivity extends AppCompatActivity
      */
     private void _repeat_instruction()
     {
-
+        makeToast("Executing " + _instruction_buffer.Current().Build());
+        ((AMEDAImplementation) _device).SendInstruction(_instruction_buffer.Current());
     }
 
 
@@ -260,15 +292,15 @@ public class FamiliarisationActivity extends AppCompatActivity
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
                 {
                     /**
-                     * It's likely that the next instruction will fail.
-                     * @TODO need a method to clear out the instructio buffer.
+                     * Cancel - so clear the instruction buffer.
+                     *
                      * @param dialog Unused
                      * @param which Unused
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        _next_instruction();
+                        _instruction_buffer.Clear();
                     }
                 });
 

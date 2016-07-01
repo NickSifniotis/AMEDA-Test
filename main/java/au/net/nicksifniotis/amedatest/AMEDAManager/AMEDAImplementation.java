@@ -93,6 +93,9 @@ public class AMEDAImplementation implements AMEDA
 
             AMEDAResponse response = AMEDAResponse.FindResponse(result);
             makeToast("Unblocking: " + response.toString());
+
+            Message message = _response_handler.obtainMessage(1, response);
+            _response_handler.sendMessage(message);
           //  _blocked = false;
         }
     }
@@ -307,19 +310,32 @@ public class AMEDAImplementation implements AMEDA
     @Override
     public boolean Beep(int num_beeps)
     {
-        try {
-            AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
-                    .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
-                    .N(num_beeps);
+//        try {
+//            AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
+//                    .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
+//                    .N(num_beeps);
+//
+//            mConnectedThread.write(instruction.Build());
+//            return true;
+//        }
+//        catch (AMEDAException e)
+//        {
+//            makeToast ("Fatal error: " + e.getMessage());
+//            return false;
+//        }
+        return true;
+    }
 
-            mConnectedThread.write(instruction.Build());
-            return true;
-        }
-        catch (AMEDAException e)
-        {
-            makeToast ("Fatal error: " + e.getMessage());
-            return false;
-        }
+
+    /**
+     * Sends the instruction to the device.
+     * @TODO it's looking like instruction creation is being moved out of AMEDAImplementation and into the activities
+     * @TODO address this design issue - creation belongs in here, return the instruction to the activity
+     * @param i The instruction to execute.
+     */
+    public void SendInstruction (AMEDAInstruction i)
+    {
+        mConnectedThread.write(i.Build());
     }
 
 
@@ -379,16 +395,16 @@ public class AMEDAImplementation implements AMEDA
 
         if (result)
         {
-            try
-            {
-                instruction = AMEDAInstructionFactory.Create()
-                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
-                        .N(position);
-            }
-            catch (AMEDAException e)
-            {
-                result = false;
-            }
+//            try
+//            {
+//                instruction = AMEDAInstructionFactory.Create()
+//                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
+//                        .N(position);
+//            }
+//            catch (AMEDAException e)
+//            {
+//                result = false;
+//            }
         }
 
         if (result)
