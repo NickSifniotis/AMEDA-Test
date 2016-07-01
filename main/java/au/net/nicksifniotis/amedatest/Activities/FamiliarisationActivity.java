@@ -5,10 +5,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -207,6 +209,70 @@ public class FamiliarisationActivity extends AppCompatActivity
     private void _response_received(AMEDAResponse response)
     {
 
+    }
+
+
+    /**
+     * Sends the next instruction to the AMEDA device.
+     *
+     * If the instruction queue is empty, then do nothing.
+     */
+    private void _next_instruction()
+    {
+
+    }
+
+
+    /**
+     * Retransmits the last instruction to the AMEDA device.
+     */
+    private void _repeat_instruction()
+    {
+
+    }
+
+
+    /**
+     * Method called when the AMEDA reports that it is unable to move to the next position.
+     * Display a dialog box complaining about it to the user, and then re-try sending the
+     * instruction again.
+     */
+    private void _cannot_move_handler()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Error")
+                .setMessage("Unable to move the AMEDA device. Please make sure the plate is horizontal.")
+                .setCancelable(false)
+                .setPositiveButton("Try Again", new DialogInterface.OnClickListener()
+                {
+                    /**
+                     * Try again - resend the last instruction to the AMEDA.
+                     *
+                     * @param dialog Unused
+                     * @param which Unused
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        _repeat_instruction();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    /**
+                     * It's likely that the next instruction will fail.
+                     * @TODO need a method to clear out the instructio buffer.
+                     * @param dialog Unused
+                     * @param which Unused
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        _next_instruction();
+                    }
+                });
+
+        builder.create().show();
     }
 
 
