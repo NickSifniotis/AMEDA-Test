@@ -8,13 +8,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center_horizontal"
-        android:text="Familiarisation Activity"/>
+        android:text="@string/f_title"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Use these buttons to move the AMEDA to different positions. Press down on the plate to get a feel for what each position is like. Please note that the board needs to be in the horizontal position before the AMEDA will respond to a move command." />
+        android:text="@string/f_description" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -22,14 +22,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="Position 1"
-            android:onClick="btn_famil_1"
+            android:id="@id/f_btn_1"
+            android:onClick="f_btn_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/famil_text_1"
-            android:text="0"
+            android:id="@id/f_txt_1"
+            android:text="@string/f_initial_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -40,14 +40,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="Position 2"
-            android:onClick="btn_famil_2"
+            android:id="@id/f_btn_2"
+            android:onClick="f_btn_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/famil_text_2"
-            android:text="0"
+            android:id="@id/f_txt_2"
+            android:text="@string/f_initial_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -58,14 +58,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="Position 3"
-            android:onClick="btn_famil_3"
+            android:id="@id/f_btn_3"
+            android:onClick="f_btn_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/famil_text_3"
-            android:text="0"
+            android:id="@id/f_txt_3"
+            android:text="@string/f_initial_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -76,14 +76,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="Position 4"
-            android:onClick="btn_famil_4"
+            android:id="@id/f_btn_4"
+            android:onClick="f_btn_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/famil_text_4"
-            android:text="0"
+            android:id="@id/f_txt_4"
+            android:text="@string/f_initial_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -94,14 +94,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="Position 5"
-            android:onClick="btn_famil_5"
+            android:id="@id/f_btn_5"
+            android:onClick="f_btn_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/famil_text_5"
-            android:text="0"
+            android:id="@id/f_txt_5"
+            android:text="@string/f_initial_count"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -112,8 +112,8 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="Go Back"
-            android:onClick="btn_familiarise_done"
+            android:text="@string/done"
+            android:onClick="f_btn_done"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

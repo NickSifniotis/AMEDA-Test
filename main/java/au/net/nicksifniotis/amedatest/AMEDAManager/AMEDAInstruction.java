@@ -20,7 +20,7 @@ public class AMEDAInstruction {
      */
     public AMEDAInstruction()
     {
-        this._instruction = AMEDAInstructionEnum.NONE;
+        this._instruction = AMEDAInstructionEnum.HELLO;
         this._n = 0;
     }
 
@@ -64,9 +64,9 @@ public class AMEDAInstruction {
             case BUZZER_SHORT:
                 res = "BZSH" + Integer.toString(_n);
                 break;
-            case REQUEST_ANGLE:
-                res = "RQAGL";
-                break;
+//            case REQUEST_ANGLE:
+//                res = "RQAGL";
+//                break;
             case CALIBRATE:
                 res = "CALHZ";
                 break;

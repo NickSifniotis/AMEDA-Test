@@ -296,4 +296,37 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
         builder.create().show();
     }
+
+
+    /**
+     * Serious error failure routine. Displays a dialog box and then terminates the activity.
+     *
+     * Called only when something has gone spectacularly wrong, like losing the connection
+     * or receiving garbage or unexpected responses from the AMEDA.
+     *
+     * @param message The message to display to the user before dying.
+     */
+    protected void FailAndDieDialog(String message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Critical Error")
+                .setMessage(message)
+                .setCancelable(false)
+                .setNegativeButton("Ok", new DialogInterface.OnClickListener()
+                {
+                    /**
+                     * This is the end of all things.
+                     *
+                     * @param dialog Unused
+                     * @param which Unused
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        finish();
+                    }
+                });
+
+        builder.create().show();
+    }
 }

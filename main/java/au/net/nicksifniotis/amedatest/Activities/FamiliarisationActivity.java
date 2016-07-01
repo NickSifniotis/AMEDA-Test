@@ -1,41 +1,17 @@
 package au.net.nicksifniotis.amedatest.Activities;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
+import java.util.Random;
 
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAException;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionFactory;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
-import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
-import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
 
 
@@ -45,6 +21,7 @@ import au.net.nicksifniotis.amedatest.R;
 public class FamiliarisationActivity extends AMEDAActivity
 {
     private TextView[] _fields;
+    private Random randomiser;
 
 
     /**
@@ -59,7 +36,10 @@ public class FamiliarisationActivity extends AMEDAActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.familiarisation);
+
         _connect_gui();
+
+        randomiser = new Random();
     }
 
 
@@ -68,13 +48,22 @@ public class FamiliarisationActivity extends AMEDAActivity
      */
     private void _connect_gui ()
     {
+        Resources r = getResources();
         _fields = new TextView[6];
-        _fields[0] = null;
-        _fields[1] = (TextView)(findViewById(R.id.famil_text_1));
-        _fields[2] = (TextView)(findViewById(R.id.famil_text_2));
-        _fields[3] = (TextView)(findViewById(R.id.famil_text_3));
-        _fields[4] = (TextView)(findViewById(R.id.famil_text_4));
-        _fields[5] = (TextView)(findViewById(R.id.famil_text_5));
+
+        for (int i = 1; i <= 5; i ++)
+        {
+            int btn_id = r.getIdentifier("f_btn_" + i, "id", "au.net.nicksifniotis.amedatest");
+            Button btn = (Button) findViewById(btn_id);
+            if (btn != null)
+                btn.setText(getString (R.string.f_goto_button, i));
+
+            int txt_id = r.getIdentifier("f_txt_" + i, "id", "au.net.nicksifniotis.amedatest");
+            _fields [i] = (TextView) findViewById(txt_id);
+
+            if (_fields[i] != null)
+                _fields[i].setText(getString(R.string.f_initial_count));
+        }
     }
 
 
@@ -83,34 +72,34 @@ public class FamiliarisationActivity extends AMEDAActivity
      *
      * @param view Not used.
      */
-    public void btn_famil_1(View view)
+    public void f_btn_1(View view)
     {
         execute (1);
     }
 
-    public void btn_famil_2(View view)
+    public void f_btn_2(View view)
     {
         execute (2);
     }
 
-    public void btn_famil_3(View view)
+    public void f_btn_3(View view)
     {
         execute (3);
     }
 
-    public void btn_famil_4(View view)
+    public void f_btn_4(View view)
     {
         execute (4);
     }
 
-    public void btn_famil_5(View view)
+    public void f_btn_5(View view)
     {
         execute (5);
     }
 
-    public void btn_familiarise_done(View view)
+    public void f_btn_done(View view)
     {
-        done();
+        finish();
     }
 
 
@@ -138,13 +127,21 @@ public class FamiliarisationActivity extends AMEDAActivity
             int curr_value = Integer.parseInt(_fields[num].getText().toString());
             if (curr_value < 5)
             {
+                // load up with a series of 'fake' movements to random positions
+                // to prevent the user from gaming the system by timing how long the
+                // AMEDA takes to reposition itself.
+                for (int i = 0; i < 5; i ++)
+                    GoToPosition(randomiser.nextInt(5) + 1);
+                GoToPosition(num);
+                Beep(1);
+
+                ExecuteNextInstruction();
+
                 curr_value++;
-
-
                 _fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
             }
             else
-                makeToast ("Sorry, you've already used up your five moves to this position.");
+                makeToast (getString(R.string.f_sorry_five));
         }
         else
             DebugToast ("Strange error in that execute has been invoked with num=" + num);
@@ -170,28 +167,16 @@ public class FamiliarisationActivity extends AMEDAActivity
                 case CANNOT_MOVE:
                     CannotMoveDialog();
                     break;
-                case CALIBRATION_FAIL:
-                case UNKNOWN_COMMAND:
-                case NO_RESPONSE_ANGLE:
-                    makeToast("Received unknown response code for current command.");
+                default:
+                    DebugToast("Received unknown response code for current command.");
+                    FailAndDieDialog(getString(R.string.f_fail_die));
                     break;
             }
         }
         else
         {
             DebugToast ("Received response " + response.toString() + " to command " + instruction.Build());
-            finish();
+            FailAndDieDialog(getString(R.string.f_fail_die));
         }
-    }
-
-
-    /**
-     * That's it, we are done.
-     *
-     * If a score or state needs to be saved, this is the place in which to do it.
-     */
-    private void done()
-    {
-        finish();
     }
 }
