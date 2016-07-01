@@ -23,6 +23,7 @@
         <activity android:name=".Activities.ManageRecordsActivity" />
         <activity android:name=".Activities.TestActivity" />
         <activity android:name=".Activities.FamiliarisationActivity" />
+
     </application>
 
 </manifest>

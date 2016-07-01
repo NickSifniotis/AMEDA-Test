@@ -6,9 +6,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+     <!--   <item name="android:background">@color/mainBackground</item> -->
 
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+  <!--      <item name="actionBarStyle" parent="android:Theme.DeviceDefault.Light.DarkActionBar">@style/MyActionBar</item>
+        <item name="android:actionBarStyle"
+            parent="android:Theme.DeviceDefault.Light.DarkActionBar">@style/MyActionBar</item> -->
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
@@ -19,5 +23,10 @@
         <item name="android:fontFamily">serif</item>
     </style>
 
+    <!-- ActionBar styles -->
+    <style name="MyActionBar">
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:color">@color/colorPrimary</item>
+    </style>
 
 </resources>

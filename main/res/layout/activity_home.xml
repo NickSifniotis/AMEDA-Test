@@ -60,38 +60,4 @@
             android:layout_alignParentStart="true" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/tutorial_video_layout"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="AMEDA Tutorial"
-            android:layout_centerHorizontal="true"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Please watch this short demonstration video to learn how to use the AMEDA device correctly." />
-
-        <VideoView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/tutorial_viewer"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/done"
-            android:onClick="btn_home_tute_finished"/>
-
-    </LinearLayout>
-
 </LinearLayout>

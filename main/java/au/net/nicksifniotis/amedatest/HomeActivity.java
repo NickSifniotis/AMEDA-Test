@@ -22,6 +22,7 @@ import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.Activities.FamiliarisationActivity;
 import au.net.nicksifniotis.amedatest.Activities.ManageRecordsActivity;
 import au.net.nicksifniotis.amedatest.Activities.NewRecordActivity;
+import au.net.nicksifniotis.amedatest.Activities.Tutorial;
 
 
 /**
@@ -47,7 +48,7 @@ public class HomeActivity extends AppCompatActivity
 
         _connect_gui();
         _control_panel.setVisibility(View.VISIBLE);
-        _video_panel.setVisibility(View.GONE);
+     //   _video_panel.setVisibility(View.GONE);
     }
 
 
@@ -68,9 +69,9 @@ public class HomeActivity extends AppCompatActivity
     private void _connect_gui()
     {
         _status_bar = (TextView)findViewById(R.id.txtStatus);
-        _tutorial_viewer = (VideoView)findViewById(R.id.tutorial_viewer);
+    //    _tutorial_viewer = (VideoView)findViewById(R.id.tutorial_viewer);
         _control_panel = (RelativeLayout)findViewById(R.id.home_control_panel);
-        _video_panel = (LinearLayout)findViewById(R.id.tutorial_video_layout);
+   //     _video_panel = (LinearLayout)findViewById(R.id.tutorial_video_layout);
     }
 
 
@@ -111,7 +112,7 @@ public class HomeActivity extends AppCompatActivity
      */
     public void btn_home_tutorial(View view)
     {
-        _start_tutorial();
+        _launch_tutorial();
     }
 
     public void btn_home_familiarise(View view)
@@ -124,11 +125,6 @@ public class HomeActivity extends AppCompatActivity
         _launch_test();
     }
 
-    public void btn_home_tute_finished(View view)
-    {
-        _end_tutorial();
-    }
-
 
     /*
         The action methods that do the things.
@@ -136,42 +132,42 @@ public class HomeActivity extends AppCompatActivity
      */
     private void _start_tutorial()
     {
-        makeToast("in start tute");
-        MediaController mediaControls = new MediaController(this);
-
-        try
-        {
-            _tutorial_viewer.setMediaController(mediaControls);
-            _tutorial_viewer.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/"
-                                    + R.raw.tutorial));
-        }
-        catch (Exception e)
-        {
-            makeToast("Error: " + e.getMessage());
-        }
-
-        _control_panel.setVisibility(View.GONE);
-        _video_panel.setVisibility(View.VISIBLE);
-
-        _tutorial_viewer.requestFocus();
-        _tutorial_viewer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-            public void onPrepared(MediaPlayer mediaPlayer)
-            {
-                _tutorial_viewer.seekTo(_tutorial_position);
-               // _tutorial_viewer.start(); @TODO what the hell is going on here
-                _tutorial_on = true;
-            }
-        });
-        _tutorial_viewer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp)
-            {
-                //_end_tutorial();
-                _tutorial_on = false;
-                makeToast("tutorial off");
-            }
-        });
+//        makeToast("in start tute");
+//        MediaController mediaControls = new MediaController(this);
+//
+//        try
+//        {
+//            _tutorial_viewer.setMediaController(mediaControls);
+//            _tutorial_viewer.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/"
+//                                    + R.raw.tutorial));
+//        }
+//        catch (Exception e)
+//        {
+//            makeToast("Error: " + e.getMessage());
+//        }
+//
+//        _control_panel.setVisibility(View.GONE);
+//        _video_panel.setVisibility(View.VISIBLE);
+//
+//        _tutorial_viewer.requestFocus();
+//        _tutorial_viewer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//
+//            public void onPrepared(MediaPlayer mediaPlayer)
+//            {
+//                _tutorial_viewer.seekTo(_tutorial_position);
+//               // _tutorial_viewer.start(); @TODO what the hell is going on here
+//                _tutorial_on = true;
+//            }
+//        });
+//        _tutorial_viewer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp)
+//            {
+//                //_end_tutorial();
+//                _tutorial_on = false;
+//                makeToast("tutorial off");
+//            }
+//        });
     }
 
 
@@ -262,6 +258,17 @@ public class HomeActivity extends AppCompatActivity
     {
         Intent familiarisationIntent = new Intent (this, FamiliarisationActivity.class);
         startActivity (familiarisationIntent);
+    }
+
+
+    /**
+     * Launch the tutorial activity
+     * @TODO as if these methods couldnt be compressed into one hey...
+     */
+    private void _launch_tutorial()
+    {
+        Intent intent = new Intent (this, Tutorial.class);
+        startActivity(intent);
     }
 
 

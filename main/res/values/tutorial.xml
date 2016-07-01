@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Resource IDs -->
+    <item type="id" name="t_title" />
+    <item type="id" name="t_description" />
+    <item type="id" name="t_videoview" />
+
+    <!-- Strings -->
+    <string name="t_title">AMEDA Tutorial</string>
+    <string name="t_description">Please watch this short demonstration video to learn how to use the AMEDA device correctly.</string>
+
+</resources>
