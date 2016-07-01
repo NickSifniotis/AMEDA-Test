@@ -276,7 +276,8 @@ public class HomeActivity extends AppCompatActivity
 
         try
         {
-            AMEDA device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
+            // @TODO implement a response code handler
+            AMEDA device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this, null);
 
             if (!device.Calibrate())
                 makeToast("Calibration failed. Try again.");

@@ -77,8 +77,8 @@ public class AMEDAInstruction {
                 break;
         }
 
-        return res;
-        //return packetize(res);
+        //return res;
+        return packetize(res);
     }
 
 
@@ -89,17 +89,13 @@ public class AMEDAInstruction {
      * @param ins The raw instruction to be transmitted to the device.
      * @return A string representing the 8 byte packet to be sent to the device.
      */
-    private byte[] packetize(String ins)
+    private String packetize(String ins)
     {
         int chk = 0;
         for (char c: ins.toCharArray())
             chk += c;
 
-        char[] temp =  ("[" + ins + (char)(chk % 256) + "]").toCharArray();
-        byte[] res = new byte[8];
-
-        for (int i = 0; i < 8; i ++)
-            res[i] = (byte)temp[i];
+        String res = "[" + ins + (char)(chk % 256) + "]";
 
         return res;
     }

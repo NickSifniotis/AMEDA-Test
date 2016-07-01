@@ -5,5 +5,5 @@ package au.net.nicksifniotis.amedatest;
  */
 public class Globals
 {
-    public static boolean AMEDA_FREE = true;
+    public static boolean AMEDA_FREE = false;
 }

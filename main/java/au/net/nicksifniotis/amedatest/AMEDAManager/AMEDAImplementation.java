@@ -34,7 +34,8 @@ public class AMEDAImplementation implements AMEDA
     private BluetoothAdapter btAdaptor = null;
     private BluetoothSocket btSocket = null;
 
-    private Handler handler;
+    private Handler _read_handler;
+    private Handler _response_handler;
     private ConnectedThread mConnectedThread;
 
 
@@ -45,15 +46,15 @@ public class AMEDAImplementation implements AMEDA
      *
      * @param context The context that this instance serves.
      */
-    public AMEDAImplementation(Context context)
+    public AMEDAImplementation(Context context, Handler responses)
     {
         _blocked = false;
         _connected = false;
-
+        _response_handler = responses;
         _parent = context;
         dataReceived = "";
 
-        handler = new Handler(new Handler.Callback()
+        _read_handler = new Handler(new Handler.Callback()
         {
             /**
              * Message handling callback. Adds the message to the input buffer string.
@@ -81,14 +82,18 @@ public class AMEDAImplementation implements AMEDA
      */
     private void addMessage(String msg)
     {
+        makeToast("Reading " + msg);
         dataReceived += msg;
-        if (dataReceived.length() > 8)
+        makeToast("New buffer contents: " + dataReceived);
+
+        if (dataReceived.length() >= 8)
         {
-            String result = dataReceived.substring(0, 8);
+            String result = dataReceived.substring(1, 6);
             dataReceived = dataReceived.substring (8);
 
-            makeToast(result);
-            _blocked = false;
+            AMEDAResponse response = AMEDAResponse.FindResponse(result);
+            makeToast("Unblocking: " + response.toString());
+          //  _blocked = false;
         }
     }
 
@@ -189,7 +194,7 @@ public class AMEDAImplementation implements AMEDA
                 {
                     int bytes = mmInStream.read(buffer);
                     String readMessage = new String(buffer, 0, bytes);
-                    handler.obtainMessage(1, bytes, -1, readMessage).sendToTarget();
+                    _read_handler.obtainMessage(1, bytes, -1, readMessage).sendToTarget();
                 }
                 catch (Exception e)
                 {
@@ -207,11 +212,13 @@ public class AMEDAImplementation implements AMEDA
          */
         public void write(String message)
         {
-            if (_blocked)
-            {
-                makeToast ("Unable to post message - AMEDA blocked.");
-                return;
-            }
+            makeToast("Write called: " + message);
+
+//            if (_blocked)
+//            {
+//                makeToast ("Unable to post message - AMEDA blocked. " + _blocked + ": " + message);
+//                return;
+//            }
 
             if (!_connected)
             {
@@ -225,6 +232,7 @@ public class AMEDAImplementation implements AMEDA
             {
                 mmOutStream.write(msgBuffer);
                 _blocked = true;
+                makeToast("Blocked set to true, message " + message);
             }
             catch (Exception e)
             {
@@ -315,10 +323,23 @@ public class AMEDAImplementation implements AMEDA
     }
 
 
+    /**
+     * Very fancy way to make thread-safe calls to the Toaster.
+     *
+     * @param message The message to send back to the user.
+     */
     public void makeToast (String message)
     {
-        Toast t = Toast.makeText(_parent, message, Toast.LENGTH_SHORT);
-        t.show();
+        final String msg = message;
+        ((Activity)_parent).runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Toast t = Toast.makeText(_parent, msg, Toast.LENGTH_SHORT);
+                t.show();
+            }
+        });
     }
 
 
@@ -348,11 +369,13 @@ public class AMEDAImplementation implements AMEDA
     @Override
     public boolean GoToPosition(int position)
     {
+        makeToast("Moving to position " + position);
+
         AMEDAInstruction instruction = null;
         boolean result = true;
 
-        if (_blocked)
-            result = false;
+//        if (_blocked)
+//            result = false;
 
         if (result)
         {
@@ -374,17 +397,17 @@ public class AMEDAImplementation implements AMEDA
 
             // this is dangerous as all hell. Block until some other thread changes the value of
             // _blocked.
-            while (_blocked)
-            {
-                try
-                {
-                    Thread.sleep(500);
-                }
-                catch (Exception e)
-                {
-                    break;
-                }
-            }
+//            while (_blocked)
+//            {
+//                try
+//                {
+//                    Thread.sleep(500);
+//                }
+//                catch (Exception e)
+//                {
+//                    break;
+//                }
+//            }
         }
 
         return result;

@@ -1,13 +1,36 @@
 package au.net.nicksifniotis.amedatest.Activities;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAException;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionFactory;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
@@ -20,6 +43,7 @@ public class FamiliarisationActivity extends AppCompatActivity
 {
     private AMEDA _device;
     private TextView[] _fields;
+    private Handler _response_handler;
 
 
     /**
@@ -36,24 +60,35 @@ public class FamiliarisationActivity extends AppCompatActivity
         setContentView(R.layout.familiarisation);
         _connect_gui();
 
-        try
+        _response_handler = new Handler(new Handler.Callback()
         {
-            _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this);
-        }
-        catch (Exception e)
-        {
-            makeToast("Unable to connect to AMEDA in constructor");
-        }
+            /**
+             * Handle responses received from the AMEDA device.
+             *
+             * At the moment, there is only one sort of message that this method handles, the
+             * 'response received' message with a @TODO magic number of 1
+             *
+             * @param msg The message received from the AMEDA reader.
+             * @return True if succesful, true otherwise @TODO come on what
+             */
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                int what = msg.what;
+                if (what == 1)
+                {
+                    AMEDAResponse response = (AMEDAResponse) msg.obj;
+
+
+                }
+
+                return true;
+            }
+        });
+
+        _device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this) : new AMEDAImplementation(this, _response_handler);
     }
 
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        _device.Disconnect();
-    }
 
     @Override
     protected void onStop()
@@ -152,15 +187,26 @@ public class FamiliarisationActivity extends AppCompatActivity
                 _device.GoToPosition(1);
                 _device.GoToPosition(5);
                 _device.GoToPosition(num);
-                _device.Beep(1);
 
-                _fields[num].setText (String.format("%d", curr_value));
+                _fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
             }
             else
                 makeToast ("Sorry, you've already used up your five moves to this position.");
         }
         else
             makeToast ("Strange error in that execute has been invoked with num=" + num);
+    }
+
+
+    /**
+     * The AMEDA has responded to the instruction just sent to it.
+     * Advance to the appropriate state based on the device's response.
+     *
+     * @param response The response code received.
+     */
+    private void _response_received(AMEDAResponse response)
+    {
+
     }
 
 
