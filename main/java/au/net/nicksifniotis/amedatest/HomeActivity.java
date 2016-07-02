@@ -7,11 +7,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
@@ -74,13 +71,13 @@ public class HomeActivity extends AppCompatActivity
                 Help();
                 return true;
             case R.id.new_record_mnu:
-                _launch_newRecord();
+                _launch_child_activity(NewRecordActivity.class);
                 return true;
             case R.id.tutorial_mnu:
-                _launch_tutorial();
+                _launch_child_activity(Tutorial.class);
                 return true;
             case R.id.famil_mnu:
-                _launch_familiarisation();
+                _launch_child_activity(FamiliarisationActivity.class);
                 return true;
             case R.id.manage_mnu:
                 _launch_manage_records();
@@ -98,12 +95,12 @@ public class HomeActivity extends AppCompatActivity
      */
     public void btn_home_tutorial(View view)
     {
-        _launch_tutorial();
+        _launch_child_activity(Tutorial.class);
     }
 
     public void btn_home_familiarise(View view)
     {
-        _launch_familiarisation();
+        _launch_child_activity(FamiliarisationActivity.class);
     }
 
     public void btn_home_start_test(View view)
@@ -129,36 +126,6 @@ public class HomeActivity extends AppCompatActivity
         Intent testIntent = new Intent(this, ManageRecordsActivity.class);
         testIntent.putExtra("activity", ManageRecordsEnum.START_TEST.ordinal());
         startActivity(testIntent);
-    }
-
-    /**
-     * Jump straight to the new record activity.
-     */
-    private void _launch_newRecord()
-    {
-        Intent newRecIntent = new Intent(this, NewRecordActivity.class);
-        startActivity(newRecIntent);
-    }
-
-
-    /**
-     * Launch the familiarisation activity.
-     */
-    private void _launch_familiarisation()
-    {
-        Intent familiarisationIntent = new Intent (this, FamiliarisationActivity.class);
-        startActivity (familiarisationIntent);
-    }
-
-
-    /**
-     * Launch the tutorial activity
-     * @TODO as if these methods couldnt be compressed into one hey...
-     */
-    private void _launch_tutorial()
-    {
-        Intent intent = new Intent (this, Tutorial.class);
-        startActivity(intent);
     }
 
 
@@ -205,5 +172,17 @@ public class HomeActivity extends AppCompatActivity
     {
         Toast t = Toast.makeText(this, message, Toast.LENGTH_SHORT);
         t.show();
+    }
+
+
+    /**
+     * Utility function to launch 'some' activity.
+     *
+     * @param activity The activity class to launch.
+     */
+    private void _launch_child_activity (Class activity)
+    {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
     }
 }
