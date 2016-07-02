@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.Activities;
+package au.net.nicksifniotis.amedatest.activities;
 
 import android.media.MediaPlayer;
 import android.view.View;
@@ -16,7 +16,6 @@ import au.net.nicksifniotis.amedatest.R;
 public class Tutorial extends AppCompatActivity
 {
     private static VideoView _tutorial_viewer;
-    private boolean _tutorial_on;
     private int _tutorial_position;
 
 
@@ -27,6 +26,61 @@ public class Tutorial extends AppCompatActivity
         setContentView(R.layout.tutorial);
 
         _connect_gui();
+    }
+
+
+    /**
+     * Screen rotation - pause the video and remember where we were.
+     *
+     * @param savedInstanceState The very tool that shall remember where we were.
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState)
+    {
+        super.onSaveInstanceState(savedInstanceState);
+
+        //we use onSaveInstanceState in order to store the video playback position for orientation change
+        _tutorial_viewer.pause();
+        savedInstanceState.putInt("Position", _tutorial_viewer.getCurrentPosition());
+    }
+
+
+    /**
+     * When the activity is ready to roll, start the tutorial video.
+     */
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        _start_tutorial();
+    }
+
+
+    /**
+     * Kill the tutorial when the user exits.
+     */
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+
+        _end_tutorial();
+    }
+
+
+    /**
+     * Screen rotation - resume video playback.
+     *
+     * @param savedInstanceState Where we were up to.
+     */
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        //we use onRestoreInstanceState in order to play the video playback from the stored position
+        _tutorial_position = savedInstanceState.getInt("Position");
     }
 
 
@@ -52,7 +106,6 @@ public class Tutorial extends AppCompatActivity
 
     private void _start_tutorial()
     {
-    //    makeToast("in start tute");
         MediaController mediaControls = new MediaController(this);
 
         try
@@ -63,7 +116,6 @@ public class Tutorial extends AppCompatActivity
         }
         catch (Exception e)
         {
-   //         makeToast("Error: " + e.getMessage());
         }
 
         _tutorial_viewer.requestFocus();
@@ -73,7 +125,6 @@ public class Tutorial extends AppCompatActivity
             {
                 _tutorial_viewer.seekTo(_tutorial_position);
                 _tutorial_viewer.start();
-                _tutorial_on = true;
             }
         });
 
@@ -82,10 +133,18 @@ public class Tutorial extends AppCompatActivity
             @Override
             public void onCompletion(MediaPlayer mp)
             {
-                //_end_tutorial();
-                _tutorial_on = false;
-       //         makeToast("tutorial off");
+                _end_tutorial();
             }
         });
+    }
+
+
+    /**
+     * Terminates the tutorial viewing.
+     */
+    private void _end_tutorial()
+    {
+        _tutorial_viewer.stopPlayback();
+        _tutorial_viewer.setMediaController(null);
     }
 }

@@ -1,7 +1,7 @@
 package au.net.nicksifniotis.amedatest;
 
-import au.net.nicksifniotis.amedatest.Activities.NewRecordActivity;
-import au.net.nicksifniotis.amedatest.Activities.TestActivity;
+import au.net.nicksifniotis.amedatest.activities.NewRecordActivity;
+import au.net.nicksifniotis.amedatest.activities.TestActivity;
 
 /**
  * An enumeration class that controls the activities that selecting an entry in ManageRecord

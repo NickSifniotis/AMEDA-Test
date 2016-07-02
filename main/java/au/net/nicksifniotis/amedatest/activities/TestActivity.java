@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.Activities;
+package au.net.nicksifniotis.amedatest.activities;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;

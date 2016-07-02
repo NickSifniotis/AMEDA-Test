@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#ed8302</color>
+    <color name="colorAccent">#F38130</color>
 
-    <color name="mainBackground">#42444d</color>
-    <color name="menuUpper">#646774</color>
-    <color name="menuBackground">#878b9e</color>
+    <color name="mainBackground">#404041</color>
+    <color name="menuUpper">#616161</color> <!-- need to set this sucker to 70% opacity -->
+    <color name="menuBackground">#A7A9AC</color>
 
     <color name="menuText">#050506</color>
 </resources>

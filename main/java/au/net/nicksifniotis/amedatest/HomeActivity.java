@@ -1,8 +1,6 @@
 package au.net.nicksifniotis.amedatest;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +16,10 @@ import android.widget.VideoView;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
-import au.net.nicksifniotis.amedatest.Activities.FamiliarisationActivity;
-import au.net.nicksifniotis.amedatest.Activities.ManageRecordsActivity;
-import au.net.nicksifniotis.amedatest.Activities.NewRecordActivity;
-import au.net.nicksifniotis.amedatest.Activities.Tutorial;
+import au.net.nicksifniotis.amedatest.activities.FamiliarisationActivity;
+import au.net.nicksifniotis.amedatest.activities.ManageRecordsActivity;
+import au.net.nicksifniotis.amedatest.activities.NewRecordActivity;
+import au.net.nicksifniotis.amedatest.activities.Tutorial;
 
 
 /**
@@ -32,12 +29,6 @@ import au.net.nicksifniotis.amedatest.Activities.Tutorial;
 public class HomeActivity extends AppCompatActivity
 {
     private static TextView _status_bar;
-    private static VideoView _tutorial_viewer;
-    private static RelativeLayout _control_panel;
-    private static LinearLayout _video_panel;
-
-    private int _tutorial_position = 0;
-    private boolean _tutorial_on = false;
 
 
     @Override
@@ -47,8 +38,6 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
         _connect_gui();
-        _control_panel.setVisibility(View.VISIBLE);
-     //   _video_panel.setVisibility(View.GONE);
     }
 
 
@@ -69,9 +58,6 @@ public class HomeActivity extends AppCompatActivity
     private void _connect_gui()
     {
         _status_bar = (TextView)findViewById(R.id.txtStatus);
-    //    _tutorial_viewer = (VideoView)findViewById(R.id.tutorial_viewer);
-        _control_panel = (RelativeLayout)findViewById(R.id.home_control_panel);
-   //     _video_panel = (LinearLayout)findViewById(R.id.tutorial_video_layout);
     }
 
 
@@ -91,7 +77,7 @@ public class HomeActivity extends AppCompatActivity
                 _launch_newRecord();
                 return true;
             case R.id.tutorial_mnu:
-                _start_tutorial();
+                _launch_tutorial();
                 return true;
             case R.id.famil_mnu:
                 _launch_familiarisation();
@@ -123,102 +109,6 @@ public class HomeActivity extends AppCompatActivity
     public void btn_home_start_test(View view)
     {
         _launch_test();
-    }
-
-
-    /*
-        The action methods that do the things.
-        Usually by loading up other activities and making them do the things.
-     */
-    private void _start_tutorial()
-    {
-//        makeToast("in start tute");
-//        MediaController mediaControls = new MediaController(this);
-//
-//        try
-//        {
-//            _tutorial_viewer.setMediaController(mediaControls);
-//            _tutorial_viewer.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/"
-//                                    + R.raw.tutorial));
-//        }
-//        catch (Exception e)
-//        {
-//            makeToast("Error: " + e.getMessage());
-//        }
-//
-//        _control_panel.setVisibility(View.GONE);
-//        _video_panel.setVisibility(View.VISIBLE);
-//
-//        _tutorial_viewer.requestFocus();
-//        _tutorial_viewer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//
-//            public void onPrepared(MediaPlayer mediaPlayer)
-//            {
-//                _tutorial_viewer.seekTo(_tutorial_position);
-//               // _tutorial_viewer.start(); @TODO what the hell is going on here
-//                _tutorial_on = true;
-//            }
-//        });
-//        _tutorial_viewer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp)
-//            {
-//                //_end_tutorial();
-//                _tutorial_on = false;
-//                makeToast("tutorial off");
-//            }
-//        });
-    }
-
-
-    /**
-     * Terminates the tutorial viewing.
-     */
-    private void _end_tutorial()
-    {
-        _tutorial_on = false;
-        _tutorial_viewer.stopPlayback();
-        _tutorial_viewer.setMediaController(null);
-
-        _video_panel.setVisibility(View.GONE);
-        _control_panel.setVisibility(View.VISIBLE);
-    }
-
-
-    /**
-     * Screen rotation - pause the video and remember where we were.
-     *
-     * @param savedInstanceState The very tool that shall remember where we were.
-     */
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState)
-    {
-        super.onSaveInstanceState(savedInstanceState);
-
-        //we use onSaveInstanceState in order to store the video playback position for orientation change
-        savedInstanceState.putInt("Position", _tutorial_viewer.getCurrentPosition());
-        savedInstanceState.putInt("tute_on", _tutorial_on ? 1 : 0);
-        _tutorial_viewer.pause();
-    }
-
-
-    /**
-     * Screen rotation - resume video playback.
-     *
-     * @param savedInstanceState Where we were up to.
-     */
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-    makeToast ("in restore");
-        //we use onRestoreInstanceState in order to play the video playback from the stored position
-        _tutorial_position = savedInstanceState.getInt("Position");
-        _tutorial_on = (savedInstanceState.getInt("tute_on") == 1);
-
-        if (_tutorial_on) {
-            _start_tutorial();
-        }
     }
 
 

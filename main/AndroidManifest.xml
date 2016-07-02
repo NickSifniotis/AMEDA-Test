@@ -18,12 +18,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.NewRecordActivity"
+            android:name=".activities.NewRecordActivity"
             android:parentActivityName=".HomeActivity" />
-        <activity android:name=".Activities.ManageRecordsActivity" />
-        <activity android:name=".Activities.TestActivity" />
-        <activity android:name=".Activities.FamiliarisationActivity" />
-
+        <activity android:name=".activities.ManageRecordsActivity" />
+        <activity android:name=".activities.TestActivity" />
+        <activity android:name=".activities.FamiliarisationActivity" />
+        <activity android:name=".activities.Tutorial" />
     </application>
 
 </manifest>
