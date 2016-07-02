@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Resource IDs -->
+    <item type="id" name="c_btn_calibrate" />
+    <item type="id" name="c_btn_position_1" />
+    <item type="id" name="c_btn_position_2" />
+    <item type="id" name="c_btn_position_3" />
+    <item type="id" name="c_btn_position_4" />
+    <item type="id" name="c_btn_position_5" />
+
+    <item type="id" name="c_btn_done" />
+
+    <item type="id" name="c_img_calibrate" />
+    <item type="id" name="c_img_position_1" />
+    <item type="id" name="c_img_position_2" />
+    <item type="id" name="c_img_position_3" />
+    <item type="id" name="c_img_position_4" />
+    <item type="id" name="c_img_position_5" />
+
+    <item type="id" name="c_row_calibrate" />
+    <item type="id" name="c_row_position_1" />
+    <item type="id" name="c_row_position_2" />
+    <item type="id" name="c_row_position_3" />
+    <item type="id" name="c_row_position_4" />
+    <item type="id" name="c_row_position_5" />
+
+
+    <!-- Strings -->
+    <string name="c_calibrate">Calibrate</string>
+    <string name="c_smiley_desc">Smiley face, calibration successful!</string>
+    <string name="c_calibration_failure">The AMEDA has failed to calibrate itself. Please make sure the wobble board is horizontal and try again.</string>
+</resources>

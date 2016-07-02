@@ -24,6 +24,7 @@
         <activity android:name=".activities.TestActivity" />
         <activity android:name=".activities.FamiliarisationActivity" />
         <activity android:name=".activities.Tutorial" />
+        <activity android:name=".activities.CalibrationActivity" />
     </application>
 
 </manifest>

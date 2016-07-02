@@ -77,13 +77,18 @@ public class AMEDAInstruction {
 
 
     /**
-     * Accessor method for the instruction enumeration.
+     * Accessor methods.
      *
-     * @return This instance's instruction enum.
+     * @return The requested data.
      */
     public AMEDAInstructionEnum GetInstruction()
     {
         return _instruction;
+    }
+
+    public int GetN()
+    {
+        return this._n;
     }
 
 

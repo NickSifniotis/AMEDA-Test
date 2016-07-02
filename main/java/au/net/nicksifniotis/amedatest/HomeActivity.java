@@ -14,6 +14,7 @@ import android.widget.Toast;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
+import au.net.nicksifniotis.amedatest.activities.CalibrationActivity;
 import au.net.nicksifniotis.amedatest.activities.FamiliarisationActivity;
 import au.net.nicksifniotis.amedatest.activities.ManageRecordsActivity;
 import au.net.nicksifniotis.amedatest.activities.NewRecordActivity;
@@ -50,7 +51,7 @@ public class HomeActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.calibrate_mnu:
-                _calibrate();
+                _launch_child_activity(CalibrationActivity.class);
                 return true;
             case R.id.help_mnu:
                 _launch_help();

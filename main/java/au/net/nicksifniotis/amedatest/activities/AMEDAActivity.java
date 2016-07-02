@@ -18,12 +18,13 @@ import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.R;
 
 /**
  * Extension of the default activity class, which hides boilerplate code
  * for accessing the AMEDA device.
  *
- * Connectivity is dealt with in this layer.
+ * Connectivity is dealt with in this layer. @TODO properly stringify
  *
  */
 public abstract class AMEDAActivity extends AppCompatActivity
@@ -310,7 +311,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     protected void FailAndDieDialog(String message)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Critical Error")
+        builder.setTitle(getString(R.string.error_title))
                 .setMessage(message)
                 .setCancelable(false)
                 .setNegativeButton("Ok", new DialogInterface.OnClickListener()

@@ -6,9 +6,6 @@
     <item type="id" name="h_btn_begintest" />
 
     <!-- Strings exclusively for Home activity -->
-    <string name="h_tutorial">Tutorial</string>
-    <string name="h_familiarisation">Familiarisation Task</string>
-    <string name="h_begintest">Begin Test</string>
 
     <!-- Strings used across entire application -->
     <string name="app_name">AMEDA 2000</string>
@@ -19,6 +16,14 @@
     <string name="btn_delete">Delete</string>
     <string name="btn_cancel">Cancel</string>
 
+    <string name="position_1">Position 1</string>
+    <string name="position_2">Position 2</string>
+    <string name="position_3">Position 3</string>
+    <string name="position_4">Position 4</string>
+    <string name="position_5">Position 5</string>
+
     <string name="not_implemented_title">Not so fast!</string>
     <string name="not_implemented_desc">Unfortunately, this feature has not been implemented yet. Please check back soon!</string>
+    <string name="error_title">Error</string>
+    <string name="error_ameda_fail_desc"></string>
 </resources>
