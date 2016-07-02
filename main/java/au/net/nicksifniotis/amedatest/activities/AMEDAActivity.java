@@ -24,7 +24,7 @@ import au.net.nicksifniotis.amedatest.R;
  * Extension of the default activity class, which hides boilerplate code
  * for accessing the AMEDA device.
  *
- * Connectivity is dealt with in this layer. @TODO properly stringify
+ * Connectivity is dealt with in this layer.
  *
  */
 public abstract class AMEDAActivity extends AppCompatActivity
@@ -264,10 +264,10 @@ public abstract class AMEDAActivity extends AppCompatActivity
     protected void CannotMoveDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Error")
-                .setMessage("Unable to move the AMEDA device. Please make sure the plate is horizontal.")
+        builder.setTitle(getString(R.string.error_title))
+                .setMessage(getString(R.string.error_ameda_not_horizontal))
                 .setCancelable(false)
-                .setPositiveButton("Try Again", new DialogInterface.OnClickListener()
+                .setPositiveButton(getString(R.string.btn_done), new DialogInterface.OnClickListener()
                 {
                     /**
                      * Try again - resend the last instruction to the AMEDA.
@@ -281,7 +281,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
                         RepeatInstruction();
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                .setNegativeButton(getString(R.string.btn_cancel), new DialogInterface.OnClickListener()
                 {
                     /**
                      * Cancel - so clear the instruction buffer.
@@ -314,7 +314,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
         builder.setTitle(getString(R.string.error_title))
                 .setMessage(message)
                 .setCancelable(false)
-                .setNegativeButton("Ok", new DialogInterface.OnClickListener()
+                .setNegativeButton(getString(R.string.btn_done), new DialogInterface.OnClickListener()
                 {
                     /**
                      * This is the end of all things.

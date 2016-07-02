@@ -169,14 +169,14 @@ public class FamiliarisationActivity extends AMEDAActivity
                     break;
                 default:
                     DebugToast("Received unknown response code for current command.");
-                    FailAndDieDialog(getString(R.string.f_fail_die));
+                    FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
                     break;
             }
         }
         else
         {
             DebugToast ("Received response " + response.toString() + " to command " + instruction.Build());
-            FailAndDieDialog(getString(R.string.f_fail_die));
+            FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
         }
     }
 }

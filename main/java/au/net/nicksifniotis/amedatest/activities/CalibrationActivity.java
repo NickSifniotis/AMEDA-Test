@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
@@ -81,7 +80,7 @@ public class CalibrationActivity extends AMEDAActivity
         AMEDAInstructionEnum instruction_code = instruction.GetInstruction();
 
         if (!instruction_code.IsValidResponse(response))
-            FailAndDieDialog(getString(R.string.f_fail_die));    // @TODO fix namespacing
+            FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
 
         if (instruction_code == AMEDAInstructionEnum.CALIBRATE && response == AMEDAResponse.CALIBRATION_FAIL)
             CalibrationFailedDialog();

@@ -6,7 +6,6 @@
     <string name="f_description">Use these buttons to move the AMEDA to different positions. Press down on the plate to get a feel for what each position is like. Please note that the board needs to be in the horizontal position before the AMEDA will respond to a move command.</string>
     <string name="f_goto_button">Go to position %1$d</string>
     <string name="f_sorry_five">"Sorry, you've already used up your five moves to this position."</string>
-    <string name="f_fail_die">Unrecognised response received from the AMEDA. Unfortunately, it is not possible to continue with the familiarisation task.</string>
 
     <!-- Resource IDs -->
     <item type="id" name="f_txt_1" />
