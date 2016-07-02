@@ -1,13 +1,14 @@
 package au.net.nicksifniotis.amedatest;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
@@ -25,16 +26,11 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
  */
 public class HomeActivity extends AppCompatActivity
 {
-    private static TextView _status_bar;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
-        _connect_gui();
+        setContentView(R.layout.home_activity);
     }
 
 
@@ -44,17 +40,6 @@ public class HomeActivity extends AppCompatActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
-    }
-
-
-    /**
-     * Connect the GUI components to the local variables ...
-     * I'm seeing this method appear over and over!
-     *
-     */
-    private void _connect_gui()
-    {
-        _status_bar = (TextView)findViewById(R.id.txtStatus);
     }
 
 
@@ -68,7 +53,7 @@ public class HomeActivity extends AppCompatActivity
                 _calibrate();
                 return true;
             case R.id.help_mnu:
-                Help();
+                _launch_help();
                 return true;
             case R.id.new_record_mnu:
                 _launch_child_activity(NewRecordActivity.class);
@@ -93,17 +78,17 @@ public class HomeActivity extends AppCompatActivity
      *
      * @param view Not used.
      */
-    public void btn_home_tutorial(View view)
+    public void h_btn_tutorial(View view)
     {
         _launch_child_activity(Tutorial.class);
     }
 
-    public void btn_home_familiarise(View view)
+    public void h_btn_familiarisation(View view)
     {
         _launch_child_activity(FamiliarisationActivity.class);
     }
 
-    public void btn_home_start_test(View view)
+    public void h_btn_begintest(View view)
     {
         _launch_test();
     }
@@ -111,9 +96,28 @@ public class HomeActivity extends AppCompatActivity
 
     /**
      * Show the app help, when that's implemented.
+     * In the meantime, show a message about the help not being implemented yet.
      */
-    private void Help() {
-        _status_bar.setText("Help screen - not implemented yet.");
+    private void _launch_help()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.not_implemented_title))
+                .setMessage(getString(R.string.not_implemented_desc))
+                .setPositiveButton(getString(R.string.btn_done), new DialogInterface.OnClickListener()
+                {
+                    /**
+                     * Do nothing on click. Kind of a waste of 10 lines of code.
+                     *
+                     * @param dialog Not used
+                     * @param which Not used
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                    }
+                });
+
+        builder.create().show();
     }
 
 

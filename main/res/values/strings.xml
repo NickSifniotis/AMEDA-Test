@@ -1,14 +1,6 @@
 <resources>
-    <string name="app_name">AMEDA App</string>
-
     <string name="completed_tests">Completed Tests</string>
     <string name="date_test">Date of Test:</string>
-
-    <string name="new_S">New</string>
-    <string name="next">Next</string>
-    <string name="done">Done</string>
-    <string name="delete">Delete</string>
-    <string name="cancel">Cancel</string>
 
     <string name="test_1">Position 1</string>
     <string name="test_2">Position 2</string>

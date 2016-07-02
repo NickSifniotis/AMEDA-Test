@@ -34,6 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:text="@string/done"
+        android:text="@string/btn_done"
         android:onClick="t_btn_done"/>
 </RelativeLayout>

@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/new_S"
+            android:text="@string/btn_new"
             android:onClick="amr_btn_new">
         </Button>
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_weight="0.5"
-            android:text="@string/cancel"
+            android:text="@string/btn_cancel"
             android:onClick="amr_btn_close">
         </Button>
 

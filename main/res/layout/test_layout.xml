@@ -15,7 +15,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:text="@string/done"
+            android:text="@string/btn_done"
             android:onClick="btn_begin_test"
             android:id="@+id/test_btn_begin_test"
             android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:text="@string/done"
+            android:text="@string/btn_done"
             android:layout_below="@+id/test002"
             android:layout_centerHorizontal="true"
             android:onClick="btn_Next_Middle"
@@ -87,7 +87,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:text="@string/done"
+            android:text="@string/btn_done"
             android:onClick="btn_Next"
             android:id="@+id/test_btn_next"
             android:layout_below="@+id/t005"
@@ -154,7 +154,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:text="@string/done"
+            android:text="@string/btn_done"
             android:onClick="btn_end_test"
             android:id="@+id/test_btn_end_test"
             android:layout_width="wrap_content"

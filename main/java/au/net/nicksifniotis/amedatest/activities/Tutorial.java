@@ -11,7 +11,7 @@ import android.widget.VideoView;
 import au.net.nicksifniotis.amedatest.R;
 
 /**
- * Launches the 'short tutorial video' activity!
+ * Launches the 'short tutorial_activity video' activity!
  */
 public class Tutorial extends AppCompatActivity
 {
@@ -23,7 +23,7 @@ public class Tutorial extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tutorial);
+        setContentView(R.layout.tutorial_activity);
 
         _connect_gui();
     }
@@ -46,7 +46,7 @@ public class Tutorial extends AppCompatActivity
 
 
     /**
-     * When the activity is ready to roll, start the tutorial video.
+     * When the activity is ready to roll, start the tutorial_activity video.
      */
     @Override
     public void onStart()
@@ -58,7 +58,7 @@ public class Tutorial extends AppCompatActivity
 
 
     /**
-     * Kill the tutorial when the user exits.
+     * Kill the tutorial_activity when the user exits.
      */
     @Override
     public void onStop()
@@ -140,7 +140,7 @@ public class Tutorial extends AppCompatActivity
 
 
     /**
-     * Terminates the tutorial viewing.
+     * Terminates the tutorial_activity viewing.
      */
     private void _end_tutorial()
     {

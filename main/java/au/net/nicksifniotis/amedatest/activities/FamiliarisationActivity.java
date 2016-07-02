@@ -35,7 +35,7 @@ public class FamiliarisationActivity extends AMEDAActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.familiarisation);
+        setContentView(R.layout.familiarisation_activity);
 
         _connect_gui();
 
@@ -116,7 +116,7 @@ public class FamiliarisationActivity extends AMEDAActivity
 
 
     /**
-     * Move the device to the requested position, for familiarisation purposes.
+     * Move the device to the requested position, for familiarisation_activity purposes.
      *
      * @param num The position to move the AMEDA to.
      */

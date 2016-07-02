@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Resource IDs for Home activity -->
+    <item type="id" name="h_btn_tutorial" />
+    <item type="id" name="h_btn_familiarisation" />
+    <item type="id" name="h_btn_begintest" />
+
+    <!-- Strings exclusively for Home activity -->
+    <string name="h_tutorial">Tutorial</string>
+    <string name="h_familiarisation">Familiarisation Task</string>
+    <string name="h_begintest">Begin Test</string>
+
+    <!-- Strings used across entire application -->
+    <string name="app_name">AMEDA 2000</string>
+
+    <string name="btn_new">New</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <string name="not_implemented_title">Not so fast!</string>
+    <string name="not_implemented_desc">Unfortunately, this feature has not been implemented yet. Please check back soon!</string>
+</resources>
