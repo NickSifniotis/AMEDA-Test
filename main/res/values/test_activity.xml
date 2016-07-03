@@ -32,10 +32,25 @@
     <string name="t_setting_title">Setting</string>
     <string name="t_setting_desc">Wait while the AMEDA moves into position ..</string>
 
+    <string name="t_paused_title">Test Paused</string>
+    <string name="t_paused_desc">Press Done when you are ready to resume the test.</string>
+    <string name="t_abort_title">Are you sure?</string>
+    <string name="t_abort_desc">Do you really want to abort this test?</string>
+
+    <string name="t_error_no_uid">Unable to run a test at this time.</string>
     <string name="t_error_database_on_response">"Unable to save your response to the database. Please try again.</string>
     <string name="t_error_database_on_abort">Error updating test during abort operation. You will not be able to resume this test.</string>
     <string name="t_error_database_on_end">There has been an error recording that this test is finished.</string>
 
     <string name="t_progress_counter">%1$d / %2$d</string>
+
+    <!-- Items that sit in the Test context menu -->
+    <item type="id" name="t_mnu_pause" />
+    <item type="id" name="t_mnu_stop" />
+    <item type="id" name="t_mnu_help" />
+
+    <string name="t_mnu_pause">Pause Recording</string>
+    <string name="t_mnu_stop">Stop Recording</string>
+    <string name="t_mnu_help">Help</string>
 
 </resources>

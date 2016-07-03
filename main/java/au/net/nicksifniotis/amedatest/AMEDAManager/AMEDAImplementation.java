@@ -372,7 +372,7 @@ public class AMEDAImplementation implements AMEDA
 
 
     /**
-     * Sets the AMEDA device to a new position, and awaits confirmation that the new position is
+     * Sets the AMEDA device to a new_btn position, and awaits confirmation that the new_btn position is
      * set. This is a blocking call @TODO it's probably blocking the UI thread, fuck
      *
      * @param position The position to set the AMEDA to.

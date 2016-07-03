@@ -11,7 +11,7 @@ public enum AMEDAInstructionEnum
     BUZZER_LONG(new AMEDAResponse[]{ }),
     MOVE_TO_POSITION(new AMEDAResponse[]{ AMEDAResponse.READY, AMEDAResponse.CANNOT_MOVE }),
     CALIBRATE(new AMEDAResponse[]{ AMEDAResponse.READY, AMEDAResponse.CALIBRATION_FAIL });
-//    REQUEST_ANGLE(new AMEDAResponse[]{ AMEDAResponse.NO_RESPONSE_ANGLE, }); @TODO this
+//    REQUEST_ANGLE(new_btn AMEDAResponse[]{ AMEDAResponse.NO_RESPONSE_ANGLE, }); @TODO this
 
     private AMEDAResponse [] _valid_responses;
 

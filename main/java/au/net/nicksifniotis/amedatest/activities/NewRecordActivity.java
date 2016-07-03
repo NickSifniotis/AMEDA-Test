@@ -186,7 +186,7 @@ public class NewRecordActivity extends AppCompatActivity
     /**
      * Save the data to the persistent storage device.
      *
-     * It's an INSERT for a new record and UPDATE for existing.
+     * It's an INSERT for a new_btn record and UPDATE for existing.
      */
     private void _save_data()
     {
@@ -207,7 +207,7 @@ public class NewRecordActivity extends AppCompatActivity
             long newRowId = db.insert(DB.PersonTable.TABLE_NAME, null, values);
 
             if (newRowId == -1)
-                _database_helper.databaseError("Unable to save new person record in database.");
+                _database_helper.databaseError("Unable to save new_btn person record in database.");
         }
 
         finish();

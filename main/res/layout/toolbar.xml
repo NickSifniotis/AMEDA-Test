@@ -4,7 +4,6 @@
     android:layout_height="0dp"
     android:layout_weight="1"
     app:logo="@drawable/ameda_logo"
-    app:navigationIcon="@drawable/nav"
     app:navigationContentDescription="Navigation Menu"
     android:padding="12dp"
     android:background="?attr/colorAccent"

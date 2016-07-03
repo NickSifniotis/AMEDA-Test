@@ -21,10 +21,10 @@ import au.net.nicksifniotis.amedatest.LocalDB.User_RCA;
 /**
  * ManageRecordsActivity
  *
- * Lists the user records (includes a new button) and launches a new activity when the user makes
+ * Lists the user records (includes a new_btn button) and launches a new_btn activity when the user makes
  * a selection.
  *
- * Note that the new button will always launch NewRecord Activity!
+ * Note that the new_btn button will always launch NewRecord Activity!
  *
  * However selecting a record from the listview will open the activity that has been provided
  * when this very activity was intent-ed.
@@ -69,7 +69,7 @@ public class ManageRecordsActivity extends AppCompatActivity
 
 
     /**
-     * On resume - after the new/edit activity finishes - refresh the data in the listview.
+     * On resume - after the new_btn/edit activity finishes - refresh the data in the listview.
      */
     @Override
     protected void onResume()
@@ -113,7 +113,7 @@ public class ManageRecordsActivity extends AppCompatActivity
 
 
     /**
-     * Event handler for the 'new record' button. Launches the 'new record' activity with
+     * Event handler for the 'new_btn record' button. Launches the 'new_btn record' activity with
      * a user_id of -1.
      *
      * @param view Unused.
@@ -130,10 +130,10 @@ public class ManageRecordsActivity extends AppCompatActivity
 
 
     /**
-     * Launches the 'new / edit user record' activity over this one.
+     * Launches the 'new_btn / edit user record' activity over this one.
      * Passes the parameter user_id to the activity.
      *
-     * @param user_id The database ID of the record to edit, or -1 if creating a new record.
+     * @param user_id The database ID of the record to edit, or -1 if creating a new_btn record.
      */
     private void _launch_newRecord_activity(int user_id, Class activity)
     {

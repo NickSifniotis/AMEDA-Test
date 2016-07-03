@@ -39,6 +39,8 @@ public class HomeActivity extends AppCompatActivity
 
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);
+        if (bar != null)
+            bar.setNavigationIcon(R.drawable.toolbar_nav);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("");
@@ -121,19 +123,7 @@ public class HomeActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.not_implemented_title))
                 .setMessage(getString(R.string.not_implemented_desc))
-                .setPositiveButton(getString(R.string.btn_done), new DialogInterface.OnClickListener()
-                {
-                    /**
-                     * Do nothing on click. Kind of a waste of 10 lines of code.
-                     *
-                     * @param dialog Not used
-                     * @param which Not used
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                    }
-                });
+                .setPositiveButton(getString(R.string.btn_done), null);
 
         builder.create().show();
     }

@@ -155,6 +155,29 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
 
     /**
+     * Allows the child activity to (re)open a connection to the AMEDA device.
+     * This call would usually follow on from a user-induced pause or stop in the activity.
+     *
+     * Don't call this method unless you've already called Disconnect(). Activity start
+     * events connect themselves.
+     */
+    protected void Connect()
+    {
+        _reconnect();
+    }
+
+
+    /**
+     * Disconnects from the AMEDA. Gives the child activity the ability to interrupt the
+     * connecton to the AMEDA device.
+     */
+    protected void Disconnect()
+    {
+        _device.Disconnect();
+    }
+
+
+    /**
      * Enqueues an instruction directing the AMEDA to move to a position.
      *
      * @param position The position to set the AMEDA to. Must be an integer between 1 and 5 inclusive.

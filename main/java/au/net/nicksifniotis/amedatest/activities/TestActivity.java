@@ -2,17 +2,19 @@ package au.net.nicksifniotis.amedatest.activities;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -29,7 +31,11 @@ import au.net.nicksifniotis.amedatest.TestState;
 /**
  * TestActivity activity. Launches a test and runs it from go to whoa.
  *
- * Created by nsifniotis on 29/05/16.
+ * Outstanding issues todo
+ * - it would be great if the tests that were loaded into the database were in their own
+ *   static class
+ * - find somewhere to display the 'question counter'
+ * - Test the resumption of interrupted tests.
  */
 public class TestActivity extends AMEDAActivity
 {
@@ -46,10 +52,21 @@ public class TestActivity extends AMEDAActivity
     private DBOpenHelper _database_helper;
 
 
+    /**
+     * Create the GUI elements, data structures etc that this activity will use.
+     *
+     * @param savedInstanceState Not used.
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
+
+        _connect_gui();
+
+        _database_helper = new DBOpenHelper(this);
+        randomiser = new Random();
 
 
         // Get the user id of the person who is taking this test.
@@ -58,17 +75,76 @@ public class TestActivity extends AMEDAActivity
         int user_id = intent.getIntExtra("id", -1);
         if (user_id == -1)
         {
-            makeToast("Unable to launch test. No user_id received.");
-            finish();
+            DebugToast("Unable to launch test. No user_id received.");
+            FailAndDieDialog(getString(R.string.t_error_no_uid));
             return;
         }
 
-        _database_helper = new DBOpenHelper(this);
-        randomiser = new Random();
 
+        // It's possible that we are resuming a test that had been interrupted.
+        // Load the test id from the intent as well, if it exists.
+        int test_id = intent.getIntExtra("test_id", -1);
+        if (test_id == -1)
+            _create_new_test(user_id);
+        else
+            _resume_test(test_id);
+    }
+
+
+    /**
+     * Sets up the GUI-y things, like the progress dialog and the text for certain elements.
+     *
+     */
+    private void _connect_gui()
+    {
+        _setting_progress = new ProgressDialog(this);
+        _setting_progress.setTitle (getString(R.string.t_setting_title));
+        _setting_progress.setMessage(getString(R.string.t_setting_desc));
+
+        Resources r = getResources();
+        for (int i = 1; i <= 5; i ++)
+        {
+            Button button = (Button) findViewById(r.getIdentifier("t_btn_excursion_" + i, "id", "au.net.nicksifniotis.amedatest"));
+            if (button != null)
+                button.setText(getString(R.string.t_excursion_button, i));
+        }
+
+        Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(bar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("");
+
+        if (bar != null)
+        {
+            bar.setNavigationIcon(R.drawable.toolbar_back);
+            bar.setNavigationOnClickListener(new View.OnClickListener()
+            {
+                /**
+                 * Clicking the back arrow is equivalent to saying 'stop the test, I wanna get off'
+                 * So record it as an interrupted test.
+                 *
+                 * @param v Not used. Poor v :(
+                 */
+                @Override
+                public void onClick(View v)
+                {
+                    _confirm_abort_test();
+                }
+            });
+        }
+    }
+
+
+    /**
+     * Launching a new_btn test from scratch. Pick one randomly from the database, read the correct answers
+     * and record the beginning of the new_btn test.
+     */
+    private void _create_new_test(int user_id)
+    {
         // randomly pick a standard test for this user, and load the answer key from the database.
         int test_number = randomiser.nextInt(NUM_TESTS) + 1;
-        String query = "SELECT * FROM " + DB.StandardTestTable.TABLE_NAME + " WHERE " + DB.StandardTestTable._ID + "=" + test_number;
+        String query = "SELECT * FROM " + DB.StandardTestTable.TABLE_NAME +
+                " WHERE " + DB.StandardTestTable._ID + "=" + test_number;
         SQLiteDatabase db = _database_helper.getReadableDatabase();
 
         Cursor c = db.rawQuery(query, null);
@@ -76,6 +152,7 @@ public class TestActivity extends AMEDAActivity
         String answer_key = c.getString(c.getColumnIndexOrThrow(DB.StandardTestTable.ANSWER_KEY));
         c.close();
         db.close();
+
 
         // If we can't load the data from the database, whinge and close.
         if (answer_key == null)
@@ -107,67 +184,142 @@ public class TestActivity extends AMEDAActivity
         {
             _database_helper.databaseError("Error saving new test into database.");
             finish();
-            return;
         }
-
-        _connect_gui();
     }
 
 
     /**
-     * Sets up the GUI-y things, like the progress dialog and the text for certain elements.
+     * Resuming a test that had been interrupted. As well as loading up the test, need to establish
+     * how many positions have been 'answered' and how many more there are to go to finish the test.
      *
+     * @param test_id The interrupted test_id
      */
-    private void _connect_gui()
+    private void _resume_test(int test_id)
     {
-        _setting_progress = new ProgressDialog(this);
-        _setting_progress.setTitle (getString(R.string.t_setting_title));
-        _setting_progress.setMessage(getString(R.string.t_setting_desc));
+        String query = "SELECT t.* FROM " + DB.StandardTestTable.TABLE_NAME + "t, " +
+                DB.TestTable.TABLE_NAME + " d " +
+                " WHERE t." + DB.StandardTestTable._ID + " = d." + DB.TestTable.STANDARD_TEST_ID +
+                " AND d." + DB.TestTable._ID + " = " + test_id +
+                " AND d." + DB.TestTable.INTERRUPTED + " = 1";
+        SQLiteDatabase db = _database_helper.getReadableDatabase();
 
-        Resources r = getResources();
-        for (int i = 1; i <= 5; i ++)
+        Cursor c = db.rawQuery(query, null);
+        c.moveToFirst();
+        String answer_key = c.getString(c.getColumnIndexOrThrow(DB.StandardTestTable.ANSWER_KEY));
+        c.close();
+
+        // If we can't load the data from the database, whinge and close.
+        if (answer_key == null)
         {
-            Button button = (Button) findViewById(r.getIdentifier("t_btn_excursion_" + i, "id", "au.net.nicksifniotis.amedatest"));
-            if (button != null)
-                button.setText(getString(R.string.t_excursion_button, i));
+            _database_helper.databaseError("Either test doesn't exist or it's not interrupted: " + test_id);
+            finish();
+            return;
         }
+
+        // load up the answer key.
+        _num_questions = answer_key.length();
+        _test_questions = new int[_num_questions];
+        for (int i = 0; i < _num_questions; i ++)
+            _test_questions[i] = Integer.parseInt(answer_key.substring(i, i + 1));
+
+
+        // Which was the last question that the user answered?
+        query = "SELECT COUNT (*) AS answer_count FROM " + DB.QuestionTable.TABLE_NAME +
+                " WHERE " + DB.QuestionTable.TEST_ID + " = " + test_id;
+        c = db.rawQuery(query, null);
+        c.moveToFirst();
+        _current_question = c.getInt(c.getColumnIndexOrThrow("answer_count")) - 1;
+        c.close();
+        db.close();
+
+
+        // Un-interrupt the test.
+        ContentValues values = new ContentValues();
+        values.put(DB.TestTable.INTERRUPTED, 0);
+
+        db = _database_helper.getWritableDatabase();
+        int success = db.update(DB.TestTable.TABLE_NAME, values, DB.TestTable._ID + " = " + _current_test_id, null);
+        db.close();
+
+        if (success == 0)
+            _database_helper.databaseError(getString(R.string.t_error_database_on_abort));
+
     }
 
 
+    /**
+     * Create the context menu for this activity.
+     *
+     * @param menu The menu to inflate.
+     * @return True on success but also true otherwise.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.test_menu, menu);
+        inflater.inflate(R.menu.test_activity_menu, menu);
         return true;
     }
 
 
+    /**
+     * Menu click event handler for the activity's context menu.
+     *
+     * @param item The item that was selected
+     * @return True if the operation was a success but also true otherwise.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // Handle item selection
+        AlertDialog.Builder builder;
         switch (item.getItemId())
         {
-            case R.id.test_pause_mnu:
-                makeToast("Pause test selected.");
-                return true;
-            case R.id.test_stop_mnu:
-                _abort_test();
-                return true;
-            case R.id.help_mnu:
-                makeToast("Help option selected.");
-                return true;
+            case R.id.t_mnu_pause:
+                Disconnect();
+
+                builder = new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.t_paused_title))
+                        .setMessage(getString(R.string.t_paused_desc))
+                        .setPositiveButton(getString(R.string.btn_done), new DialogInterface.OnClickListener()
+                        {
+                            /**
+                             * Reconnect.
+                             *
+                             * @param dialog Not used.
+                             * @param which Not used.
+                             */
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                Connect();
+                            }
+                        });
+                builder.create().show();
+
+                break;
+
+            case R.id.t_mnu_stop:
+                _confirm_abort_test();
+
+                break;
+            case R.id.t_mnu_help:
+                builder = new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.not_implemented_title))
+                        .setMessage(getString(R.string.not_implemented_desc))
+                        .setPositiveButton(getString(R.string.btn_done), null);
+                builder.create().show();
+
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(item);
         }
+
+        return true;
     }
 
 
     /**
-     * Disconnect from the AMEDA each time the user exits the activity. We don't want to be
-     * holding on to this resource.
-     *
+     * Abort the test before shutting down completely.
      */
     @Override
     protected void onStop()
@@ -245,7 +397,7 @@ public class TestActivity extends AMEDAActivity
     private void _move_to_next_pos()
     {
         updateState(TestState.SETTING);
-        makeToast("Setting device to position " + _test_questions[_current_question]);
+        DebugToast("Setting device to position " + _test_questions[_current_question]);
 
         for (int i = 0; i < 5; i ++)
             GoToPosition(randomiser.nextInt(5) + 1);
@@ -258,7 +410,7 @@ public class TestActivity extends AMEDAActivity
     /**
      * Update the GUI components to match the current state of the test state machine.
      *
-     * @param new_state The new state to advance to.
+     * @param new_state The new_btn state to advance to.
      */
     private void updateState(TestState new_state)
     {
@@ -331,13 +483,6 @@ public class TestActivity extends AMEDAActivity
     }
 
 
-    public void makeToast (String message)
-    {
-        Toast t = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        t.show();
-    }
-
-
     /**
      * Saves the user's response to the test question in the database.
      *
@@ -348,7 +493,7 @@ public class TestActivity extends AMEDAActivity
         if (current_state != TestState.ANSWERING)
         {
             // this is impossible. The response buttons are invisible in every state except ANSWERING.
-            makeToast("Impossible state - record_user_response where state is " + current_state.toString());
+            DebugToast("Impossible state - record_user_response where state is " + current_state.toString());
             return;
         }
 
@@ -356,7 +501,7 @@ public class TestActivity extends AMEDAActivity
         {
             // another impossible state. This function cannot be called with values outside this range.
             // Buttons to do that simply don't exist.
-            makeToast("Impossible state - response passed to record_user_response is " + response);
+            DebugToast("Impossible state - response passed to record_user_response is " + response);
             return;
         }
 
@@ -381,6 +526,38 @@ public class TestActivity extends AMEDAActivity
 
         // advance to the next question.
         _next_question();
+    }
+
+
+    /**
+     * Aborting a test is kind of a big deal. So make sure that the user is really sure that
+     * they want to abort the test, before doing so.
+     */
+    private void _confirm_abort_test()
+    {
+        AlertDialog.Builder builder;
+
+        builder = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.t_abort_title))
+                .setMessage(getString(R.string.t_abort_desc))
+                .setPositiveButton(getString(R.string.btn_yes),
+                        new DialogInterface.OnClickListener()
+                {
+                    /**
+                     * User wants to abort the test. So, do that.
+                     *
+                     * @param dialog Unused.
+                     * @param which Unused.
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        _abort_test();
+                    }
+                })
+                .setNegativeButton(getString(R.string.btn_no), null);
+
+        builder.create().show();
     }
 
 
