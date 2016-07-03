@@ -120,7 +120,7 @@ public class ManageRecordsActivity extends AppCompatActivity
      */
     public void amr_btn_new(View view)
     {
-        _launch_newRecord_activity(-1, NewRecordActivity.class);
+        _launch_newRecord_activity(-1, EditUserActivity.class);
     }
 
     public void amr_btn_close(View view)

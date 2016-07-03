@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Resource IDs -->
+    <item type="id" name="mpr_txt_name" />
+    <item type="id" name="mpr_txt_dob" />
+    <item type="id" name="mpr_spn_gender" />
+    <item type="id" name="mpr_txt_height" />
+    <item type="id" name="mpr_txt_weight" />
+    <item type="id" name="mpr_txt_address" />
+    <item type="id" name="mpr_txt_notes" />
+
+    <item type="id" name="mpr_btn_done" />
+    <item type="id" name="mpr_btn_delete" />
+    <item type="id" name="mpr_btn_cancel" />
+
+    <item type="id" name="mpr_layout_name" />
+    <item type="id" name="mpr_layout_dob" />
+    <item type="id" name="mpr_layout_gender" />
+    <item type="id" name="mpr_layout_height" />
+    <item type="id" name="mpr_layout_weight" />
+    <item type="id" name="mpr_layout_address" />
+    <item type="id" name="mpr_layout_notes" />
+
+
+    <!-- Strings -->
+    <string name="mpr_str_name">Name:</string>
+    <string name="mpr_str_dob">Date of Birth:</string>
+    <string name="mpr_str_gender">Gender:</string>
+    <string name="mpr_str_height">Height (cm):</string>
+    <string name="mpr_str_weight">Weight (kg):</string>
+    <string name="mpr_str_address">Address:</string>
+    <string name="mpr_str_notes">Notes:</string>
+
+    <string name="mpr_delete_title">Are you sure?</string>
+    <string name="mpr_delete_desc">Once you delete a user\'s record, there\'s no way to undo it. Are you sure you want to continue?</string>
+    <string name="mpr_unsaved_title">Unsaved changes</string>
+    <string name="mpr_unsaved_desc">You may have unsaved changes that you will lose if you continue. Do you want to proceed?</string>
+
+
+    <!-- Context menu items -->
+    <string name="mpr_mnu_save">Save changes</string>
+    <string name="mpr_mnu_launch_test">Launch test</string>
+    <string name="mpr_mnu_delete">Delete user</string>
+
+    <item type="id" name="mpr_mnu_save" />
+    <item type="id" name="mpr_mnu_launch_test" />
+    <item type="id" name="mpr_mnu_delete" />
+
+</resources>

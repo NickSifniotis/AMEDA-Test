@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".activities.EditUserActivity">
+
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@id/mpr_layout_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:labelFor="@id/mpr_txt_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mpr_str_name" />
+
+                <EditText
+                    android:inputType="textPersonName"
+                    android:id="@id/mpr_txt_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:ems="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/mpr_layout_dob"
+                android:layout_below="@id/mpr_layout_name"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:labelFor="@id/mpr_txt_dob"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mpr_str_dob" />
+
+                <EditText
+                    android:inputType="date"
+                    android:id="@id/mpr_txt_dob"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:ems="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/mpr_layout_gender"
+                android:layout_below="@id/mpr_layout_dob"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mpr_str_gender" />
+
+                <Spinner
+                    android:id="@id/mpr_spn_gender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:ems="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/mpr_layout_height"
+                android:layout_below="@id/mpr_layout_gender"
+                android:padding="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:labelFor="@id/mpr_txt_height"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mpr_str_height" />
+
+                <EditText
+                    android:inputType="number"
+                    android:id="@id/mpr_txt_height"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:ems="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/mpr_layout_weight"
+                android:layout_below="@id/mpr_layout_height"
+                android:padding="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:labelFor="@id/mpr_txt_weight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mpr_str_weight" />
+
+                <EditText
+                    android:inputType="number"
+                    android:id="@id/mpr_txt_weight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:ems="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/mpr_layout_address"
+                android:layout_below="@id/mpr_layout_weight"
+                android:padding="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:labelFor="@id/mpr_txt_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mpr_str_address" />
+
+                <EditText
+                    android:inputType="number"
+                    android:id="@id/mpr_txt_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:ems="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/mpr_layout_notes"
+                android:layout_below="@id/mpr_layout_address"
+                android:padding="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:labelFor="@id/mpr_txt_notes"
+                    android:layout_width="0dp"
+                    android:layout_gravity="top"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/mpr_str_notes" />
+
+                <EditText
+                    android:id="@id/mpr_txt_notes"
+                    android:inputType="textMultiLine"
+                    android:lines="4"
+                    android:minLines="4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:ems="10" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_below="@id/mpr_layout_notes"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="mpr_btn_done"
+                    android:id="@id/mpr_btn_done"
+                    android:text="@string/btn_done" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="mpr_btn_delete"
+                    android:id="@id/mpr_btn_delete"
+                    android:text="@string/btn_delete" />
+
+                <Button
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="mpr_btn_cancel"
+                    android:id="@id/mpr_btn_cancel"
+                    android:text="@string/btn_cancel" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+</LinearLayout>

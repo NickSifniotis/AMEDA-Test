@@ -17,7 +17,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="9"
+            android:layout_weight="8"
             android:background="@color/mainBackground"
             android:orientation="vertical"
             tools:context="au.net.nicksifniotis.amedatest.HomeActivity">

@@ -1,6 +1,6 @@
 package au.net.nicksifniotis.amedatest;
 
-import au.net.nicksifniotis.amedatest.activities.NewRecordActivity;
+import au.net.nicksifniotis.amedatest.activities.EditUserActivity;
 import au.net.nicksifniotis.amedatest.activities.TestActivity;
 
 /**
@@ -12,7 +12,7 @@ import au.net.nicksifniotis.amedatest.activities.TestActivity;
  */
 public enum ManageRecordsEnum
 {
-    EDIT_RECORD(NewRecordActivity.class, R.string.amr_edit_descriptor),
+    EDIT_RECORD(EditUserActivity.class, R.string.amr_edit_descriptor),
     START_TEST(TestActivity.class, R.string.amr_test_descriptor);
 
     private Class _activity;

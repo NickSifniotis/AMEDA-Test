@@ -10,4 +10,7 @@ public class Globals
 
     /* TRUE if you want to dump a bunch of debug toasts to the device during execution. */
     public static boolean DEBUG_MODE = true;
+
+    /* TRUE if we want to save the addresses of users in the database. */
+    public static boolean USING_ADDRESSES = true;
 }
