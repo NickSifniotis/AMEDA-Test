@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import au.net.nicksifniotis.amedatest.activities.CalibrationActivity;
 import au.net.nicksifniotis.amedatest.activities.FamiliarisationActivity;
@@ -26,6 +27,10 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
  */
 public class HomeActivity extends AppCompatActivity
 {
+    private TextView _ameda_toggle;
+    private TextView _debug_toggle;
+
+
     /**
      * Set up the toolbar and navigation drawer components.
      *
@@ -65,6 +70,11 @@ public class HomeActivity extends AppCompatActivity
 
         if (mDrawerLayout != null)
             mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        _ameda_toggle = (TextView)findViewById(R.id.home_toggle_ameda);
+        _debug_toggle = (TextView)findViewById(R.id.home_toggle_debug);
+
+        _update_drawer_toggles();
     }
 
 
@@ -111,6 +121,25 @@ public class HomeActivity extends AppCompatActivity
     public void h_d_help(View view)
     {
         _launch_help();
+    }
+
+    public void h_d_toggle_ameda(View view)
+    {
+        Globals.AMEDA_FREE = !Globals.AMEDA_FREE;
+        _update_drawer_toggles();
+    }
+
+    public void h_d_toggle_debug(View view)
+    {
+        Globals.DEBUG_MODE = !Globals.DEBUG_MODE;
+        _update_drawer_toggles();
+    }
+
+
+    private void _update_drawer_toggles()
+    {
+        _ameda_toggle.setText("Toggle AMEDAfree (Currently " + (Globals.AMEDA_FREE ? "true" : "false") + ")");
+        _debug_toggle.setText("Toggle Debug (Currently " + (Globals.DEBUG_MODE ? "true" : "false") + ")");
     }
 
 

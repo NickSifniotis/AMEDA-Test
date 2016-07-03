@@ -88,10 +88,10 @@
                 android:padding="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
+                android:text="Main"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         </RelativeLayout>
 
@@ -109,6 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/h_d_tutorial"
+                android:textColor="@color/mainBackground"
                 android:onClick="h_btn_tutorial" />
 
             <TextView
@@ -117,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/h_d_familiarisation"
+                android:textColor="@color/mainBackground"
                 android:onClick="h_btn_familiarisation" />
 
             <TextView
@@ -125,6 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/h_d_new"
+                android:textColor="@color/mainBackground"
                 android:onClick="h_d_new" />
 
             <TextView
@@ -133,6 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/h_d_open"
+                android:textColor="@color/mainBackground"
                 android:onClick="h_d_open" />
 
             <TextView
@@ -141,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/h_d_manage"
+                android:textColor="@color/mainBackground"
                 android:onClick="h_d_manage" />
 
             <TextView
@@ -148,16 +153,44 @@
                 android:paddingLeft="20dp"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:textColor="@color/mainBackground"
                 android:text="@string/h_d_calibrate"
                 android:onClick="h_d_calibrate" />
 
             <TextView
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/mainBackground"
                 android:paddingLeft="20dp"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:text="@string/h_d_help"
                 android:onClick="h_d_help" />
+
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingLeft="10dp"
+                android:paddingTop="30dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Developer Options" />
+
+            <TextView
+                android:id="@+id/home_toggle_ameda"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingLeft="20dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textColor="@color/mainBackground"
+                android:onClick="h_d_toggle_ameda" />
+
+            <TextView
+                android:id="@+id/home_toggle_debug"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingLeft="20dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textColor="@color/mainBackground"
+                android:onClick="h_d_toggle_debug" />
 
         </LinearLayout>
 
