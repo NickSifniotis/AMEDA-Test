@@ -17,6 +17,8 @@
     <item type="id" name="t_btn_excursion_4" />
     <item type="id" name="t_btn_excursion_5" />
 
+    <item type="id" name="t_progress_counter" />
+
 
     <!-- Strings -->
     <string name="t_starting_desc">Press next once you are in the start position.</string>

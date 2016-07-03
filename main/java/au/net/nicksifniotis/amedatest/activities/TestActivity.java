@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -34,7 +35,6 @@ import au.net.nicksifniotis.amedatest.TestState;
  * Outstanding issues todo
  * - it would be great if the tests that were loaded into the database were in their own
  *   static class
- * - find somewhere to display the 'question counter'
  * - Test the resumption of interrupted tests.
  */
 public class TestActivity extends AMEDAActivity
@@ -46,6 +46,7 @@ public class TestActivity extends AMEDAActivity
     private int _num_questions;
     private Random randomiser;
     private ProgressDialog _setting_progress;
+    private TextView _questions_progress;
 
     private TestState current_state;
     private int _current_test_id;
@@ -97,6 +98,8 @@ public class TestActivity extends AMEDAActivity
      */
     private void _connect_gui()
     {
+        _questions_progress = (TextView) findViewById(R.id.t_progress_counter);
+
         _setting_progress = new ProgressDialog(this);
         _setting_progress.setTitle (getString(R.string.t_setting_title));
         _setting_progress.setMessage(getString(R.string.t_setting_desc));
@@ -386,7 +389,11 @@ public class TestActivity extends AMEDAActivity
         if (_current_question >= _num_questions)
             _end_of_test();
         else
+        {
+            _questions_progress.setText (getString(
+                    R.string.t_progress_counter, (_current_question + 1), _num_questions));
             updateState(TestState.MIDDLE);
+        }
     }
 
 
