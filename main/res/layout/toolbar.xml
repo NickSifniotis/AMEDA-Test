@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar android:id="@id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    app:logo="@drawable/ameda_logo"
+    app:navigationIcon="@drawable/nav"
+    app:navigationContentDescription="Navigation Menu"
+    android:padding="12dp"
+    android:background="?attr/colorAccent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+</android.support.v7.widget.Toolbar>

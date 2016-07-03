@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Resource IDs for Home activity -->
+    <item type="id" name="toolbar" />
+
     <item type="id" name="h_btn_tutorial" />
     <item type="id" name="h_btn_familiarisation" />
     <item type="id" name="h_btn_begintest" />
 
     <!-- Strings exclusively for Home activity -->
+    <string name="h_d_tutorial">Tutorial</string>
+    <string name="h_d_familiarisation">Familiarisation</string>
+    <string name="h_d_new">New Record</string>
+    <string name="h_d_open">Open Record</string>
+    <string name="h_d_manage">Manage Records</string>
+    <string name="h_d_calibrate">Calibrate</string>
+    <string name="h_d_help">Help</string>
 
     <!-- Strings used across entire application -->
     <string name="app_name">AMEDA 2000</string>
+    <string name="ameda_logo">AMEDA Logo</string>
 
     <string name="btn_new">New</string>
     <string name="btn_next">Next</string>

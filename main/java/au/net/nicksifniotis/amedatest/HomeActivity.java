@@ -2,13 +2,18 @@ package au.net.nicksifniotis.amedatest;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
@@ -27,11 +32,55 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
  */
 public class HomeActivity extends AppCompatActivity
 {
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
+
+        Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(bar);
+        getSupportActionBar().setTitle("");
+
+        DrawerLayout mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                bar,  /* nav drawer icon to replace 'Up' caret */
+                R.string.btn_new,  /* "open drawer" description @TODO me*/
+                R.string.btn_cancel /* "close drawer" description @TODO me 2*/
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+           //     getActionBar().setTitle(mTitle);
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+             //   getActionBar().setTitle(mDrawerTitle);
+            }
+        };
+
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+//        mDrawerList = (ListView)findViewById(R.id.navList);
+//        _add_drawer_items();
+    }
+
+
+    /**
+     * Toggle the sidebar open and closed.
+     */
+    public void _toggle_sidebar()
+    {
+
     }
 
 
@@ -75,7 +124,7 @@ public class HomeActivity extends AppCompatActivity
 
 
     /**
-     * Button click event handlers.
+     * Click event handlers.
      *
      * @param view Not used.
      */
@@ -92,6 +141,31 @@ public class HomeActivity extends AppCompatActivity
     public void h_btn_begintest(View view)
     {
         _launch_test();
+    }
+
+    public void h_d_new(View view)
+    {
+
+    }
+
+    public void h_d_open(View view)
+    {
+
+    }
+
+    public void h_d_manage(View view)
+    {
+
+    }
+
+    public void h_d_calibrate(View view)
+    {
+
+    }
+
+    public void h_d_help(View view)
+    {
+        _launch_help();
     }
 
 
