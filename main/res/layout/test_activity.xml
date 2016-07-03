@@ -11,163 +11,162 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/test_starting_state"
+        <RelativeLayout
+            android:id="@id/t_layout_starting"
+            android:gravity="center"
+            android:padding="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Are you ready? Press the button to begin the test."
+                android:text="@string/t_starting_desc"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_above="@id/t_btn_start_test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="@string/btn_done"
-                android:onClick="btn_begin_test"
-                android:id="@+id/test_btn_begin_test"
+                android:text="@string/btn_next"
+                android:onClick="t_btn_start_test"
+                android:id="@id/t_btn_start_test"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/test_middle_state"
-            android:orientation="vertical"
+        <RelativeLayout
+            android:id="@id/t_layout_middle"
+            android:gravity="center"
+            android:padding="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Step onto the middle of the plate so that the board is horizontal."
-                android:id="@+id/test001"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/t_middle_desc"
+                android:id="@+id/t_middle_1"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <ImageView
+                android:contentDescription="@string/t_pic_middle_desc"
                 android:src="@drawable/horizontal"
-                android:id="@+id/test002"
-                android:layout_below="@+id/test001"
+                android:id="@+id/t_middle_2"
+                android:layout_below="@+id/t_middle_1"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="@string/btn_done"
-                android:layout_below="@+id/test002"
+                android:text="@string/btn_next"
+                android:layout_below="@+id/t_middle_2"
                 android:layout_centerHorizontal="true"
-                android:onClick="btn_Next_Middle"
+                android:onClick="t_btn_middle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/test_setting_state"
+        <RelativeLayout
+            android:id="@id/t_layout_stepping"
+            android:gravity="center"
+            android:padding="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Please wait while the AMEDA moves into the next position."
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/test_stepping_state"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Step on to the plate. Press Next when you know what position the plate is in."
-                android:id="@+id/t004"
+                android:text="@string/t_stepping_desc"
+                android:id="@+id/t_step_1"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <ImageView
+                android:contentDescription="@string/t_pic_stepping_desc"
                 android:src="@drawable/step_on"
-                android:id="@+id/t005"
-                android:layout_below="@+id/t004"
+                android:id="@+id/t_step_2"
+                android:layout_below="@+id/t_step_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/btn_done"
-                android:onClick="btn_Next"
-                android:id="@+id/test_btn_next"
-                android:layout_below="@+id/t005"
+                android:onClick="t_btn_step"
+                android:layout_below="@+id/t_step_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/test_answering_state"
+        <RelativeLayout
+            android:gravity="center"
+            android:padding="40dp"
+            android:id="@id/t_layout_answering"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Step off the platform and select the position you felt while standing on it."
+                android:text="@string/t_excursion_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/position_1"
-                android:onClick="btn_1"
+                android:onClick="t_btn_excursion_1"
                 android:id="@+id/test_button_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/position_2"
-                android:onClick="btn_2"
+                android:onClick="t_btn_excursion_2"
                 android:id="@+id/test_button_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/position_3"
-                android:onClick="btn_3"
+                android:onClick="t_btn_excursion_3"
                 android:id="@+id/test_button_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/position_4"
-                android:onClick="btn_4"
+                android:onClick="t_btn_excursion_4"
                 android:id="@+id/test_button_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/position_5"
-                android:onClick="btn_5"
+                android:onClick="t_btn_excursion_5"
                 android:id="@+id/test_button_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/test_finishing_state"
+        <RelativeLayout
+            android:gravity="center"
+            android:padding="40dp"
+            android:id="@id/t_layout_finishing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="The test is finished. Your results have been saved and are available to be viewed."
+                android:text="@string/t_ending_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/btn_done"
-                android:onClick="btn_end_test"
-                android:id="@+id/test_btn_end_test"
+                android:onClick="t_btn_end_test"
+                android:id="@id/t_btn_end_test"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 

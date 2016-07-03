@@ -1,5 +1,6 @@
 package au.net.nicksifniotis.amedatest.activities;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -22,6 +22,7 @@ import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 import au.net.nicksifniotis.amedatest.R;
 import au.net.nicksifniotis.amedatest.TestState;
+
 
 /**
  * TestActivity activity. Launches a test and runs it from go to whoa.
@@ -36,12 +37,11 @@ public class TestActivity extends AMEDAActivity
     private int _current_question;
     private int _num_questions;
     private Random randomiser;
+    private ProgressDialog _setting_progress;
 
     private TestState current_state;
     private int _current_test_id;
     private DBOpenHelper _database_helper;
-
-    private LinearLayout[] _state_layouts;
 
 
     @Override
@@ -108,7 +108,12 @@ public class TestActivity extends AMEDAActivity
             return;
         }
 
-        _connect_gui();
+
+        // create the 'Setting AMEDA please wait' progress dialog.
+        // it gets shown and hidden as the activity changes from one state to another.
+        _setting_progress = new ProgressDialog(this);
+        _setting_progress.setTitle (getString(R.string.t_setting_title));
+        _setting_progress.setMessage(getString(R.string.t_setting_desc));
     }
 
 
@@ -170,23 +175,6 @@ public class TestActivity extends AMEDAActivity
 
 
     /**
-     * Finds the different layout controls on the UI and connects them to a bunch of local vars.
-     * This has been split into it's own function, so that the state controller can call it directly
-     * if it ever detects that a connection to one of these layouts is lost.
-     */
-    private void _connect_gui()
-    {
-        _state_layouts = new LinearLayout[TestState.values().length];
-        _state_layouts[TestState.STARTING.ordinal()] = (LinearLayout)findViewById(R.id.test_starting_state);
-        _state_layouts[TestState.MIDDLE.ordinal()] = (LinearLayout)findViewById(R.id.test_middle_state);
-        _state_layouts[TestState.SETTING.ordinal()] = (LinearLayout)findViewById(R.id.test_setting_state);
-        _state_layouts[TestState.STEPPING.ordinal()] = (LinearLayout)findViewById(R.id.test_stepping_state);
-        _state_layouts[TestState.ANSWERING.ordinal()] = (LinearLayout)findViewById(R.id.test_answering_state);
-        _state_layouts[TestState.FINISHING.ordinal()] = (LinearLayout)findViewById(R.id.test_finishing_state);
-    }
-
-
-    /**
      * Processes the response codes received from the AMEDA device.
      *
      * In this implementation of the AMEDA activity, the only commands that are being sent to
@@ -215,33 +203,6 @@ public class TestActivity extends AMEDAActivity
                     ExecuteNextInstruction();
                 else
                     updateState(TestState.STEPPING);
-    }
-
-
-    /**
-     * Safely sets the 'visibility' parameter of the given LinearLayout.
-     *
-     * This function is called by updateState() only. It contains safety code to ensure that
-     * calls to null pointers are never made. It will try to 'reload' the pointers to the layouts,
-     * and only if it can't do that, will it crap out.
-     *
-     * @param target Which state layout to target.
-     * @param visibility True if the layout is to be made visible, false otherwise.
-     */
-    private void _toggle_layout (TestState target, boolean visibility)
-    {
-        if (_state_layouts[target.ordinal()] == null)
-            _connect_gui();
-
-        // try it again.
-        if (_state_layouts[target.ordinal()] == null)
-        {
-            makeToast("Catastrophic failure connecting to layouts in the UI. This error should never ever be seen.");
-            finish();
-            return;
-        }
-
-        _state_layouts[target.ordinal()].setVisibility((visibility) ? View.VISIBLE : View.GONE);
     }
 
 
@@ -279,63 +240,24 @@ public class TestActivity extends AMEDAActivity
 
     /**
      * Update the GUI components to match the current state of the test state machine.
-     *@TODO tomorrow morning add the 'middle' state to this
+     *
      * @param new_state The new state to advance to.
      */
     private void updateState(TestState new_state)
     {
         current_state = new_state;
-        switch (new_state)
+
+        for (TestState t: TestState.values())
         {
-            case STARTING:
-                _toggle_layout(TestState.STARTING, true);
-                _toggle_layout(TestState.MIDDLE, false);
-                _toggle_layout(TestState.SETTING, false);
-                _toggle_layout(TestState.STEPPING, false);
-                _toggle_layout(TestState.ANSWERING, false);
-                _toggle_layout(TestState.FINISHING, false);
-                break;
-            case MIDDLE:
-                _toggle_layout(TestState.STARTING, false);
-                _toggle_layout(TestState.MIDDLE, true);
-                _toggle_layout(TestState.SETTING, false);
-                _toggle_layout(TestState.STEPPING, false);
-                _toggle_layout(TestState.ANSWERING, false);
-                _toggle_layout(TestState.FINISHING, false);
-                break;
-            case SETTING:
-                _toggle_layout(TestState.STARTING, false);
-                _toggle_layout(TestState.MIDDLE, false);
-                _toggle_layout(TestState.SETTING, true);
-                _toggle_layout(TestState.STEPPING, false);
-                _toggle_layout(TestState.ANSWERING, false);
-                _toggle_layout(TestState.FINISHING, false);
-                break;
-            case STEPPING:
-                _toggle_layout(TestState.STARTING, false);
-                _toggle_layout(TestState.MIDDLE, false);
-                _toggle_layout(TestState.SETTING, false);
-                _toggle_layout(TestState.STEPPING, true);
-                _toggle_layout(TestState.ANSWERING, false);
-                _toggle_layout(TestState.FINISHING, false);
-                break;
-            case ANSWERING:
-                _toggle_layout(TestState.STARTING, false);
-                _toggle_layout(TestState.MIDDLE, false);
-                _toggle_layout(TestState.SETTING, false);
-                _toggle_layout(TestState.STEPPING, false);
-                _toggle_layout(TestState.ANSWERING, true);
-                _toggle_layout(TestState.FINISHING, false);
-                break;
-            case FINISHING:
-                _toggle_layout(TestState.STARTING, false);
-                _toggle_layout(TestState.MIDDLE, false);
-                _toggle_layout(TestState.SETTING, false);
-                _toggle_layout(TestState.STEPPING, false);
-                _toggle_layout(TestState.ANSWERING, false);
-                _toggle_layout(TestState.FINISHING, true);
-                break;
+            View layout = findViewById(t.Layout());
+            if (layout != null)
+                layout.setVisibility ((current_state == t) ? View.VISIBLE : View.GONE);
         }
+
+        if (current_state == TestState.SETTING)
+            _setting_progress.show();
+        else
+            _setting_progress.dismiss();
     }
 
 
@@ -344,49 +266,49 @@ public class TestActivity extends AMEDAActivity
      *
      * @param view Not used.
      */
-    public void btn_Next (View view)
+    public void t_btn_step(View view)
     {
         updateState(TestState.ANSWERING);
     }
 
-    public void btn_Next_Middle (View view)
+    public void t_btn_middle(View view)
     {
         _move_to_next_pos();
     }
 
-    public void btn_1(View view)
+    public void t_btn_excursion_1(View view)
     {
         record_user_response(1);
     }
 
-    public void btn_2(View view)
+    public void t_btn_excursion_2(View view)
     {
         record_user_response(2);
     }
 
-    public void btn_3(View view)
+    public void t_btn_excursion_3(View view)
     {
         record_user_response(3);
     }
 
-    public void btn_4(View view)
+    public void t_btn_excursion_4(View view)
     {
         record_user_response(4);
     }
 
-    public void btn_5(View view)
+    public void t_btn_excursion_5(View view)
     {
         record_user_response(5);
     }
 
 
-    public void btn_begin_test(View view)
+    public void t_btn_start_test(View view)
     {
         _next_question();
     }
 
 
-    public void btn_end_test (View view)
+    public void t_btn_end_test(View view)
     {
         finish();
     }
