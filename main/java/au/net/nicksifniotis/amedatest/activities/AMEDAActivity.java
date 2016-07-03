@@ -1,5 +1,6 @@
 package au.net.nicksifniotis.amedatest.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import au.net.nicksifniotis.amedatest.R;
 public abstract class AMEDAActivity extends AppCompatActivity
 {
     private AMEDA _device;
+    private boolean _connecting;
+    private ProgressDialog _connect_progress;
     private AMEDAInstructionQueue _instruction_buffer;
     private Handler _response_handler;
 
@@ -59,10 +62,14 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
                     ProcessAMEDAResponse(_instruction_buffer.Current(), response);
                 }
+                else if (msg_type == AMEDA.CONNECTED)
+                    _handle_connected();
+
                 return true;
             }
         });
 
+        _connecting = false;
         _device = (Globals.AMEDA_FREE)
                 ? new VirtualAMEDA(this, _response_handler)
                 : new AMEDAImplementation(this, _response_handler);
@@ -77,7 +84,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     {
         super.onStart();
 
-        _device.Connect();
+        _reconnect();
     }
 
 
@@ -102,6 +109,48 @@ public abstract class AMEDAActivity extends AppCompatActivity
         super.onDestroy();
 
         _response_handler.removeCallbacksAndMessages(null);
+    }
+
+
+    /**
+     * Attempts to establish a connection to the AMEDA device.
+     *
+     * Displays a funky dialog to the user to keep them occupied.
+     */
+    private void _reconnect()
+    {
+        if (_connect_progress != null)
+            _connect_progress.dismiss();
+
+        _connecting = true;
+
+        _connect_progress = new ProgressDialog(this);
+        _connect_progress.setTitle("Connecting");
+        _connect_progress.setMessage("Please wait while a connection to the AMEDA is established..");
+        _connect_progress.setCancelable(false);
+        _connect_progress.show();
+
+        _device.Connect();
+
+    }
+
+
+    /**
+     * Handles a 'we are connected' message from the AMEDA device.
+     */
+    private void _handle_connected()
+    {
+        DebugToast("Received connection confirmation.");
+        if (_connecting)
+        {
+            if (_connect_progress != null)
+            {
+                _connect_progress.dismiss();
+                _connect_progress = null;
+            }
+
+            _connecting = false;
+        }
     }
 
 

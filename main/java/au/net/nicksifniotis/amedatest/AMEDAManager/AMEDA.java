@@ -10,6 +10,7 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
 public interface AMEDA
 {
     public static final int RESPONSE = 1;
+    public static final int CONNECTED = 2;
 
     public boolean GoToPosition (int position);
 

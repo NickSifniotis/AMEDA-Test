@@ -295,6 +295,12 @@ public class AMEDAImplementation implements AMEDA
         mConnectedThread.start();
 
         _connected = true;
+
+
+        // Signal the success of the connection by sending a message back to the parent UI
+        // Delay it by half a second so that the user gets to see the spinner a little before it's dismissed.
+        Message success_message = _response_handler.obtainMessage(AMEDA.CONNECTED);
+        _response_handler.sendMessageDelayed(success_message, 500);
     }
 
 

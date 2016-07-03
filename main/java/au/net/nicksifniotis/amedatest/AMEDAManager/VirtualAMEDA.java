@@ -76,11 +76,15 @@ public class VirtualAMEDA implements AMEDA
 
     /**
      * Implementation of the open connection method.
-     * The virtual AMEDA has nothing to connect to, so do nothing.
+     *
+     * There's nothing to connect to, but we still need to signal a successful connection to the
+     * UI thread.
      */
     @Override
     public void Connect()
     {
+        Message msg = _response_handler.obtainMessage(AMEDA.CONNECTED);
+        _response_handler.sendMessageDelayed(msg, 2000);
     }
 
 
