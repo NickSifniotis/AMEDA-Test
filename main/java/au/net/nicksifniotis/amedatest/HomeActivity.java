@@ -8,33 +8,29 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
-import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 import au.net.nicksifniotis.amedatest.activities.CalibrationActivity;
 import au.net.nicksifniotis.amedatest.activities.FamiliarisationActivity;
 import au.net.nicksifniotis.amedatest.activities.ManageRecordsActivity;
-import au.net.nicksifniotis.amedatest.activities.NewRecordActivity;
 import au.net.nicksifniotis.amedatest.activities.Tutorial;
 
 
 /**
  * The main activity of the AMEDA app.
  *
+ * @TODO Outstanding issues:
+ * - layout needs tweaking - namely, the three big buttons are a bit ugly at the moment
+ * - open record does nothing because the activity that it calls doesnt exist yet.
+ *
  */
 public class HomeActivity extends AppCompatActivity
 {
-    private ListView mDrawerList;
-    private ArrayAdapter<String> mAdapter;
-
+    /**
+     * Set up the toolbar and navigation drawer components.
+     *
+     * @param savedInstanceState Not really used.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -43,83 +39,30 @@ public class HomeActivity extends AppCompatActivity
 
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);
-        getSupportActionBar().setTitle("");
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("");
 
         DrawerLayout mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                bar,  /* nav drawer icon to replace 'Up' caret */
-                R.string.btn_new,  /* "open drawer" description @TODO me*/
-                R.string.btn_cancel /* "close drawer" description @TODO me 2*/
-        ) {
-
+                this, mDrawerLayout, bar, R.string.h_d_nav_open, R.string.h_d_nav_close)
+        {
             /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
+            public void onDrawerClosed(View view)
+            {
                 super.onDrawerClosed(view);
-           //     getActionBar().setTitle(mTitle);
             }
 
             /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
+            public void onDrawerOpened(View drawerView)
+            {
                 super.onDrawerOpened(drawerView);
-             //   getActionBar().setTitle(mDrawerTitle);
             }
         };
 
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
-
-//        mDrawerList = (ListView)findViewById(R.id.navList);
-//        _add_drawer_items();
-    }
-
-
-    /**
-     * Toggle the sidebar open and closed.
-     */
-    public void _toggle_sidebar()
-    {
-
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle item selection
-        switch (item.getItemId())
-        {
-            case R.id.calibrate_mnu:
-                _launch_child_activity(CalibrationActivity.class);
-                return true;
-            case R.id.help_mnu:
-                _launch_help();
-                return true;
-            case R.id.new_record_mnu:
-                _launch_child_activity(NewRecordActivity.class);
-                return true;
-            case R.id.tutorial_mnu:
-                _launch_child_activity(Tutorial.class);
-                return true;
-            case R.id.famil_mnu:
-                _launch_child_activity(FamiliarisationActivity.class);
-                return true;
-            case R.id.manage_mnu:
-                _launch_manage_records();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        if (mDrawerLayout != null)
+            mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
 
@@ -145,22 +88,22 @@ public class HomeActivity extends AppCompatActivity
 
     public void h_d_new(View view)
     {
-
+        _launch_test();
     }
 
     public void h_d_open(View view)
     {
-
+        // this is a todoo
     }
 
     public void h_d_manage(View view)
     {
-
+        _launch_manage_records();
     }
 
     public void h_d_calibrate(View view)
     {
-
+        _launch_child_activity(CalibrationActivity.class);
     }
 
     public void h_d_help(View view)
@@ -209,34 +152,6 @@ public class HomeActivity extends AppCompatActivity
 
 
     /**
-     * Calibrate the AMEDA device. The call is a blocking call that will suspend execution
-     * until the AMEDA confirms that it has succeeded (or otherwise..)
-     *
-     */
-    private void _calibrate()
-    {
-        makeToast("Calibrating ..");
-
-        try
-        {
-            // @TODO implement a response code handler
-            AMEDA device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this, null) : new AMEDAImplementation(this, null);
-
-            if (!device.Calibrate())
-                makeToast("Calibration failed. Try again.");
-            else
-                makeToast("Calibration succeeded.");
-
-            device.Disconnect();
-        }
-        catch (Exception e)
-        {
-            makeToast ("Unable to connect to AMEDA device.");
-        }
-    }
-
-
-    /**
      * Launch the 'look at a list of every user' activity.
      */
     private void _launch_manage_records()
@@ -244,13 +159,6 @@ public class HomeActivity extends AppCompatActivity
         Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
         manageRecIntent.putExtra("activity", ManageRecordsEnum.EDIT_RECORD.ordinal());
         startActivity(manageRecIntent);
-    }
-
-
-    public void makeToast (String message)
-    {
-        Toast t = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        t.show();
     }
 
 

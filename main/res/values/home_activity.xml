@@ -8,6 +8,9 @@
     <item type="id" name="h_btn_begintest" />
 
     <!-- Strings exclusively for Home activity -->
+    <string name="h_d_nav_open">Open Navigation</string>
+    <string name="h_d_nav_close">Close Navigation</string>
+
     <string name="h_d_tutorial">Tutorial</string>
     <string name="h_d_familiarisation">Familiarisation</string>
     <string name="h_d_new">New Record</string>
