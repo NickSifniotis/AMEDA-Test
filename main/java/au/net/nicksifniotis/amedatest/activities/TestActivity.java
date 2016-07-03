@@ -35,7 +35,7 @@ import au.net.nicksifniotis.amedatest.TestState;
  * Outstanding issues todo
  * - it would be great if the tests that were loaded into the database were in their own
  *   static class
- * - Test the resumption of interrupted tests.
+ * - Get tests to work correctly across a screen rotation. At the moment they crap out.
  */
 public class TestActivity extends AMEDAActivity
 {
@@ -176,6 +176,7 @@ public class TestActivity extends AMEDAActivity
         ContentValues values = new ContentValues();
         values.put(DB.TestTable.DATE, Calendar.getInstance().getTimeInMillis());
         values.put(DB.TestTable.SCORE, -1);
+        values.put(DB.TestTable.ACTIVE, 1);
         values.put(DB.TestTable.NUM_QUESTIONS, _num_questions);
         values.put(DB.TestTable.INTERRUPTED, 0);
         values.put(DB.TestTable.PERSON_ID, user_id);
@@ -200,7 +201,9 @@ public class TestActivity extends AMEDAActivity
      */
     private void _resume_test(int test_id)
     {
-        String query = "SELECT t.* FROM " + DB.StandardTestTable.TABLE_NAME + "t, " +
+        _current_test_id = test_id;
+
+        String query = "SELECT t.* FROM " + DB.StandardTestTable.TABLE_NAME + " t, " +
                 DB.TestTable.TABLE_NAME + " d " +
                 " WHERE t." + DB.StandardTestTable._ID + " = d." + DB.TestTable.STANDARD_TEST_ID +
                 " AND d." + DB.TestTable._ID + " = " + test_id +

@@ -1,5 +1,6 @@
 package au.net.nicksifniotis.amedatest.activities;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,7 +27,9 @@ import au.net.nicksifniotis.amedatest.R;
  * Watch the user's progress improve (or otherwise) with repeated practice on the AMEDA
  * device.
  *
- * todo - pretty much build this one up from scratch. She won't be polished.
+ * Only a few things todo:
+ *   - make 'view results' DO something
+ *   - the user interface really could use some work
  */
 public class ViewUserActivity extends AppCompatActivity
 {
@@ -144,7 +147,7 @@ public class ViewUserActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v)
                 {
-                    finish();   // todo make sure this is right
+                    finish();
                 }
             });
         }
@@ -175,7 +178,7 @@ public class ViewUserActivity extends AppCompatActivity
      * @param test_id The test that has been selected.
      * @param interrupted True if the test was interrupted and completion is an option.
      */
-    private void _handle_test_selection(int test_id, boolean interrupted)
+    private void _handle_test_selection(final int test_id, boolean interrupted)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage (getString(R.string.vu_selected_resume))
@@ -190,7 +193,7 @@ public class ViewUserActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-
+                        _view_results(test_id);
                     }
                 })
                 .setNegativeButton(getString(R.string.vu_selected_delete), new DialogInterface.OnClickListener()
@@ -204,7 +207,7 @@ public class ViewUserActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-
+                        _delete_test(test_id);
                     }
                 });
 
@@ -220,11 +223,61 @@ public class ViewUserActivity extends AppCompatActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which)
                 {
-
+                    _resume_test(test_id);
                 }
             });
 
         builder.create().show();
+    }
+
+
+    /**
+     * Launches a new activity that displays the results of the test in detail.
+     *
+     * @param test_id The test who's results must be viewed.
+     */
+    private void _view_results (int test_id)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.not_implemented_title)
+                .setMessage(R.string.not_implemented_desc)
+                .setPositiveButton(R.string.btn_done, null);
+
+        builder.create().show();
+    }
+
+
+    /**
+     * Attempts to resume an interrupted test.
+     *
+     * @param test_id The test to resume.
+     */
+    private void _resume_test (int test_id)
+    {
+        Intent intent = new Intent (this, TestActivity.class);
+        intent.putExtra("id", 0);
+        intent.putExtra("test_id", test_id);
+        startActivity(intent);
+    }
+
+
+    /**
+     * Marks this test as deleted.
+     *
+     * @param test_id The test to delete.
+     */
+    private void _delete_test (int test_id)
+    {
+        SQLiteDatabase db_w = _database_helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DB.TestTable.ACTIVE, 0);
+
+        int success = db_w.update(DB.TestTable.TABLE_NAME, values, DB.TestTable._ID + " = " + test_id, null);
+        db_w.close();
+
+        if (success == 0)
+            _database_helper.databaseError(getString(R.string.vu_error_delete_fail));
     }
 
 
