@@ -60,7 +60,7 @@ public class User_RCA extends CursorAdapter
         TextView tv_Date = (TextView)view.findViewById(R.id.record_score);
 
         String name = cursor.getString(cursor.getColumnIndexOrThrow(DB.PersonTable.NAME));
-        long d = cursor.getLong(cursor.getColumnIndexOrThrow("test_count"));
+        long d = cursor.getLong(cursor.getColumnIndexOrThrow(DB.TestTable.DATE));
         String date;
 
         if (d == 0)

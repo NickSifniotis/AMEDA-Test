@@ -16,19 +16,24 @@
             android:gravity="center"
             android:padding="40dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:visibility="invisible">
 
             <TextView
+                android:id="@+id/t_start_1"
                 android:text="@string/t_starting_desc"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_above="@id/t_btn_start_test"
-                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:paddingBottom="70dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/btn_next"
                 android:onClick="t_btn_start_test"
                 android:id="@id/t_btn_start_test"
+                android:layout_below="@+id/t_start_1"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -40,7 +45,8 @@
             android:gravity="center"
             android:padding="40dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:visibility="invisible">
 
             <TextView
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -48,7 +54,7 @@
                 android:id="@+id/t_middle_1"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <ImageView
@@ -75,11 +81,14 @@
             android:gravity="center"
             android:padding="40dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:visibility="invisible">
 
             <TextView
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/t_stepping_desc"
                 android:id="@+id/t_step_1"
+                android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -88,6 +97,7 @@
                 android:contentDescription="@string/t_pic_stepping_desc"
                 android:src="@drawable/step_on"
                 android:id="@+id/t_step_2"
+                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/t_step_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -95,6 +105,7 @@
             <Button
                 android:text="@string/btn_done"
                 android:onClick="t_btn_step"
+                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/t_step_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -105,45 +116,42 @@
             android:padding="40dp"
             android:id="@id/t_layout_answering"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
             <TextView
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/t_excursion_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="@string/position_1"
                 android:onClick="t_btn_excursion_1"
-                android:id="@+id/test_button_1"
+                android:id="@id/t_btn_excursion_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="@string/position_2"
                 android:onClick="t_btn_excursion_2"
-                android:id="@+id/test_button_2"
+                android:id="@id/t_btn_excursion_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="@string/position_3"
                 android:onClick="t_btn_excursion_3"
-                android:id="@+id/test_button_3"
+                android:id="@id/t_btn_excursion_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="@string/position_4"
                 android:onClick="t_btn_excursion_4"
-                android:id="@+id/test_button_4"
+                android:id="@id/t_btn_excursion_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:text="@string/position_5"
                 android:onClick="t_btn_excursion_5"
-                android:id="@+id/test_button_5"
+                android:id="@id/t_btn_excursion_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
@@ -153,9 +161,11 @@
             android:padding="40dp"
             android:id="@id/t_layout_finishing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
 
             <TextView
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/t_ending_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

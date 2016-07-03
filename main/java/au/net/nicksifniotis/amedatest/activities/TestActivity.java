@@ -3,6 +3,7 @@ package au.net.nicksifniotis.amedatest.activities;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -108,12 +110,27 @@ public class TestActivity extends AMEDAActivity
             return;
         }
 
+        _connect_gui();
+    }
 
-        // create the 'Setting AMEDA please wait' progress dialog.
-        // it gets shown and hidden as the activity changes from one state to another.
+
+    /**
+     * Sets up the GUI-y things, like the progress dialog and the text for certain elements.
+     *
+     */
+    private void _connect_gui()
+    {
         _setting_progress = new ProgressDialog(this);
         _setting_progress.setTitle (getString(R.string.t_setting_title));
         _setting_progress.setMessage(getString(R.string.t_setting_desc));
+
+        Resources r = getResources();
+        for (int i = 1; i <= 5; i ++)
+        {
+            Button button = (Button) findViewById(r.getIdentifier("t_btn_excursion_" + i, "id", "au.net.nicksifniotis.amedatest"));
+            if (button != null)
+                button.setText(getString(R.string.t_excursion_button, i));
+        }
     }
 
 
