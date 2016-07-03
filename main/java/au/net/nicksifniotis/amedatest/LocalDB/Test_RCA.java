@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import au.net.nicksifniotis.amedatest.R;
 
 /**
@@ -39,7 +43,7 @@ public class Test_RCA extends CursorAdapter
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent)
     {
-        return LayoutInflater.from(context).inflate(R.layout.record_list_layout, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.test_rca_layout, parent, false);
     }
 
 
@@ -54,9 +58,13 @@ public class Test_RCA extends CursorAdapter
     @Override
     public void bindView(View view, Context context, Cursor cursor)
     {
-        TextView txt_test_date = (TextView)view.findViewById(R.id.record_date);
-        TextView txt_test_score = (TextView)view.findViewById(R.id.record_score);
+        TextView txt_test_date = (TextView)view.findViewById(R.id.test_rca_date);
+        TextView txt_test_score = (TextView)view.findViewById(R.id.test_rca_score);
 
+        long d = cursor.getLong(cursor.getColumnIndexOrThrow(DB.TestTable.DATE));
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        String date = format.format(new Date(d));
 
+        int score = cursor.getInt(cursor.getColumnIndex(""));
     }
 }

@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 public class DB
 {
     public static final String filename = "AMEDA.db";
-    public static final int version = 9;
+    public static final int version = 10;
 
     /**
      * Blank constructor, to make sure nobody accidentally instantiates a copy of this non-object.
@@ -52,7 +52,8 @@ public class DB
         public static final String PERSON_ID = "PersonId" + TABLE_NAME;
         public static final String STANDARD_TEST_ID = "StandardId" + TABLE_NAME;
         public static final String INTERRUPTED = "Interrupted" + TABLE_NAME;
-        public static final String FINISHED = "Finished" + TABLE_NAME;
+        public static final String SCORE = "Score" + TABLE_NAME;
+        public static final String NUM_QUESTIONS = "NumQuestions" + TABLE_NAME;
         public static final String ACTIVE = "Active" + TABLE_NAME;
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
@@ -60,7 +61,8 @@ public class DB
                                                 + PERSON_ID + " INTEGER, "
                                                 + STANDARD_TEST_ID + " INTEGER, "
                                                 + INTERRUPTED + " INTEGER, "
-                                                + FINISHED + " INTEGER, "
+                                                + SCORE + " INTEGER, "
+                                                + NUM_QUESTIONS + " INTEGER, "
                                                 + DATE + " INTEGER, "
                                                 + ACTIVE + " INTEGER)";
         public static final String DestroySQL = "DROP TABLE IF EXISTS " + TABLE_NAME;

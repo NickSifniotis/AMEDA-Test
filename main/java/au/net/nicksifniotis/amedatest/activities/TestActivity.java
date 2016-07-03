@@ -175,7 +175,8 @@ public class TestActivity extends AMEDAActivity
         // having made it this far, prepare to begin the test.
         ContentValues values = new ContentValues();
         values.put(DB.TestTable.DATE, Calendar.getInstance().getTimeInMillis());
-        values.put(DB.TestTable.FINISHED, 0);
+        values.put(DB.TestTable.SCORE, -1);
+        values.put(DB.TestTable.NUM_QUESTIONS, _num_questions);
         values.put(DB.TestTable.INTERRUPTED, 0);
         values.put(DB.TestTable.PERSON_ID, user_id);
         values.put(DB.TestTable.STANDARD_TEST_ID, test_number);
@@ -596,7 +597,7 @@ public class TestActivity extends AMEDAActivity
         updateState(TestState.FINISHING);
 
         ContentValues values = new ContentValues();
-        values.put(DB.TestTable.FINISHED, 1);
+        values.put(DB.TestTable.SCORE, _compute_score());
 
         SQLiteDatabase db = _database_helper.getWritableDatabase();
         int success = db.update(DB.TestTable.TABLE_NAME, values, DB.TestTable._ID + " = " + _current_test_id, null);
@@ -606,5 +607,34 @@ public class TestActivity extends AMEDAActivity
         {
             _database_helper.databaseError(getString(R.string.t_error_database_on_end));
         }
+    }
+
+
+    /**
+     * Scores the test.
+     *
+     * @return The number of questions that the user got correct in this test.
+     */
+    private int _compute_score()
+    {
+        int res = 0;
+
+        SQLiteDatabase db = _database_helper.getReadableDatabase();
+        String query = "SELECT * FROM " + DB.QuestionTable.TABLE_NAME +
+                " WHERE " + DB.QuestionTable.TEST_ID + " = " + _current_test_id;
+
+        Cursor resultSet = db.rawQuery(query, null);
+        resultSet.moveToFirst();
+        while (resultSet.moveToNext())
+        {
+            int answer = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.USER_ANSWER));
+            int question_number = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.QUESTION_NUMBER));
+            if (answer == _test_questions[question_number])
+                res ++;
+        }
+        resultSet.close();
+        db.close();
+
+        return res;
     }
 }

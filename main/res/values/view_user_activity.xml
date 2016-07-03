@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/tools">
+    <!-- Resource IDs -->
+    <item type="id" name="vu_txt_title" />
+    <item type="id" name="vu_list_tests" />
+
+    <item type="id" name="test_rca_date" />
+    <item type="id" name="test_rca_score" />
+    <item type="id" name="test_rca_status" />
+
+    <!-- Strings -->
+    <string name="vu_string_page_title">Viewing User %1$s</string>
+
+    <string name="test_rca_date">Date of Test</string>
+    <string name="test_rca_score">Score</string>
+</resources>
