@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Resource IDs -->
+
+    <!-- Strings -->
+    <string name="t_starting_desc">Press go once you are in the start position.</string>
+    <string name="t_setting_desc">Please step into the centre line.</string>
+    <string name="t_stepping_desc">Please step down.</string>
+    <string name="t_excursion_desc">Step back to start position and report back perceived excursion number.</string>
+    <string name="t_excursion_button">Step excursion $1%d</string>
+    <string name="t_ending_desc">Recording task is completed. Please hand back the tablet to the therapist.</string>
+
+    <string name="t_error_database_on_response">"Unable to save your response to the database. Please try again.</string>
+    <string name="t_error_database_on_abort">Error updating test during abort operation. You will not be able to resume this test.</string>
+    <string name="t_error_database_on_end">There has been an error recording that this test is finished.</string>
+    <!-- <string name="t_progress_counter">$1%d / $2%d</string> -->
+
+</resources>

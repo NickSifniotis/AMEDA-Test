@@ -259,6 +259,12 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
 
     /**
+     * @return True if there are more instructions remaining in the instruction queue.
+     */
+    protected boolean HasMoreInstructions() { return _instruction_buffer.HasNext(); }
+
+
+    /**
      * Process the AMEDA's response to the instruction that it just received.
      *
      * This abstract method needs to be implemented by every Activity that sends commands

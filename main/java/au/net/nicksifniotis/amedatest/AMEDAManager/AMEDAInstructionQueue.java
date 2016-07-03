@@ -59,4 +59,12 @@ public class AMEDAInstructionQueue
     {
         return _last_instruction;
     }
+
+
+    /**
+     * Does the instruction queue hold any more instructions beyond the current one?
+     *
+     * @return True if it does, false if it doesn't.
+     */
+    public boolean HasNext() { return !_queue.isEmpty(); }
 }

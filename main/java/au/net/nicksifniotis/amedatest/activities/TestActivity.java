@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,10 +15,9 @@ import android.widget.Toast;
 import java.util.Calendar;
 import java.util.Random;
 
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
-import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
-import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 import au.net.nicksifniotis.amedatest.R;
@@ -30,16 +28,16 @@ import au.net.nicksifniotis.amedatest.TestState;
  *
  * Created by nsifniotis on 29/05/16.
  */
-public class TestActivity extends AppCompatActivity
+public class TestActivity extends AMEDAActivity
 {
     private static final int NUM_TESTS = 5;
 
     private int [] _test_questions;
     private int _current_question;
     private int _num_questions;
+    private Random randomiser;
 
     private TestState current_state;
-    private AMEDA device;
     private int _current_test_id;
     private DBOpenHelper _database_helper;
 
@@ -49,7 +47,7 @@ public class TestActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_layout);
+        setContentView(R.layout.test_activity);
 
 
         // Get the user id of the person who is taking this test.
@@ -64,10 +62,10 @@ public class TestActivity extends AppCompatActivity
         }
 
         _database_helper = new DBOpenHelper(this);
-        Random r = new Random();
+        randomiser = new Random();
 
         // randomly pick a standard test for this user, and load the answer key from the database.
-        int test_number = r.nextInt(NUM_TESTS) + 1;
+        int test_number = randomiser.nextInt(NUM_TESTS) + 1;
         String query = "SELECT * FROM " + DB.StandardTestTable.TABLE_NAME + " WHERE " + DB.StandardTestTable._ID + "=" + test_number;
         SQLiteDatabase db = _database_helper.getReadableDatabase();
 
@@ -109,6 +107,8 @@ public class TestActivity extends AppCompatActivity
             finish();
             return;
         }
+
+        _connect_gui();
     }
 
 
@@ -165,21 +165,6 @@ public class TestActivity extends AppCompatActivity
     {
         super.onStart();
 
-        try
-        {
-            // @TODO implement a response code handler
-            device = (Globals.AMEDA_FREE) ? new VirtualAMEDA(this, null) : new AMEDAImplementation(this, null);
-            device.Connect();
-        }
-        catch (Exception e)
-        {
-            makeToast("Unable to create connection to AMEDA device, aborting.");
-            finish();
-        }
-
-        _connect_to_layouts();
-
-
         updateState(TestState.STARTING);
     }
 
@@ -189,7 +174,7 @@ public class TestActivity extends AppCompatActivity
      * This has been split into it's own function, so that the state controller can call it directly
      * if it ever detects that a connection to one of these layouts is lost.
      */
-    private void _connect_to_layouts()
+    private void _connect_gui()
     {
         _state_layouts = new LinearLayout[TestState.values().length];
         _state_layouts[TestState.STARTING.ordinal()] = (LinearLayout)findViewById(R.id.test_starting_state);
@@ -198,6 +183,38 @@ public class TestActivity extends AppCompatActivity
         _state_layouts[TestState.STEPPING.ordinal()] = (LinearLayout)findViewById(R.id.test_stepping_state);
         _state_layouts[TestState.ANSWERING.ordinal()] = (LinearLayout)findViewById(R.id.test_answering_state);
         _state_layouts[TestState.FINISHING.ordinal()] = (LinearLayout)findViewById(R.id.test_finishing_state);
+    }
+
+
+    /**
+     * Processes the response codes received from the AMEDA device.
+     *
+     * In this implementation of the AMEDA activity, the only commands that are being sent to
+     * the device are 'Move to position' commands. So that significantly narrows the set of
+     * possible responses being received, and the appropriate actions to take for them.
+     *
+     * @param instruction The instruction that was sent to the AMEDA.
+     * @param response The AMEDA's response to that instruction.
+     */
+    @Override
+    protected void ProcessAMEDAResponse(AMEDAInstruction instruction, AMEDAResponse response)
+    {
+        AMEDAInstructionEnum instruction_code = instruction.GetInstruction();
+
+        if (!instruction_code.IsValidResponse(response))
+        {
+            DebugToast("Unknown response " + response.toString() + " received for instruction " + instruction_code.toString());
+            FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
+        }
+
+        if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION)
+            if (response == AMEDAResponse.CANNOT_MOVE)
+                CannotMoveDialog();
+            else
+                if (HasMoreInstructions())
+                    ExecuteNextInstruction();
+                else
+                    updateState(TestState.STEPPING);
     }
 
 
@@ -214,7 +231,7 @@ public class TestActivity extends AppCompatActivity
     private void _toggle_layout (TestState target, boolean visibility)
     {
         if (_state_layouts[target.ordinal()] == null)
-            _connect_to_layouts();
+            _connect_gui();
 
         // try it again.
         if (_state_layouts[target.ordinal()] == null)
@@ -252,16 +269,11 @@ public class TestActivity extends AppCompatActivity
         updateState(TestState.SETTING);
         makeToast("Setting device to position " + _test_questions[_current_question]);
 
-        boolean success;
-        success = device.GoToPosition(1);
-        if (!success)
-            _abort_test();
+        for (int i = 0; i < 5; i ++)
+            GoToPosition(randomiser.nextInt(5) + 1);
+        GoToPosition(_test_questions[_current_question]);
 
-        success = device.GoToPosition(_test_questions[_current_question]);
-        if (!success)
-            _abort_test();
-
-        updateState(TestState.STEPPING);
+        ExecuteNextInstruction();
     }
 
 
@@ -330,7 +342,7 @@ public class TestActivity extends AppCompatActivity
     /**
      * Button press event handlers.
      *
-     * @param view
+     * @param view Not used.
      */
     public void btn_Next (View view)
     {
@@ -422,7 +434,8 @@ public class TestActivity extends AppCompatActivity
         {
             // something's gone wrong saving to the database.
             // this is the sort of error that can't be explained and needs to reset the system.
-            _database_helper.databaseError("Unable to save your response to the database. " + values.toString());
+            DebugToast("Error on database response save.");
+            _database_helper.databaseError(getString(R.string.t_error_database_on_response));
             finish();
             return;
         }
@@ -446,15 +459,9 @@ public class TestActivity extends AppCompatActivity
         db.close();
 
         if (success == 0)
-        {
-            _database_helper.databaseError("Error updating test during abort operation. You will not be able to resume this test.");
-        }
-
-        // @TODO reference to ameda here.
-        device.Disconnect();
+            _database_helper.databaseError(getString(R.string.t_error_database_on_abort));
 
         finish();
-        return;
     }
 
 
@@ -474,7 +481,7 @@ public class TestActivity extends AppCompatActivity
 
         if (success == 0)
         {
-            _database_helper.databaseError("There has been an error recording that this test is finished.");
+            _database_helper.databaseError(getString(R.string.t_error_database_on_end));
         }
     }
 }
