@@ -3,6 +3,9 @@
     <!-- Resource IDs -->
     <item type="id" name="vu_txt_title" />
     <item type="id" name="vu_list_tests" />
+    <item type="id" name="vu_txt_notes" />
+    <item type="id" name="vu_layout_notes" />
+    <item type="id" name="vu_btn_edit" />
 
     <item type="id" name="test_rca_date" />
     <item type="id" name="test_rca_score" />
@@ -10,7 +13,14 @@
 
     <!-- Strings -->
     <string name="vu_string_page_title">Viewing User %1$s</string>
+    <string name="vu_btn_edit">Edit ..</string>
+    <string name="vu_selected_delete">Delete</string>
+    <string name="vu_selected_view">View Results</string>
+    <string name="vu_selected_resume">Resume Test</string>
+    <string name="vu_selected_desc">What would you like to do with this test?</string>
 
+    <string name="test_rca_incomplete">Incomplete</string>
     <string name="test_rca_date">Date of Test</string>
     <string name="test_rca_score">Score</string>
+    <string name="test_rca_score_template">%1$d / %2$d</string>
 </resources>

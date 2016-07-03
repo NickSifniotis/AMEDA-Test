@@ -95,7 +95,7 @@ public class HomeActivity extends AppCompatActivity
 
     public void h_d_open(View view)
     {
-        // this is a todoo
+        _launch_edit_records();
     }
 
     public void h_d_manage(View view)
@@ -145,6 +145,14 @@ public class HomeActivity extends AppCompatActivity
      * Launch the 'look at a list of every user' activity.
      */
     private void _launch_manage_records()
+    {
+        Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
+        manageRecIntent.putExtra("activity", ManageRecordsEnum.VIEW_RECORD.ordinal());
+        startActivity(manageRecIntent);
+    }
+
+
+    private void _launch_edit_records()
     {
         Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
         manageRecIntent.putExtra("activity", ManageRecordsEnum.EDIT_RECORD.ordinal());

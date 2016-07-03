@@ -2,6 +2,7 @@ package au.net.nicksifniotis.amedatest;
 
 import au.net.nicksifniotis.amedatest.activities.EditUserActivity;
 import au.net.nicksifniotis.amedatest.activities.TestActivity;
+import au.net.nicksifniotis.amedatest.activities.ViewUserActivity;
 
 /**
  * An enumeration class that controls the activities that selecting an entry in ManageRecord
@@ -13,7 +14,8 @@ import au.net.nicksifniotis.amedatest.activities.TestActivity;
 public enum ManageRecordsEnum
 {
     EDIT_RECORD(EditUserActivity.class, R.string.amr_edit_descriptor),
-    START_TEST(TestActivity.class, R.string.amr_test_descriptor);
+    START_TEST(TestActivity.class, R.string.amr_test_descriptor),
+    VIEW_RECORD(ViewUserActivity.class, R.string.amr_view_descriptor);
 
     private Class _activity;
     private int _descriptor_resource;

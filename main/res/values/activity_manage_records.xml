@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Labels -->
-    <string name="amr_edit_descriptor">Edit Record</string>
-    <string name="amr_test_descriptor">Start Test</string>
+    <string name="amr_edit_descriptor">edit</string>
+    <string name="amr_test_descriptor">test</string>
+    <string name="amr_view_descriptor">view</string>
     <string name="amr_title_stub">Select user to </string>
     <string name="amr_title">%1$s %2$s</string>
 

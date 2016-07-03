@@ -49,7 +49,6 @@ public class Test_RCA extends CursorAdapter
 
     /**
      * Populates one row of the ListView with the dataset currently pointed to by the cursor.
-     * @TODO finish this
      *
      * @param view The view describing one row of the dataset. These go into the ListView.
      * @param context The ListView itself? I'm not sure, it isn't used.
@@ -65,6 +64,15 @@ public class Test_RCA extends CursorAdapter
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         String date = format.format(new Date(d));
 
-        int score = cursor.getInt(cursor.getColumnIndex(""));
+        int score = cursor.getInt(cursor.getColumnIndex(DB.TestTable.SCORE));
+        int numq = cursor.getInt(cursor.getColumnIndex(DB.TestTable.NUM_QUESTIONS));
+        int interrupted = cursor.getInt(cursor.getColumnIndex(DB.TestTable.INTERRUPTED));
+
+        String score_text = (interrupted == 1)
+                ? context.getString(R.string.test_rca_incomplete)
+                : context.getString(R.string.test_rca_score_template, score, numq);
+
+        txt_test_date.setText(date);
+        txt_test_score.setText(score_text);
     }
 }
