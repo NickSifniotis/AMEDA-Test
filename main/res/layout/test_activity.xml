@@ -16,15 +16,13 @@
             android:gravity="center"
             android:padding="40dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/t_start_1"
                 android:text="@string/t_starting_desc"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:gravity="center_horizontal"
-                android:paddingBottom="70dp"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -45,8 +43,7 @@
             android:gravity="center"
             android:padding="40dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
+            android:layout_height="match_parent">
 
             <TextView
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -61,6 +58,7 @@
                 android:contentDescription="@string/t_pic_middle_desc"
                 android:src="@drawable/horizontal"
                 android:id="@+id/t_middle_2"
+                android:adjustViewBounds="true"
                 android:layout_below="@+id/t_middle_1"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
@@ -81,8 +79,7 @@
             android:gravity="center"
             android:padding="40dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
+            android:layout_height="match_parent">
 
             <TextView
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -116,11 +113,13 @@
             android:padding="40dp"
             android:id="@id/t_layout_answering"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible">
+            android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/t_exc_1"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
                 android:text="@string/t_excursion_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -128,52 +127,66 @@
             <Button
                 android:onClick="t_btn_excursion_1"
                 android:id="@id/t_btn_excursion_1"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/t_exc_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:onClick="t_btn_excursion_2"
                 android:id="@id/t_btn_excursion_2"
+                android:layout_below="@id/t_btn_excursion_1"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:onClick="t_btn_excursion_3"
                 android:id="@id/t_btn_excursion_3"
+                android:layout_below="@id/t_btn_excursion_2"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:onClick="t_btn_excursion_4"
                 android:id="@id/t_btn_excursion_4"
+                android:layout_below="@id/t_btn_excursion_3"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:onClick="t_btn_excursion_5"
                 android:id="@id/t_btn_excursion_5"
+                android:layout_below="@id/t_btn_excursion_4"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
 
         <RelativeLayout
             android:gravity="center"
-            android:padding="40dp"
             android:id="@id/t_layout_finishing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible">
+            android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/t_end_1"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/t_ending_desc"
-                android:layout_width="match_parent"
+                android:gravity="center_horizontal"
+                android:paddingBottom="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <Button
                 android:text="@string/btn_done"
                 android:onClick="t_btn_end_test"
                 android:id="@id/t_btn_end_test"
+                android:layout_below="@+id/t_end_1"
+                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
