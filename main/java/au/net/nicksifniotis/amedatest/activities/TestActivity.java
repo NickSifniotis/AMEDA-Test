@@ -190,6 +190,12 @@ public class TestActivity extends AMEDAActivity
             _database_helper.databaseError("Error saving new test into database.");
             finish();
         }
+
+        values = new ContentValues();
+        values.put(DB.PersonTable.LAST_TEST_DATE, Calendar.getInstance().getTimeInMillis());
+        db.update(DB.PersonTable.TABLE_NAME, values, DB.PersonTable._ID + " = " + user_id, null);
+
+        db.close();
     }
 
 

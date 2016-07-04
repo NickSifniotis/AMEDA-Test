@@ -1,55 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ManageRecordsActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@id/toolbar"
-        android:minHeight="?attr/actionBarSize"
+    <include layout="@layout/toolbar" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:logo="@drawable/ameda_logo"
-        android:padding="12dp"
-        android:background="?attr/colorAccent">
-    </android.support.v7.widget.Toolbar>
+        android:padding="10px"
+        android:layout_height="0dp"
+        android:layout_weight="8">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@id/amr_txt_title"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <RelativeLayout
+            android:layout_alignParentTop="true"
+            android:id="@+id/manage_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@id/amr_list_records"
-        android:layout_gravity="center_horizontal" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@id/amr_txt_title"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="20dp"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            <Button
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:text="View Last Record"
+                android:onClick="manage_searchbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
-        <Button style="?android:attr/buttonBarButtonStyle"
+        <SearchView
+            android:layout_below="@+id/manage_header_layout"
+            android:id="@+id/manage_searchbar"
+            android:onClick="manage_searchbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/btn_new"
-            android:onClick="amr_btn_new">
-        </Button>
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/manage_list_header"
+            android:layout_below="@+id/manage_searchbar">
 
-        <Button style="?android:attr/buttonBarButtonStyle"
+            <TextView
+                android:textColor="@color/mainBackground"
+                android:background="@color/menuBackground"
+                android:layout_width="0dp"
+                android:layout_weight="6"
+                android:text="Name"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:textColor="@color/mainBackground"
+                android:background="@color/menuBackground"
+                android:text="Date of Last Test"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <ListView
+            android:layout_below="@+id/manage_list_header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/btn_cancel"
-            android:onClick="amr_btn_close">
-        </Button>
+            android:id="@id/amr_list_records"
+            android:layout_gravity="center_horizontal" />
 
-    </LinearLayout>
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="40dp"
+            android:orientation="horizontal">
+
+            <Button style="?android:attr/buttonBarButtonStyle"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.5"
+                android:text="New User"
+                android:onClick="amr_btn_new">
+            </Button>
+
+            <Button style="?android:attr/buttonBarButtonStyle"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/btn_cancel"
+                android:onClick="amr_btn_close">
+            </Button>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 </LinearLayout>

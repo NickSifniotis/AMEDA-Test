@@ -1,15 +1,23 @@
 package au.net.nicksifniotis.amedatest.activities;
 
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
@@ -64,6 +72,7 @@ public class ManageRecordsActivity extends AppCompatActivity
         {
             _list.setAdapter(_adaptor);
             _list.setOnItemClickListener(new UserRecordAdapterView());
+            registerForContextMenu(_list);
         }
     }
 
@@ -76,11 +85,15 @@ public class ManageRecordsActivity extends AppCompatActivity
     {
         super.onResume();
 
-        String query = "SELECT d.*, t." + DB.TestTable.DATE +
-                " FROM " + DB.PersonTable.TABLE_NAME + " d" +
-                " LEFT JOIN " + DB.TestTable.TABLE_NAME + " t" +
-                " ON d." + DB.PersonTable._ID + " = t." + DB.TestTable.PERSON_ID +
-                " WHERE d." + DB.PersonTable.ACTIVE + " = 1";
+        _refresh_data();
+    }
+
+
+    private void _refresh_data()
+    {
+        String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME
+                + " WHERE " + DB.PersonTable.ACTIVE + " = 1"
+                + " ORDER BY " + DB.PersonTable.NAME;
 
         Cursor _record_cursor = _db.rawQuery(query, null);
         _record_cursor.moveToFirst();
@@ -109,6 +122,30 @@ public class ManageRecordsActivity extends AppCompatActivity
     {
         _title = (TextView)findViewById(R.id.amr_txt_title);
         _list = (ListView) findViewById(R.id.amr_list_records);
+
+        Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(bar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("");
+
+        if (bar != null)
+        {
+            bar.setNavigationIcon(R.drawable.toolbar_back);
+            bar.setNavigationOnClickListener(new View.OnClickListener()
+            {
+                /**
+                 * Clicking the back arrow is equivalent to saying 'stop the test, I wanna get off'
+                 * So record it as an interrupted test.
+                 *
+                 * @param v Not used. Poor v :(
+                 */
+                @Override
+                public void onClick(View v)
+                {
+                    finish();
+                }
+            });
+        }
     }
 
 
@@ -149,6 +186,16 @@ public class ManageRecordsActivity extends AppCompatActivity
     }
 
 
+    public void manage_searchbar(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.not_implemented_title))
+                .setMessage(getString(R.string.not_implemented_desc))
+                .setPositiveButton(getString(R.string.btn_done), null);
+
+        builder.create().show();
+    }
+
     /**
      * Call me crazy, but I am no fan of anonymous classes.
      */
@@ -163,4 +210,120 @@ public class ManageRecordsActivity extends AppCompatActivity
             _launch_newRecord_activity(record_id, _activity.Activity());
         }
     }
+
+
+    /**
+     * Inflate the context menu.
+     *
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.manage_records, menu);
+    }
+
+
+    /**
+     * Handler for the context menu selection.
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        ListView lv = (ListView) findViewById(R.id.amr_list_records);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        SQLiteCursor entry = (SQLiteCursor) lv.getItemAtPosition(info.position);
+        int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
+
+        switch (item.getItemId())
+        {
+            case R.id.manage_delete_user:
+                _confirm_deletion(record_id);
+                break;
+            case R.id.manage_edit_user:
+                _launch_newRecord_activity(record_id, ManageRecordsEnum.EDIT_RECORD.Activity());
+                break;
+            case R.id.manage_start_test:
+                _launch_newRecord_activity(record_id, ManageRecordsEnum.START_TEST.Activity());
+                break;
+            case R.id.manage_view_user:
+                _launch_newRecord_activity(record_id, ManageRecordsEnum.VIEW_RECORD.Activity());
+                break;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
+        return true;
+    }
+
+    /**
+     * Delete the existing record from the system - including all tests that this person may
+     * have taken.
+     *
+     */
+    private void _delete_record(int _user_id)
+    {
+        if (_user_id == -1)
+            _database_helper.databaseError("Error deleting non-existent user.");
+        else
+        {
+            SQLiteDatabase db = _database_helper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(DB.TestTable.ACTIVE, Integer.toString(0));
+
+            db.update(DB.TestTable.TABLE_NAME, values,
+                    DB.TestTable.PERSON_ID + " = " + _user_id, null);
+
+            values = new ContentValues();
+            values.put(DB.PersonTable.ACTIVE, Integer.toString(0));
+
+            db.update(DB.PersonTable.TABLE_NAME, values,
+                    DB.PersonTable._ID + " = " + _user_id, null);
+
+            //db.close();
+        }
+
+        _refresh_data();
+    }
+
+
+    /**
+     * Deleting a user record is a big enough deal to warrant the creation of a confirmation
+     * dialog box.
+     */
+    private void _confirm_deletion(final int _user_id)
+    {
+        if (_user_id <= 0)
+            return;     // nothing to delete.
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.mpr_delete_title))
+                .setMessage(getString(R.string.mpr_delete_desc))
+                .setNegativeButton(getString(R.string.btn_no), null)
+                .setPositiveButton(getString(R.string.btn_yes),
+                        new DialogInterface.OnClickListener()
+                        {
+                            /**
+                             * Delete the damn thing, then.
+                             *
+                             * @param dialog Not used.
+                             * @param which Not used.
+                             */
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                _delete_record(_user_id);
+                            }
+                        });
+
+        builder.create().show();
+    }
+
 }

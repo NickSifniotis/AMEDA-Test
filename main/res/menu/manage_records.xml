@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/manage_start_test"
+        android:title="Begin New Test" />
+    <item android:id="@+id/manage_view_user"
+        android:title="View Test Results"/>
+    <item android:id="@+id/manage_edit_user"
+        android:title="Edit User Details" />
+    <item android:id="@+id/manage_delete_user"
+        android:title="Delete User" />
+</menu>
