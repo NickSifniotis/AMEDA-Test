@@ -13,4 +13,7 @@ public class Globals
 
     /* TRUE if we want to save the addresses of users in the database. */
     public static boolean USING_ADDRESSES = true;
+
+    /* TRUE if we are testing the app and want to cap test size to 10 questions */
+    public static boolean SHORT_TESTS = false;
 }

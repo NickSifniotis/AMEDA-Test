@@ -254,6 +254,15 @@
                 android:textColor="@color/mainBackground"
                 android:onClick="h_d_toggle_debug" />
 
+            <TextView
+                android:id="@+id/home_toggle_testcap"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:paddingLeft="20dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textColor="@color/mainBackground"
+                android:onClick="h_d_toggle_testcap" />
+
         </LinearLayout>
 
     </LinearLayout>

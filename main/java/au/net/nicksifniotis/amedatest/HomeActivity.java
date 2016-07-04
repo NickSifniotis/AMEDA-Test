@@ -29,6 +29,7 @@ public class HomeActivity extends AppCompatActivity
 {
     private TextView _ameda_toggle;
     private TextView _debug_toggle;
+    private TextView _short_test_toggle;
 
 
     /**
@@ -73,6 +74,7 @@ public class HomeActivity extends AppCompatActivity
 
         _ameda_toggle = (TextView)findViewById(R.id.home_toggle_ameda);
         _debug_toggle = (TextView)findViewById(R.id.home_toggle_debug);
+        _short_test_toggle = (TextView)findViewById(R.id.home_toggle_testcap);
 
         _update_drawer_toggles();
     }
@@ -135,11 +137,18 @@ public class HomeActivity extends AppCompatActivity
         _update_drawer_toggles();
     }
 
+    public void h_d_toggle_testcap(View view)
+    {
+        Globals.SHORT_TESTS = !Globals.SHORT_TESTS;
+        _update_drawer_toggles();
+    }
+
 
     private void _update_drawer_toggles()
     {
         _ameda_toggle.setText("Toggle AMEDAfree (Currently " + (Globals.AMEDA_FREE ? "true" : "false") + ")");
         _debug_toggle.setText("Toggle Debug (Currently " + (Globals.DEBUG_MODE ? "true" : "false") + ")");
+        _short_test_toggle.setText("Toggle ShortTest (Currently " + (Globals.SHORT_TESTS ? "true" : "false") + ")");
     }
 
 

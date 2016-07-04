@@ -23,6 +23,7 @@ import java.util.Random;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 import au.net.nicksifniotis.amedatest.R;
@@ -196,6 +197,10 @@ public class TestActivity extends AMEDAActivity
         db.update(DB.PersonTable.TABLE_NAME, values, DB.PersonTable._ID + " = " + user_id, null);
 
         db.close();
+
+        // todo integrate properly
+        if (Globals.SHORT_TESTS)
+            _num_questions = 10;
     }
 
 
@@ -257,6 +262,9 @@ public class TestActivity extends AMEDAActivity
         if (success == 0)
             _database_helper.databaseError(getString(R.string.t_error_database_on_abort));
 
+        // todo integrate properly
+        if (Globals.SHORT_TESTS)
+            _num_questions = 10;
     }
 
 
