@@ -1,6 +1,8 @@
 package au.net.nicksifniotis.amedatest.activities;
 
 import android.media.MediaPlayer;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.MediaController;
 import android.net.Uri;
@@ -26,6 +28,31 @@ public class Tutorial extends AppCompatActivity
         setContentView(R.layout.tutorial_activity);
 
         _connect_gui();
+
+
+        Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(bar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("");
+
+        if (bar != null)
+        {
+            bar.setNavigationIcon(R.drawable.toolbar_back);
+            bar.setNavigationOnClickListener(new View.OnClickListener()
+            {
+                /**
+                 * Clicking the back arrow is equivalent to saying 'stop the test, I wanna get off'
+                 * So record it as an interrupted test.
+                 *
+                 * @param v Not used. Poor v :(
+                 */
+                @Override
+                public void onClick(View v)
+                {
+                    finish();
+                }
+            });
+        }
     }
 
 
@@ -101,6 +128,20 @@ public class Tutorial extends AppCompatActivity
     public void t_btn_done (View view)
     {
         finish();
+    }
+
+    public void t_btn_repeat (View view)
+    {
+//        _tutorial_viewer.stopPlayback();
+//        _tutorial_viewer.seekTo(0);
+//        _tutorial_viewer.start(); // TODO: 4/07/16
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.not_implemented_title))
+                .setMessage(getString(R.string.not_implemented_desc))
+                .setPositiveButton(getString(R.string.btn_done), null);
+
+        builder.create().show();
     }
 
 

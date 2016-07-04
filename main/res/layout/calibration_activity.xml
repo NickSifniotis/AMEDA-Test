@@ -1,175 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/mainBackground"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@id/toolbar"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:logo="@drawable/ameda_logo"
-        android:padding="12dp"
-        android:background="?attr/colorAccent">
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/toolbar" />
 
-    <LinearLayout
-        android:id="@id/c_row_calibrate"
-        android:layout_below="@id/toolbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:padding="30dp"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:id="@id/c_row_calibrate"
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:onClick="c_btn_calibrate"
+                android:padding="20dp"
+                android:text="Set horizontal"
+                android:id="@id/c_btn_calibrate" />
+
+            <ImageView
+                android:src="@drawable/c_smiley"
+                android:contentDescription="@string/c_smiley_desc"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@id/c_img_calibrate" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/c_row_position_1"
+            android:layout_below="@id/c_row_calibrate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:onClick="c_btn_position_1"
+                android:padding="20dp"
+                android:text="Check step 1"
+                android:id="@id/c_btn_position_1" />
+
+            <ImageView
+                android:src="@drawable/c_smiley"
+                android:contentDescription="@string/c_smiley_desc"
+                android:id="@id/c_img_position_1"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/c_row_position_2"
+            android:layout_below="@id/c_row_position_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:padding="20dp"
+                android:onClick="c_btn_position_2"
+                android:text="Check step 2"
+                android:id="@id/c_btn_position_2" />
+
+            <ImageView
+                android:src="@drawable/c_smiley"
+                android:contentDescription="@string/c_smiley_desc"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@id/c_img_position_2" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/c_row_position_3"
+            android:layout_below="@id/c_row_position_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:onClick="c_btn_position_3"
+                android:padding="20dp"
+                android:text="Check step 3"
+                android:id="@id/c_btn_position_3" />
+
+            <ImageView
+                android:src="@drawable/c_smiley"
+                android:contentDescription="@string/c_smiley_desc"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@id/c_img_position_3" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/c_row_position_4"
+            android:layout_below="@id/c_row_position_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:padding="20dp"
+                android:onClick="c_btn_position_4"
+                android:text="Check step 4"
+                android:id="@id/c_btn_position_4" />
+
+
+            <ImageView
+                android:src="@drawable/c_smiley"
+                android:contentDescription="@string/c_smiley_desc"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@id/c_img_position_4" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@id/c_row_position_5"
+            android:layout_below="@id/c_row_position_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:padding="20dp"
+                android:onClick="c_btn_position_5"
+                android:text="Check step 5"
+                android:id="@id/c_btn_position_5" />
+
+            <ImageView
+                android:src="@drawable/c_smiley"
+                android:contentDescription="@string/c_smiley_desc"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@id/c_img_position_5" />
+
+        </LinearLayout>
+
 
         <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:onClick="c_btn_calibrate"
-            android:text="@string/c_calibrate"
-            android:id="@id/c_btn_calibrate" />
+            android:layout_marginTop="40dp"
+            android:id="@id/c_btn_done"
+            android:text="@string/btn_done"
+            android:onClick="c_btn_done"
+            android:layout_below="@id/c_row_position_5"
+            android:layout_centerHorizontal="true"/>
 
-        <ImageView
-            android:src="@drawable/c_smiley"
-            android:contentDescription="@string/c_smiley_desc"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:id="@id/c_img_calibrate" />
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:id="@id/c_row_position_1"
-        android:layout_below="@id/c_row_calibrate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:onClick="c_btn_position_1"
-            android:text="@string/position_1"
-            android:id="@id/c_btn_position_1" />
-
-        <ImageView
-            android:src="@drawable/c_smiley"
-            android:contentDescription="@string/c_smiley_desc"
-            android:id="@id/c_img_position_1"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@id/c_row_position_2"
-        android:layout_below="@id/c_row_position_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:onClick="c_btn_position_2"
-            android:text="@string/position_2"
-            android:id="@id/c_btn_position_2" />
-
-        <ImageView
-            android:src="@drawable/c_smiley"
-            android:contentDescription="@string/c_smiley_desc"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:id="@id/c_img_position_2" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@id/c_row_position_3"
-        android:layout_below="@id/c_row_position_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:onClick="c_btn_position_3"
-            android:text="@string/position_3"
-            android:id="@id/c_btn_position_3" />
-
-        <ImageView
-            android:src="@drawable/c_smiley"
-            android:contentDescription="@string/c_smiley_desc"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:id="@id/c_img_position_3" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@id/c_row_position_4"
-        android:layout_below="@id/c_row_position_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:onClick="c_btn_position_4"
-            android:text="@string/position_4"
-            android:id="@id/c_btn_position_4" />
-
-
-        <ImageView
-            android:src="@drawable/c_smiley"
-            android:contentDescription="@string/c_smiley_desc"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:id="@id/c_img_position_4" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@id/c_row_position_5"
-        android:layout_below="@id/c_row_position_4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:onClick="c_btn_position_5"
-            android:text="@string/position_5"
-            android:id="@id/c_btn_position_5" />
-
-        <ImageView
-            android:src="@drawable/c_smiley"
-            android:contentDescription="@string/c_smiley_desc"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:id="@id/c_img_position_5" />
-
-    </LinearLayout>
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:id="@id/c_btn_done"
-        android:text="@string/btn_done"
-        android:onClick="c_btn_done"
-        android:layout_below="@id/c_row_position_5"
-        android:layout_centerHorizontal="true"/>
-
-</RelativeLayout>
+</LinearLayout>
