@@ -93,7 +93,9 @@ public class ViewUserActivity extends AppCompatActivity
 
         query = "SELECT * FROM " + DB.TestTable.TABLE_NAME +
                 " WHERE " + DB.TestTable.PERSON_ID + " = " + _user_id +
-                " AND " + DB.TestTable.ACTIVE + " = 1";
+                " AND " + DB.TestTable.ACTIVE + " = 1" +
+                " ORDER BY " + DB.TestTable.DATE + " DESC";
+
         resultSet = _db.rawQuery(query, null);
         resultSet.moveToFirst();
         _adaptor.swapCursor(resultSet);
@@ -164,6 +166,18 @@ public class ViewUserActivity extends AppCompatActivity
         Intent intent = new Intent (this, EditUserActivity.class);
         intent.putExtra("id", _user_id);
         startActivity(intent);
+    }
+
+    public void vu_btn_new(View view)
+    {
+        Intent intent = new Intent (this, TestActivity.class);
+        intent.putExtra("id", _user_id);
+        startActivity(intent);
+    }
+
+    public void vu_btn_close(View view)
+    {
+        finish();
     }
 
 
