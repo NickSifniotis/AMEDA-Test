@@ -2,6 +2,7 @@ package au.net.nicksifniotis.amedatest.activities;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,6 +41,31 @@ public class FamiliarisationActivity extends AMEDAActivity
         _connect_gui();
 
         randomiser = new Random();
+
+
+        Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(bar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("");
+
+        if (bar != null)
+        {
+            bar.setNavigationIcon(R.drawable.toolbar_back);
+            bar.setNavigationOnClickListener(new View.OnClickListener()
+            {
+                /**
+                 * Clicking the back arrow is equivalent to saying 'stop the test, I wanna get off'
+                 * So record it as an interrupted test.
+                 *
+                 * @param v Not used. Poor v :(
+                 */
+                @Override
+                public void onClick(View v)
+                {
+                    finish();
+                }
+            });
+        }
     }
 
 
