@@ -125,6 +125,11 @@ public class HomeActivity extends AppCompatActivity
         _launch_help();
     }
 
+    public void h_d_exit(View view)
+    {
+        finish();
+    }
+
     public void h_d_toggle_ameda(View view)
     {
         Globals.AMEDA_FREE = !Globals.AMEDA_FREE;
@@ -146,9 +151,9 @@ public class HomeActivity extends AppCompatActivity
 
     private void _update_drawer_toggles()
     {
-        _ameda_toggle.setText("Toggle AMEDAfree (Currently " + (Globals.AMEDA_FREE ? "true" : "false") + ")");
-        _debug_toggle.setText("Toggle Debug (Currently " + (Globals.DEBUG_MODE ? "true" : "false") + ")");
-        _short_test_toggle.setText("Toggle ShortTest (Currently " + (Globals.SHORT_TESTS ? "true" : "false") + ")");
+        _ameda_toggle.setText("Toggle AMEDAfree (" + (Globals.AMEDA_FREE ? "true" : "false") + ")");
+        _debug_toggle.setText("Toggle Debug (" + (Globals.DEBUG_MODE ? "true" : "false") + ")");
+        _short_test_toggle.setText("Toggle ShortTest (" + (Globals.SHORT_TESTS ? "true" : "false") + ")");
     }
 
 

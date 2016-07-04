@@ -123,150 +123,185 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_gravity="left|start"
-        android:orientation="vertical"
         android:layout_width="300dp"
         android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:id="@+id/drawer_rel_id"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:background="@color/menuUpper" >
-
-            <ImageView
-                android:contentDescription="@string/ameda_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="40dp"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ameda_logo" />
-
-            <TextView
-                android:padding="3dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Main"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-        </RelativeLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:padding="7dp"
-            android:background="@color/menuBackground">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:id="@+id/drawer_rel_id"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:text="@string/h_d_tutorial"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_btn_tutorial" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:background="@color/menuUpper" >
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
+                <ImageView
+                    android:contentDescription="@string/ameda_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="40dp"
+                    android:paddingBottom="20dp"
+                    android:layout_gravity="right"
+                    android:src="@drawable/ameda_logo" />
+
+                <TextView
+                    android:padding="3dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Main"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:text="@string/h_d_familiarisation"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_btn_familiarisation" />
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:padding="7dp"
+                android:background="@color/menuBackground">
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/h_d_new"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_d_new" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/h_d_tutorial"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_btn_tutorial" />
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/h_d_open"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_d_open" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/h_d_familiarisation"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_btn_familiarisation" />
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/h_d_manage"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_d_manage" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/h_d_new"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_d_new" />
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:textColor="@color/mainBackground"
-                android:text="@string/h_d_calibrate"
-                android:onClick="h_d_calibrate" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/h_d_open"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_d_open" />
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/mainBackground"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="@string/h_d_help"
-                android:onClick="h_d_help" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/h_d_manage"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_d_manage" />
 
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="10dp"
-                android:paddingTop="30dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:text="Developer Options" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/menuUpper"/>
 
-            <TextView
-                android:id="@+id/home_toggle_ameda"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_d_toggle_ameda" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingTop="15dp"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/mainBackground"
+                    android:text="@string/h_d_calibrate"
+                    android:onClick="h_d_calibrate" />
 
-            <TextView
-                android:id="@+id/home_toggle_debug"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_d_toggle_debug" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/mainBackground"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="@string/h_d_help"
+                    android:onClick="h_d_help" />
 
-            <TextView
-                android:id="@+id/home_toggle_testcap"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:paddingLeft="20dp"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:textColor="@color/mainBackground"
-                android:onClick="h_d_toggle_testcap" />
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/mainBackground"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="Exit"
+                    android:onClick="h_d_exit" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/menuUpper"/>
+
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="15dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="Developer Options" />
+
+                <TextView
+                    android:id="@+id/home_toggle_ameda"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_d_toggle_ameda" />
+
+                <TextView
+                    android:id="@+id/home_toggle_debug"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_d_toggle_debug" />
+
+                <TextView
+                    android:id="@+id/home_toggle_testcap"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_d_toggle_testcap" />
+
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
+    </ScrollView>
 
 </android.support.v4.widget.DrawerLayout>
 
