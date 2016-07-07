@@ -1,6 +1,7 @@
 package au.net.nicksifniotis.amedatest;
 
 import android.content.Intent;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,8 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
 /**
  * The main activity of the AMEDA app.
  *
+ * Displays the navigation drawer pane and the three big buttons that launch activities.
+ *
  */
 public class HomeActivity extends AppCompatActivity
 {
@@ -26,6 +29,7 @@ public class HomeActivity extends AppCompatActivity
     private TextView _debug_toggle;
     private TextView _short_test_toggle;
     private TextView _address_toggle;
+    private DrawerLayout _drawer;
 
 
 
@@ -60,10 +64,10 @@ public class HomeActivity extends AppCompatActivity
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("");
 
-        DrawerLayout mDrawerLayout = (DrawerLayout)findViewById(R.id.h_drawer);
+        _drawer = (DrawerLayout)findViewById(R.id.h_drawer);
 
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, bar, R.string.h_d_nav_open, R.string.h_d_nav_close)
+                this, _drawer, bar, R.string.h_d_nav_open, R.string.h_d_nav_close)
         {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view)
@@ -78,9 +82,8 @@ public class HomeActivity extends AppCompatActivity
             }
         };
 
-        if (mDrawerLayout != null)
-            mDrawerLayout.addDrawerListener(mDrawerToggle);
-
+        if (_drawer != null)
+            _drawer.addDrawerListener(mDrawerToggle);
 
         // Link to the textbox accessor variables.
         _ameda_toggle = (TextView)findViewById(R.id.h_d_t_ameda);
@@ -107,17 +110,17 @@ public class HomeActivity extends AppCompatActivity
 
     public void h_btn_begintest(View view)
     {
-        _launch_test();
+        _launch_child_activity(ManageRecordsActivity.class, ManageRecordsEnum.START_TEST);
     }
 
     public void h_d_new(View view)
     {
-        _launch_test();
+        _launch_child_activity(ManageRecordsActivity.class, ManageRecordsEnum.START_TEST);
     }
 
     public void h_d_open(View view)
     {
-        _launch_edit_records();
+        _launch_child_activity(ManageRecordsActivity.class, ManageRecordsEnum.VIEW_RECORD);
     }
 
     public void h_d_calibrate(View view)
@@ -189,36 +192,30 @@ public class HomeActivity extends AppCompatActivity
 
 
     /**
-     * Launches the 'select a person' activity with a view towards beginning the test instead
-     * of editing their details.
-     */
-    private void _launch_test()
-    {
-        Intent testIntent = new Intent(this, ManageRecordsActivity.class);
-        testIntent.putExtra("activity", ManageRecordsEnum.START_TEST.ordinal());
-        startActivity(testIntent);
-    }
-
-
-    /**
-     * Launch the 'look at a list of every user' activity.
-     */
-    private void _launch_edit_records()
-    {
-        Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
-        manageRecIntent.putExtra("activity", ManageRecordsEnum.VIEW_RECORD.ordinal());
-        startActivity(manageRecIntent);
-    }
-
-
-    /**
      * Utility function to launch 'some' activity.
      *
      * @param activity The activity class to launch.
      */
     private void _launch_child_activity (Class activity)
     {
+        _launch_child_activity(activity, null);
+    }
+
+
+    /**
+     * Overloaded utility function to launch some activity with a specified
+     * extra data packet for the intent.
+     *
+     * @param activity The activity class to launch.
+     * @param extra_intent The data to pass through to the intent.
+     */
+    private void _launch_child_activity (Class activity, ManageRecordsEnum extra_intent)
+    {
+        _drawer.closeDrawer(GravityCompat.START);
+
         Intent intent = new Intent(this, activity);
+        if (extra_intent != null)
+                intent.putExtra("activity", extra_intent.ordinal());
         startActivity(intent);
     }
 }
