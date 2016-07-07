@@ -1,6 +1,5 @@
 package au.net.nicksifniotis.amedatest;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,16 +19,14 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
 /**
  * The main activity of the AMEDA app.
  *
- * @TODO Outstanding issues:
- * - layout needs tweaking - namely, the three big buttons are a bit ugly at the moment
- * - open record does nothing because the activity that it calls doesnt exist yet.
- *
  */
 public class HomeActivity extends AppCompatActivity
 {
     private TextView _ameda_toggle;
     private TextView _debug_toggle;
     private TextView _short_test_toggle;
+    private TextView _address_toggle;
+
 
 
     /**
@@ -43,6 +40,18 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
 
+        _connect_gui();
+
+        _update_drawer_toggles();
+    }
+
+
+    /**
+     * Connects the GUI elements to the variables that hold them.
+     */
+    private void _connect_gui()
+    {
+        // Set up the toolbar and the navigation pane.
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);
         if (bar != null)
@@ -51,7 +60,7 @@ public class HomeActivity extends AppCompatActivity
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("");
 
-        DrawerLayout mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        DrawerLayout mDrawerLayout = (DrawerLayout)findViewById(R.id.h_drawer);
 
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, bar, R.string.h_d_nav_open, R.string.h_d_nav_close)
@@ -72,11 +81,12 @@ public class HomeActivity extends AppCompatActivity
         if (mDrawerLayout != null)
             mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-        _ameda_toggle = (TextView)findViewById(R.id.home_toggle_ameda);
-        _debug_toggle = (TextView)findViewById(R.id.home_toggle_debug);
-        _short_test_toggle = (TextView)findViewById(R.id.home_toggle_testcap);
 
-        _update_drawer_toggles();
+        // Link to the textbox accessor variables.
+        _ameda_toggle = (TextView)findViewById(R.id.h_d_t_ameda);
+        _debug_toggle = (TextView)findViewById(R.id.h_d_t_debug);
+        _short_test_toggle = (TextView)findViewById(R.id.h_d_t_shorttest);
+        _address_toggle = (TextView)findViewById(R.id.h_d_t_address);
     }
 
 
@@ -110,11 +120,6 @@ public class HomeActivity extends AppCompatActivity
         _launch_edit_records();
     }
 
-    public void h_d_manage(View view)
-    {
-        _launch_manage_records();
-    }
-
     public void h_d_calibrate(View view)
     {
         _launch_child_activity(CalibrationActivity.class);
@@ -130,30 +135,41 @@ public class HomeActivity extends AppCompatActivity
         finish();
     }
 
-    public void h_d_toggle_ameda(View view)
+    public void h_d_t_ameda(View view)
     {
         Globals.AMEDA_FREE = !Globals.AMEDA_FREE;
         _update_drawer_toggles();
     }
 
-    public void h_d_toggle_debug(View view)
+    public void h_d_t_debug(View view)
     {
         Globals.DEBUG_MODE = !Globals.DEBUG_MODE;
         _update_drawer_toggles();
     }
 
-    public void h_d_toggle_testcap(View view)
+    public void h_d_t_shorttest(View view)
     {
         Globals.SHORT_TESTS = !Globals.SHORT_TESTS;
         _update_drawer_toggles();
     }
 
+    public void h_d_t_address(View view)
+    {
+        Globals.USING_ADDRESSES = !Globals.USING_ADDRESSES;
+        _update_drawer_toggles();
+    }
 
+
+    /**
+     * Update the text on the navigation drawer's 'developer options' subsegment.
+     * To reflect the current state of the global variables that they are linked to.
+     */
     private void _update_drawer_toggles()
     {
-        _ameda_toggle.setText("Toggle AMEDAfree (" + (Globals.AMEDA_FREE ? "true" : "false") + ")");
-        _debug_toggle.setText("Toggle Debug (" + (Globals.DEBUG_MODE ? "true" : "false") + ")");
-        _short_test_toggle.setText("Toggle ShortTest (" + (Globals.SHORT_TESTS ? "true" : "false") + ")");
+        _address_toggle.setText(getString(R.string.h_d_t_address, String.valueOf(Globals.USING_ADDRESSES)));
+        _ameda_toggle.setText(getString(R.string.h_d_t_ameda, String.valueOf(Globals.AMEDA_FREE)));
+        _debug_toggle.setText(getString(R.string.h_d_t_debug, String.valueOf(Globals.DEBUG_MODE)));
+        _short_test_toggle.setText(getString(R.string.h_d_t_shorttest, String.valueOf(Globals.SHORT_TESTS)));
     }
 
 
@@ -187,18 +203,10 @@ public class HomeActivity extends AppCompatActivity
     /**
      * Launch the 'look at a list of every user' activity.
      */
-    private void _launch_manage_records()
-    {
-        Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
-        manageRecIntent.putExtra("activity", ManageRecordsEnum.VIEW_RECORD.ordinal());
-        startActivity(manageRecIntent);
-    }
-
-
     private void _launch_edit_records()
     {
         Intent manageRecIntent = new Intent(this, ManageRecordsActivity.class);
-        manageRecIntent.putExtra("activity", ManageRecordsEnum.EDIT_RECORD.ordinal());
+        manageRecIntent.putExtra("activity", ManageRecordsEnum.VIEW_RECORD.ordinal());
         startActivity(manageRecIntent);
     }
 

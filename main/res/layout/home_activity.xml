@@ -2,7 +2,7 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@id/h_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -25,8 +25,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/home_1"
-                android:layout_alignParentTop="true"
                 android:layout_weight="1">
 
             </RelativeLayout>
@@ -35,14 +33,13 @@
                 android:layout_height="0dp"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
-                android:layout_below="@+id/home_1"
-                android:id="@+id/home_2"
                 android:layout_weight="1">
 
                 <ImageButton
+                    android:contentDescription="@string/h_btn_tutorial"
                     android:background="@drawable/h_btn_background"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/h_btn_fore_tutorial"
                     android:scaleType="centerInside"
                     android:padding="20dp"
@@ -52,8 +49,6 @@
 
             </RelativeLayout>
             <RelativeLayout
-                android:id="@+id/home_3"
-                android:layout_below="@+id/home_2"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:layout_height="0dp">
@@ -62,13 +57,12 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_below="@+id/home_3"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
-                android:id="@+id/home_4"
                 android:layout_weight="1">
 
                 <ImageButton
+                    android:contentDescription="@string/h_btn_familiarisation"
                     android:background="@drawable/h_btn_background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -81,16 +75,12 @@
 
             </RelativeLayout>
             <RelativeLayout
-                android:id="@+id/home_5"
-                android:layout_below="@+id/home_4"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
 
             </RelativeLayout>
             <RelativeLayout
-                android:id="@+id/home_6"
-                android:layout_below="@+id/home_5"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="70dp"
                 android:layout_marginRight="70dp"
@@ -99,6 +89,7 @@
 
 
                 <ImageButton
+                    android:contentDescription="@string/h_btn_new_test"
                     android:background="@drawable/h_btn_background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -111,8 +102,6 @@
 
             </RelativeLayout>
             <RelativeLayout
-                android:layout_below="@+id/home_6"
-                android:id="@+id/home_7"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2">
@@ -124,7 +113,7 @@
     </LinearLayout>
 
     <ScrollView
-        android:layout_gravity="left|start"
+        android:layout_gravity="start"
         android:layout_width="300dp"
         android:layout_height="match_parent">
 
@@ -148,16 +137,14 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="40dp"
                     android:paddingBottom="20dp"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:src="@drawable/ameda_logo" />
 
                 <TextView
                     android:padding="3dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Main"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
+                    android:text="@string/h_d_main"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             </LinearLayout>
@@ -172,7 +159,8 @@
 
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
@@ -182,7 +170,8 @@
 
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
@@ -192,7 +181,8 @@
 
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
@@ -202,23 +192,14 @@
 
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:text="@string/h_d_open"
                     android:textColor="@color/mainBackground"
                     android:onClick="h_d_open" />
-
-                <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:text="@string/h_d_manage"
-                    android:textColor="@color/mainBackground"
-                    android:onClick="h_d_manage" />
 
                 <View
                     android:layout_width="match_parent"
@@ -228,7 +209,8 @@
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:paddingTop="15dp"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
@@ -239,7 +221,8 @@
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/mainBackground"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
@@ -249,11 +232,12 @@
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/mainBackground"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:text="Exit"
+                    android:text="@string/h_d_exit"
                     android:onClick="h_d_exit" />
 
                 <View
@@ -263,41 +247,57 @@
 
                 <TextView
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="10dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="12dp"
                     android:paddingTop="15dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:text="Developer Options" />
+                    android:text="@string/h_d_t_desc" />
 
                 <TextView
-                    android:id="@+id/home_toggle_ameda"
+                    android:id="@id/h_d_t_ameda"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textColor="@color/mainBackground"
-                    android:onClick="h_d_toggle_ameda" />
+                    android:onClick="h_d_t_ameda" />
 
                 <TextView
-                    android:id="@+id/home_toggle_debug"
+                    android:id="@id/h_d_t_address"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textColor="@color/mainBackground"
-                    android:onClick="h_d_toggle_debug" />
+                    android:onClick="h_d_t_address" />
 
                 <TextView
-                    android:id="@+id/home_toggle_testcap"
+                    android:id="@id/h_d_t_debug"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingLeft="20dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="12dp"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textColor="@color/mainBackground"
-                    android:onClick="h_d_toggle_testcap" />
+                    android:onClick="h_d_t_debug" />
+
+                <TextView
+                    android:id="@id/h_d_t_shorttest"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="12dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/mainBackground"
+                    android:onClick="h_d_t_shorttest" />
 
             </LinearLayout>
         </LinearLayout>

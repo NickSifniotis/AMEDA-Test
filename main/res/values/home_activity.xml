@@ -7,17 +7,36 @@
     <item type="id" name="h_btn_familiarisation" />
     <item type="id" name="h_btn_begintest" />
 
+    <item type="id" name="h_drawer" />
+    <item type="id" name="h_d_t_debug" />
+    <item type="id" name="h_d_t_ameda" />
+    <item type="id" name="h_d_t_shorttest" />
+    <item type="id" name="h_d_t_address" />
+
+
     <!-- Strings exclusively for Home activity -->
+    <string name="h_btn_tutorial">Tutorial</string>
+    <string name="h_btn_familiarisation">Familiarisation</string>
+    <string name="h_btn_new_test">New Record</string>
+
     <string name="h_d_nav_open">Open Navigation</string>
     <string name="h_d_nav_close">Close Navigation</string>
+    <string name="h_d_main">Main</string>
 
     <string name="h_d_tutorial">Tutorial</string>
     <string name="h_d_familiarisation">Familiarisation</string>
-    <string name="h_d_new">New Record</string>
-    <string name="h_d_open">Open Record</string>
-    <string name="h_d_manage">Manage Records</string>
+    <string name="h_d_new">New</string>
+    <string name="h_d_open">Open</string>
     <string name="h_d_calibrate">Calibrate</string>
     <string name="h_d_help">Help</string>
+    <string name="h_d_exit">Exit</string>
+
+    <string name="h_d_t_desc">Developer Options</string>
+    <string name="h_d_t_ameda">No AMEDA (%1$s)</string>
+    <string name="h_d_t_shorttest">Limit 10 Questions (%1$s)</string>
+    <string name="h_d_t_address">Record Addresses (%1$s)</string>
+    <string name="h_d_t_debug">Debug Mode (%1$s)</string>
+
 
     <!-- Strings used across entire application -->
     <string name="app_name">AMEDA 2000</string>
