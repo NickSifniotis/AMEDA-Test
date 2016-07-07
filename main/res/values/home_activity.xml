@@ -23,6 +23,9 @@
     <string name="app_name">AMEDA 2000</string>
     <string name="ameda_logo">AMEDA Logo</string>
 
+    <string name="connecting_title">Connecting</string>
+    <string name="connecting_desc">Please wait while a connection to the AMEDA is established.</string>
+
     <string name="btn_no">No</string>
     <string name="btn_yes">Yes</string>
     <string name="btn_new">New</string>

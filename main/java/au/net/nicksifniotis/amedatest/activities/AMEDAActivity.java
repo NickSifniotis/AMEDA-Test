@@ -125,13 +125,25 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _connecting = true;
 
         _connect_progress = new ProgressDialog(this);
-        _connect_progress.setTitle("Connecting");
-        _connect_progress.setMessage("Please wait while a connection to the AMEDA is established..");
+        _connect_progress.setTitle(getString(R.string.connecting_title));
+        _connect_progress.setMessage(getString(R.string.connecting_desc));
         _connect_progress.setCancelable(false);
+        _connect_progress.setOnShowListener(new DialogInterface.OnShowListener()
+        {
+            /**
+             * Cleverly, do not attempt to connect to the device until the dialog box has been
+             * presented to the user. This is to prevent the UI thread from hanging on the call
+             * to Connect.
+             *
+             * @param dialog Not used.
+             */
+            @Override
+            public void onShow(DialogInterface dialog)
+            {
+                _device.Connect();
+            }
+        });
         _connect_progress.show();
-
-        _device.Connect();
-
     }
 
 
