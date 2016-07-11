@@ -1,15 +1,15 @@
 package au.net.nicksifniotis.amedatest.activities;
 
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.MediaController;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.VideoView;
 
+import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
 
 /**
@@ -116,7 +116,7 @@ public class Tutorial extends AppCompatActivity
      */
     private void _connect_gui()
     {
-        _tutorial_viewer = (VideoView)findViewById(R.id.t_videoview);
+        _tutorial_viewer = (VideoView)findViewById(R.id.tut_videoview);
     }
 
 
@@ -125,38 +125,35 @@ public class Tutorial extends AppCompatActivity
      *
      * @param view Not used.
      */
-    public void t_btn_done (View view)
+    public void tut_btn_done(View view)
     {
         finish();
     }
 
-    public void t_btn_repeat (View view)
+    public void tut_btn_repeat(View view)
     {
-//        _tutorial_viewer.stopPlayback();
-//        _tutorial_viewer.seekTo(0);
-//        _tutorial_viewer.start(); // TODO: 4/07/16
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.not_implemented_title))
-                .setMessage(getString(R.string.not_implemented_desc))
-                .setPositiveButton(getString(R.string.btn_done), null);
-
-        builder.create().show();
+        _tutorial_viewer.pause();
+        _tutorial_viewer.seekTo(0);
+        _tutorial_viewer.start();
     }
 
 
     private void _start_tutorial()
     {
-        MediaController mediaControls = new MediaController(this);
-
         try
         {
-            _tutorial_viewer.setMediaController(mediaControls);
             _tutorial_viewer.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/"
                                     + R.raw.tutorial));
         }
         catch (Exception e)
         {
+            Globals.Error(this, getString(R.string.error_resource_not_found), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    finish();
+                }
+            });
         }
 
         _tutorial_viewer.requestFocus();
@@ -186,6 +183,5 @@ public class Tutorial extends AppCompatActivity
     private void _end_tutorial()
     {
         _tutorial_viewer.stopPlayback();
-        _tutorial_viewer.setMediaController(null);
     }
 }
