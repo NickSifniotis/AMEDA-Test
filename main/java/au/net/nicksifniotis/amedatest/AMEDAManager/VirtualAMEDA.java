@@ -15,8 +15,8 @@ import au.net.nicksifniotis.amedatest.R;
  */
 public class VirtualAMEDA implements AMEDA
 {
-    private Context _context;
-    private Handler _response_handler;
+    final private Context _context;
+    final private Handler _response_handler;
 
 
     /**

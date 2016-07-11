@@ -67,20 +67,7 @@ public class HomeActivity extends AppCompatActivity
         _drawer = (DrawerLayout)findViewById(R.id.h_drawer);
 
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-                this, _drawer, bar, R.string.h_d_nav_open, R.string.h_d_nav_close)
-        {
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view)
-            {
-                super.onDrawerClosed(view);
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView)
-            {
-                super.onDrawerOpened(drawerView);
-            }
-        };
+                this, _drawer, bar, R.string.h_d_nav_open, R.string.h_d_nav_close);
 
         if (_drawer != null)
             _drawer.addDrawerListener(mDrawerToggle);

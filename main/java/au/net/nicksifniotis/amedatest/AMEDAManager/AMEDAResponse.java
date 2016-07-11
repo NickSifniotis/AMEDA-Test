@@ -13,7 +13,7 @@ public enum AMEDAResponse
     CALIBRATION_FAIL("ERR03"),
     UNKNOWN_COMMAND("NEGAK");
 
-    private String packet;
+    final private String packet;
 
     AMEDAResponse(String p)
     {

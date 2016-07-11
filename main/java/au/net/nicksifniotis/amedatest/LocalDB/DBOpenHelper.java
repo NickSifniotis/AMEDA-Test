@@ -14,7 +14,7 @@ import android.support.v7.app.AlertDialog;
  */
 public class DBOpenHelper extends SQLiteOpenHelper
 {
-    private Context _my_context;
+    final private Context _my_context;
 
 
     public DBOpenHelper(Context context)

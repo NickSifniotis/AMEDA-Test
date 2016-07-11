@@ -186,7 +186,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      * Don't call this method unless you've already called Disconnect(). Activity start
      * events connect themselves.
      */
-    protected void Connect()
+    void Connect()
     {
         _reconnect();
     }
@@ -196,7 +196,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      * Disconnects from the AMEDA. Gives the child activity the ability to interrupt the
      * connecton to the AMEDA device.
      */
-    protected void Disconnect()
+    void Disconnect()
     {
         _device.Disconnect();
     }
@@ -207,7 +207,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * @param position The position to set the AMEDA to. Must be an integer between 1 and 5 inclusive.
      */
-    protected void GoToPosition (int position)
+    void GoToPosition (int position)
     {
         if (position >= 1 && position <= 5)
         {
@@ -223,7 +223,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     /**
      * Enqueues an instruction to begin the AMEDA's self calibration process.
      */
-    protected void Calibrate ()
+    void Calibrate ()
     {
         _instruction_buffer.Enqueue(
                 AMEDAInstructionFactory.Create()
@@ -262,7 +262,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * @param num_times The number of beeps to beep.
      */
-    protected void Beep (int num_times)
+    void Beep (int num_times)
     {
         if (num_times > 9)
             num_times = 9;
@@ -280,7 +280,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * If the instruction queue is empty, then do nothing.
      */
-    protected void ExecuteNextInstruction()
+    void ExecuteNextInstruction()
     {
         _instruction_buffer.Advance();
         RepeatInstruction();
@@ -290,7 +290,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     /**
      * Retransmits the last instruction to the AMEDA device.
      */
-    protected void RepeatInstruction()
+    void RepeatInstruction()
     {
         DebugToast("Executing " + _instruction_buffer.Current().Build());
         _device.SendInstruction(_instruction_buffer.Current());
@@ -300,7 +300,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     /**
      * Clear the instruction buffer. Could be used when failing or no response from machine.
      */
-    protected void ClearInstructions()
+    void ClearInstructions()
     {
         _instruction_buffer.Clear();
     }
@@ -309,7 +309,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     /**
      * @return True if there are more instructions remaining in the instruction queue.
      */
-    protected boolean HasMoreInstructions() { return _instruction_buffer.HasNext(); }
+    boolean HasMoreInstructions() { return _instruction_buffer.HasNext(); }
 
 
     /**
@@ -364,7 +364,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      * Clears the instruction queue if the user selects cancel,
      * re-executes the last instruction if they select try again.
      */
-    protected void CannotMoveDialog()
+    void CannotMoveDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.error_title))
@@ -411,7 +411,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * @param message The message to display to the user before dying.
      */
-    protected void FailAndDieDialog(String message)
+    void FailAndDieDialog(String message)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.error_title))

@@ -29,16 +29,17 @@ import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
 public class AMEDAImplementation implements AMEDA
 {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private AMEDAActivity _parent;
     private String _data_received_buffer;
     private boolean _connected;
 
-    private BluetoothAdapter btAdaptor = null;
-    private BluetoothSocket btSocket = null;
+    private BluetoothAdapter _bt_adaptor = null;
+    private BluetoothSocket _bt_sockets = null;
 
-    private Handler _read_handler;
-    private Handler _response_handler;
-    private ConnectedThread mConnectedThread;
+    final private Handler _read_handler;
+    final private Handler _response_handler;
+    final private AMEDAActivity _parent;
+
+    private ConnectedThread _read_thread;
 
 
     /**
@@ -113,9 +114,9 @@ public class AMEDAImplementation implements AMEDA
      */
     private void checkBTState()
     {
-        if (btAdaptor == null)
+        if (_bt_adaptor == null)
             Globals.Error(_parent, _parent.getString(R.string.error_ameda_no_bluetooth));
-        else if (!btAdaptor.isEnabled())
+        else if (!_bt_adaptor.isEnabled())
         {
             Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
             _parent.startActivityForResult(enableBtIntent, 1);
@@ -244,13 +245,13 @@ public class AMEDAImplementation implements AMEDA
     @Override
     public boolean Connect()
     {
-        btAdaptor = BluetoothAdapter.getDefaultAdapter();
+        _bt_adaptor = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
 
         BluetoothDevice device = null;
         String device_name = "AMEDA";
 
-        List<BluetoothDevice> pairedDevices = new ArrayList<>(btAdaptor.getBondedDevices());
+        List<BluetoothDevice> pairedDevices = new ArrayList<>(_bt_adaptor.getBondedDevices());
         for (BluetoothDevice d: pairedDevices)
             if (d.getName().equals(device_name))
                 device = d;
@@ -263,7 +264,7 @@ public class AMEDAImplementation implements AMEDA
 
         try
         {
-            btSocket = createBluetoothSocket(device);
+            _bt_sockets = createBluetoothSocket(device);
         }
         catch (Exception e)
         {
@@ -271,17 +272,17 @@ public class AMEDAImplementation implements AMEDA
             return false;
         }
 
-        if (btSocket == null)
+        if (_bt_sockets == null)
         {
             _parent.DebugToast("Socket created was null.");
             return false;
         }
 
-        btAdaptor.cancelDiscovery();
+        _bt_adaptor.cancelDiscovery();
 
         try
         {
-            btSocket.connect();
+            _bt_sockets.connect();
         }
         catch (Exception e)
         {
@@ -289,8 +290,8 @@ public class AMEDAImplementation implements AMEDA
             return false;
         }
 
-        mConnectedThread = new ConnectedThread(btSocket);
-        mConnectedThread.start();
+        _read_thread = new ConnectedThread(_bt_sockets);
+        _read_thread.start();
 
         _connected = true;
 
@@ -311,7 +312,7 @@ public class AMEDAImplementation implements AMEDA
      */
     public void SendInstruction (AMEDAInstruction i)
     {
-        mConnectedThread.write(i.Build());
+        _read_thread.write(i.Build());
     }
 
 
@@ -321,12 +322,12 @@ public class AMEDAImplementation implements AMEDA
     @Override
     public void Disconnect()
     {
-        mConnectedThread.interrupt();
+        _read_thread.interrupt();
         try
         {
-            mConnectedThread.mmOutStream.close();
-            mConnectedThread.mmInStream.close();
-            btSocket.close();
+            _read_thread.mmOutStream.close();
+            _read_thread.mmInStream.close();
+            _bt_sockets.close();
         }
         catch (Exception e)
         {

@@ -13,7 +13,7 @@ public enum AMEDAInstructionEnum
     CALIBRATE(new AMEDAResponse[]{ AMEDAResponse.READY, AMEDAResponse.CALIBRATION_FAIL });
 //    REQUEST_ANGLE(new_btn AMEDAResponse[]{ AMEDAResponse.NO_RESPONSE_ANGLE, }); @TODO this
 
-    private AMEDAResponse [] _valid_responses;
+    final private AMEDAResponse [] _valid_responses;
 
 
     /**

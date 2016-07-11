@@ -8,7 +8,7 @@ import java.util.Queue;
  */
 public class AMEDAInstructionQueue
 {
-    private Queue <AMEDAInstruction> _queue;
+    final private Queue <AMEDAInstruction> _queue;
     private AMEDAInstruction _last_instruction;
 
 

@@ -17,8 +17,8 @@ public enum ManageRecordsEnum
     START_TEST(TestActivity.class, R.string.amr_test_descriptor),
     VIEW_RECORD(ViewUserActivity.class, R.string.amr_view_descriptor);
 
-    private Class _activity;
-    private int _descriptor_resource;
+    final private Class _activity;
+    final private int _descriptor_resource;
 
 
     /**

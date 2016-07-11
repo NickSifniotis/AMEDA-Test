@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.Random;
@@ -22,6 +21,7 @@ import au.net.nicksifniotis.amedatest.R;
 public class FamiliarisationActivity extends AMEDAActivity
 {
     private TextView[] _fields;
+    private Button[] _buttons;
     private Random randomiser;
 
 
@@ -76,13 +76,14 @@ public class FamiliarisationActivity extends AMEDAActivity
     {
         Resources r = getResources();
         _fields = new TextView[6];
+        _buttons = new Button[6];
 
         for (int i = 1; i <= 5; i ++)
         {
             int btn_id = r.getIdentifier("f_btn_" + i, "id", "au.net.nicksifniotis.amedatest");
-            Button btn = (Button) findViewById(btn_id);
-            if (btn != null)
-                btn.setText(getString (R.string.f_goto_button, i));
+            _buttons[i] = (Button) findViewById(btn_id);
+            if (_buttons[i] != null)
+                _buttons[i].setText(getString (R.string.f_goto_button, i));
 
             int txt_id = r.getIdentifier("f_txt_" + i, "id", "au.net.nicksifniotis.amedatest");
             _fields [i] = (TextView) findViewById(txt_id);
@@ -130,18 +131,6 @@ public class FamiliarisationActivity extends AMEDAActivity
 
 
     /**
-     * Make toast shortcut method. This is used everywhere it should live in the globals or something.
-     *
-     * @param message The message to display.
-     */
-    public void makeToast (String message)
-    {
-        Toast t = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        t.show();
-    }
-
-
-    /**
      * Move the device to the requested position, for familiarisation_activity purposes.
      *
      * @param num The position to move the AMEDA to.
@@ -165,9 +154,15 @@ public class FamiliarisationActivity extends AMEDAActivity
 
                 curr_value++;
                 _fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
+
+                if (curr_value >= 5)
+                {
+                    _fields[num].setEnabled(false);
+                    _buttons[num].setEnabled(false);
+                }
             }
             else
-                makeToast (getString(R.string.f_sorry_five));
+                DebugToast (getString(R.string.f_sorry_five));
         }
         else
             DebugToast ("Strange error in that execute has been invoked with num=" + num);

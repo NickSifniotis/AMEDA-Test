@@ -14,7 +14,7 @@ public enum TestState
     ANSWERING(R.id.t_layout_answering),
     FINISHING(R.id.t_layout_finishing);
 
-    private int _my_layout;
+    final private int _my_layout;
 
 
     TestState (int i)
