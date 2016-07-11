@@ -6,14 +6,14 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
  */
 public enum AMEDAInstructionEnum
 {
-    HELLO(new AMEDAResponse[]{ AMEDAResponse.READY }),
-    BUZZER_SHORT(new AMEDAResponse[]{ }),
-    BUZZER_LONG(new AMEDAResponse[]{ }),
-    MOVE_TO_POSITION(new AMEDAResponse[]{ AMEDAResponse.READY, AMEDAResponse.CANNOT_MOVE }),
-    CALIBRATE(new AMEDAResponse[]{ AMEDAResponse.READY, AMEDAResponse.CALIBRATION_FAIL });
-//    REQUEST_ANGLE(new_btn AMEDAResponse[]{ AMEDAResponse.NO_RESPONSE_ANGLE, }); @TODO this
+    HELLO(new AMEDAResponse.Code[]{ AMEDAResponse.Code.READY }),
+    BUZZER_SHORT(new AMEDAResponse.Code[]{ }),
+    BUZZER_LONG(new AMEDAResponse.Code[]{ }),
+    MOVE_TO_POSITION(new AMEDAResponse.Code[]{ AMEDAResponse.Code.READY, AMEDAResponse.Code.CANNOT_MOVE }),
+    CALIBRATE(new AMEDAResponse.Code[]{ AMEDAResponse.Code.READY, AMEDAResponse.Code.CALIBRATION_FAIL }),
+    REQUEST_ANGLE(new AMEDAResponse.Code[]{ AMEDAResponse.Code.NO_RESPONSE_ANGLE, AMEDAResponse.Code.ANGLE });
 
-    final private AMEDAResponse [] _valid_responses;
+    final private AMEDAResponse.Code [] _valid_responses;
 
 
     /**
@@ -21,7 +21,7 @@ public enum AMEDAInstructionEnum
      *
      * @param rs Array containing the set of response codes that the AMEDA generates for this instruction.
      */
-    AMEDAInstructionEnum (AMEDAResponse[] rs)
+    AMEDAInstructionEnum (AMEDAResponse.Code[] rs)
     {
         this._valid_responses = rs;
     }
@@ -39,8 +39,9 @@ public enum AMEDAInstructionEnum
      */
     public boolean IsValidResponse(AMEDAResponse response)
     {
-        for (AMEDAResponse r: this._valid_responses)
-            if (r == response)
+        AMEDAResponse.Code code = response.GetCode();
+        for (AMEDAResponse.Code r: this._valid_responses)
+            if (r == code)
                 return true;
 
         return false;

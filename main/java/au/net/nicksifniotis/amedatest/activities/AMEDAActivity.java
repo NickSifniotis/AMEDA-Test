@@ -194,7 +194,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
     /**
      * Disconnects from the AMEDA. Gives the child activity the ability to interrupt the
-     * connecton to the AMEDA device.
+     * connection to the AMEDA device.
      */
     void Disconnect()
     {

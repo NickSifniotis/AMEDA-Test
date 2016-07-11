@@ -89,12 +89,12 @@ public class AMEDAImplementation implements AMEDA
 
         if (_data_received_buffer.length() >= 8)
         {
-            String result = _data_received_buffer.substring(1, 6);
+            String result = _data_received_buffer.substring(0, 8);
             _data_received_buffer = _data_received_buffer.substring (8);
 
-            AMEDAResponse response = AMEDAResponse.FindResponse(result);
+            AMEDAResponse response = new AMEDAResponse(result);
 
-            if (response == null)
+            if (response.GetCode() == null)
             {
                 _parent.DebugToast("Unable to parse message received: " + result);
             }
