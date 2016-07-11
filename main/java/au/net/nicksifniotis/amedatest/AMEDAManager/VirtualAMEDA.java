@@ -33,37 +33,6 @@ public class VirtualAMEDA implements AMEDA
 
 
     /**
-     * Moves the AMEDA plate to the given position.
-     *
-     * As the virtual AMEDA doesn't have a plate to move, every call to this function returns
-     * a true.
-     *
-     * @param position The position to move the device to. Valid range is from 1 to 5.
-     * @return True if the device moved successfully, false otherwise.
-     */
-    @Override
-    public boolean GoToPosition(int position)
-    {
-
-        return true;
-    }
-
-
-    /**
-     * Calibration should occur before the AMEDA device is used.
-     * The virtual AMEDA doesn't need to calibrate, so always indicate success
-     * by returning a true.
-     * @return True if the calibration was successful, false if the AMEDA is returning an
-     * error that it cannot recover from.
-     */
-    @Override
-    public boolean Calibrate()
-    {
-        return true;
-    }
-
-
-    /**
      * Implementation of the terminate connection method.
      * The Virtual AMEDA has no connection to terminate.
      * So do nothing.
@@ -81,24 +50,11 @@ public class VirtualAMEDA implements AMEDA
      * UI thread.
      */
     @Override
-    public void Connect()
+    public boolean Connect()
     {
         Message msg = _response_handler.obtainMessage(AMEDA.CONNECTED);
         _response_handler.sendMessageDelayed(msg, 2000);
-    }
 
-
-    /**
-     * Implementation of 'beep'.
-     *
-     * It should actually play a 'beep' sound I reckon.
-     *
-     * @param num_beeps The number of beeps to emit.
-     * @return True if successful, false otherwise.
-     */
-    @Override
-    public boolean Beep(int num_beeps)
-    {
         return true;
     }
 

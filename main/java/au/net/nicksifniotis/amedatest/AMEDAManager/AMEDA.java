@@ -12,10 +12,6 @@ public interface AMEDA
     int RESPONSE = 1;
     int CONNECTED = 2;
 
-    boolean GoToPosition(int position);
-
-    boolean Calibrate();
-
 
     /**
      * Disconnects the device, if it's currently connected.
@@ -25,10 +21,10 @@ public interface AMEDA
 
     /**
      * Creates the connection to the device, if no such connection exists.
+     *
+     * Returns true on 'we are connected' and false otherwise.
      */
-    void Connect();
-
-    boolean Beep(int num_beeps);
+    boolean Connect();
 
 
     /**

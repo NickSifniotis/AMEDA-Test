@@ -1,10 +1,8 @@
 package au.net.nicksifniotis.amedatest.AMEDAManager;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
@@ -19,6 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.R;
+import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
+
+
 /**
  * New AMEDA implementation class using code reverse engineered from other bluetooth projects.
  *
@@ -26,8 +29,8 @@ import java.util.UUID;
 public class AMEDAImplementation implements AMEDA
 {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private Context _parent;
-    private String dataReceived;
+    private AMEDAActivity _parent;
+    private String _data_received_buffer;
     private boolean _connected;
 
     private BluetoothAdapter btAdaptor = null;
@@ -45,12 +48,12 @@ public class AMEDAImplementation implements AMEDA
      *
      * @param context The context that this instance serves.
      */
-    public AMEDAImplementation(Context context, Handler responses)
+    public AMEDAImplementation(AMEDAActivity context, Handler responses)
     {
         _connected = false;
         _response_handler = responses;
         _parent = context;
-        dataReceived = "";
+        _data_received_buffer = "";
 
         _read_handler = new Handler(new Handler.Callback()
         {
@@ -80,21 +83,27 @@ public class AMEDAImplementation implements AMEDA
      */
     private void addMessage(String msg)
     {
-        makeToast("Reading " + msg);
-        dataReceived += msg;
-        makeToast("New buffer contents: " + dataReceived);
+        _parent.DebugToast("Reading " + msg);
+        _data_received_buffer += msg;
 
-        if (dataReceived.length() >= 8)
+        if (_data_received_buffer.length() >= 8)
         {
-            String result = dataReceived.substring(1, 6);
-            dataReceived = dataReceived.substring (8);
+            String result = _data_received_buffer.substring(1, 6);
+            _data_received_buffer = _data_received_buffer.substring (8);
 
             AMEDAResponse response = AMEDAResponse.FindResponse(result);
-            makeToast("Unblocking: " + response.toString());
 
-            Message message = _response_handler.obtainMessage(1, response);
-            _response_handler.sendMessage(message);
-          //  _blocked = false;
+            if (response == null)
+            {
+                _parent.DebugToast("Unable to parse message received: " + result);
+            }
+            else
+            {
+                _parent.DebugToast("Sending message: " + response.toString());
+
+                Message message = _response_handler.obtainMessage(1, response);
+                _response_handler.sendMessage(message);
+            }
         }
     }
 
@@ -105,15 +114,11 @@ public class AMEDAImplementation implements AMEDA
     private void checkBTState()
     {
         if (btAdaptor == null)
-        {
-            makeToast ("Bluetooth not supported");
-            return;
-        }
-
-        if (!btAdaptor.isEnabled())
+            Globals.Error(_parent, _parent.getString(R.string.error_ameda_no_bluetooth));
+        else if (!btAdaptor.isEnabled())
         {
             Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
-            ((Activity)_parent).startActivityForResult(enableBtIntent, 1);
+            _parent.startActivityForResult(enableBtIntent, 1);
         }
     }
 
@@ -142,7 +147,7 @@ public class AMEDAImplementation implements AMEDA
             }
             catch (Exception e)
             {
-                makeToast ("Error: " + e.getMessage());
+                _parent.DebugToast("Error: " + e.getMessage());
             }
         }
 
@@ -172,7 +177,8 @@ public class AMEDAImplementation implements AMEDA
             }
             catch (Exception e)
             {
-                makeToast("Error connecting to i/o streams. " + e.getMessage());
+                _parent.DebugToast("Error connecting to i/o streams. " + e.getMessage());
+                Globals.Error(_parent, _parent.getString(R.string.error_ameda_cannot_connect));
             }
 
             mmInStream = tmpIn;
@@ -199,7 +205,7 @@ public class AMEDAImplementation implements AMEDA
                 }
                 catch (Exception e)
                 {
-                    makeToast("Error reading from AMEDA device. " + e.getMessage());
+                    _parent.DebugToast("Error reading from AMEDA device. " + e.getMessage());
                     return;
                 }
             }
@@ -213,24 +219,19 @@ public class AMEDAImplementation implements AMEDA
          */
         public void write(String message)
         {
-            makeToast("Write called: " + message);
-
             if (!_connected)
-            {
-                makeToast ("Unable to post message - AMEDA not connected.");
                 return;
-            }
 
+            _parent.DebugToast("Write called: " + message);
 
             byte[] msgBuffer = message.getBytes();
             try
             {
                 mmOutStream.write(msgBuffer);
-                makeToast("Blocked set to true, message " + message);
             }
             catch (Exception e)
             {
-                makeToast("Error writing to device. " + e.getMessage());
+                _parent.DebugToast("Error writing to device. " + e.getMessage());
             }
         }
     }
@@ -241,7 +242,7 @@ public class AMEDAImplementation implements AMEDA
      *
      */
     @Override
-    public void Connect()
+    public boolean Connect()
     {
         btAdaptor = BluetoothAdapter.getDefaultAdapter();
         checkBTState();
@@ -256,8 +257,8 @@ public class AMEDAImplementation implements AMEDA
 
         if (device == null)
         {
-            makeToast ("Unable to find AMEDA. Has it been paired to this device?");
-            return;
+            _parent.DebugToast("Unable to find AMEDA. Has it been paired to this device?");
+            return false;
         }
 
         try
@@ -266,29 +267,26 @@ public class AMEDAImplementation implements AMEDA
         }
         catch (Exception e)
         {
-            makeToast("Socket create failed: " + e.getMessage());
-            return;
+            _parent.DebugToast("Socket create failed: " + e.getMessage());
+            return false;
+        }
+
+        if (btSocket == null)
+        {
+            _parent.DebugToast("Socket created was null.");
+            return false;
         }
 
         btAdaptor.cancelDiscovery();
 
         try
         {
-            if (btSocket == null)
-                makeToast("Socket is null but.");
             btSocket.connect();
         }
         catch (Exception e)
         {
-            try
-            {
-                if (btSocket != null)
-                    btSocket.close();
-            }
-            catch (Exception e2)
-            {
-                makeToast ("In onResume() and unable to close socket during connection failure: " + e2.getMessage());
-            }
+            _parent.DebugToast("Socket connection failure: " + e.getMessage());
+            return false;
         }
 
         mConnectedThread = new ConnectedThread(btSocket);
@@ -301,25 +299,7 @@ public class AMEDAImplementation implements AMEDA
         // Delay it by half a second so that the user gets to see the spinner a little before it's dismissed.
         Message success_message = _response_handler.obtainMessage(AMEDA.CONNECTED);
         _response_handler.sendMessageDelayed(success_message, 500);
-    }
 
-
-    @Override
-    public boolean Beep(int num_beeps)
-    {
-//        try {
-//            AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
-//                    .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
-//                    .N(num_beeps);
-//
-//            mConnectedThread.write(instruction.Build());
-//            return true;
-//        }
-//        catch (AMEDAException e)
-//        {
-//            makeToast ("Fatal error: " + e.getMessage());
-//            return false;
-//        }
         return true;
     }
 
@@ -336,97 +316,6 @@ public class AMEDAImplementation implements AMEDA
 
 
     /**
-     * Very fancy way to make thread-safe calls to the Toaster.
-     *
-     * @param message The message to send back to the user.
-     */
-    public void makeToast (String message)
-    {
-        final String msg = message;
-        ((Activity)_parent).runOnUiThread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                Toast t = Toast.makeText(_parent, msg, Toast.LENGTH_SHORT);
-                t.show();
-            }
-        });
-    }
-
-
-    /**
-     * Instructs the AMEDA device to calibrate itself.
-     *
-     * @return True if the AMEDA reports everything ok, false otherwise.
-     */
-    @Override
-    public boolean Calibrate()
-    {
-        AMEDAInstruction instruction = AMEDAInstructionFactory.Create()
-                .Instruction(AMEDAInstructionEnum.CALIBRATE);
-        mConnectedThread.write(instruction.Build());
-
-        return true;
-    }
-
-
-    /**
-     * Sets the AMEDA device to a new_btn position, and awaits confirmation that the new_btn position is
-     * set. This is a blocking call @TODO it's probably blocking the UI thread, fuck
-     *
-     * @param position The position to set the AMEDA to.
-     * @return True if successful, false otherwise.
-     */
-    @Override
-    public boolean GoToPosition(int position)
-    {
-        makeToast("Moving to position " + position);
-
-        AMEDAInstruction instruction = null;
-        boolean result = true;
-
-//        if (_blocked)
-//            result = false;
-
-        if (result)
-        {
-//            try
-//            {
-//                instruction = AMEDAInstructionFactory.Create()
-//                        .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
-//                        .N(position);
-//            }
-//            catch (AMEDAException e)
-//            {
-//                result = false;
-//            }
-        }
-
-        if (result)
-        {
-            mConnectedThread.write(instruction.Build());
-
-            // this is dangerous as all hell. Block until some other thread changes the value of
-            // _blocked.
-//            while (_blocked)
-//            {
-//                try
-//                {
-//                    Thread.sleep(500);
-//                }
-//                catch (Exception e)
-//                {
-//                    break;
-//                }
-//            }
-        }
-
-        return result;
-    }
-
-
-    /**
      * Close the connection to the AMEDA device.
      */
     @Override
@@ -435,11 +324,13 @@ public class AMEDAImplementation implements AMEDA
         mConnectedThread.interrupt();
         try
         {
+            mConnectedThread.mmOutStream.close();
+            mConnectedThread.mmInStream.close();
             btSocket.close();
         }
         catch (Exception e)
         {
-            makeToast("Error closing AMEDA connection. " + e.getMessage());
+            _parent.DebugToast("Error closing AMEDA connection. " + e.getMessage());
         }
     }
 }

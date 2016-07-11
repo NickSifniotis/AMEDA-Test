@@ -140,10 +140,23 @@ public abstract class AMEDAActivity extends AppCompatActivity
             @Override
             public void onShow(DialogInterface dialog)
             {
-                _device.Connect();
+                if (!_device.Connect())
+                    _connection_failure();
             }
         });
         _connect_progress.show();
+    }
+
+
+    /**
+     * The device being connected to reported a failure to connect.
+     *
+     * Handle this situation by shutting down the activity.
+     */
+    private void _connection_failure()
+    {
+        _connect_progress.dismiss();
+        FailAndDieDialog(getString(R.string.error_ameda_cannot_connect));
     }
 
 
@@ -324,7 +337,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * @param message The message to display.
      */
-    protected void DebugToast (String message)
+    public void DebugToast (String message)
     {
         if (Globals.DEBUG_MODE)
         {

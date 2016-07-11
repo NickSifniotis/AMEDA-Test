@@ -24,10 +24,10 @@ public class User_RCA extends CursorAdapter
      * Default constructor.
      *
      * @param context The ListView that this RCA will populate.
-     * @param cursor The cursor pointing to the dataset to draw from.
      */
-    public User_RCA(Context context, Cursor cursor) {
-        super(context, cursor, 0);
+    public User_RCA(Context context)
+    {
+        super(context, null, 0);
     }
 
 

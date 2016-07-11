@@ -24,11 +24,10 @@ public class Test_RCA extends CursorAdapter
      * Default constructor.
      *
      * @param context The ListView that this RCA will populate.
-     * @param cursor The database cursor linking to the dataset to display.
      */
-    public Test_RCA(Context context, Cursor cursor)
+    public Test_RCA(Context context)
     {
-        super(context, cursor, 0);
+        super(context, null, 0);
     }
 
 

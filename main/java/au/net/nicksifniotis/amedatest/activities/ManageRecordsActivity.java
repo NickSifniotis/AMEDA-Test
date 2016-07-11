@@ -65,7 +65,7 @@ public class ManageRecordsActivity extends AppCompatActivity
         _database_helper = new DBOpenHelper(this);
         _db = _database_helper.getReadableDatabase();
 
-        _adaptor = new User_RCA(this, null);
+        _adaptor = new User_RCA(this);
 
         if (_list != null)
         {

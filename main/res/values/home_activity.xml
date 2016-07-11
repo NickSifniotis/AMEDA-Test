@@ -61,8 +61,12 @@
 
     <string name="not_implemented_title">Not so fast!</string>
     <string name="not_implemented_desc">Unfortunately, this feature has not been implemented yet. Please check back soon!</string>
+
+    <!-- Error messages! -->
     <string name="error_title">Error</string>
     <string name="error_ameda_fail_desc">Unrecognised response received from the AMEDA. Unfortunately, it is not possible to continue with this task.</string>
     <string name="error_ameda_not_horizontal">Unable to move the AMEDA device. Please make sure the plate is horizontal.</string>
     <string name="error_resource_not_found">Unable to find resource. Aborting this operation.</string>
+    <string name="error_ameda_no_bluetooth">Bluetooth is not supported on this device. Unable to continue.</string>
+    <string name="error_ameda_cannot_connect">Unable to open a connection to the AMEDA device.</string>
 </resources>
