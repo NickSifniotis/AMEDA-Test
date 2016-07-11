@@ -105,8 +105,6 @@ public class AMEDAInstruction {
         for (char c: ins.toCharArray())
             chk += c;
 
-        String res = "[" + ins + (char)(chk % 256) + "]";
-
-        return res;
+        return "[" + ins + (char)(chk % 256) + "]";
     }
 }

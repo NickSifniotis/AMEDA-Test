@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/mainBackground">
+    android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
 
@@ -41,20 +40,21 @@
             android:layout_centerHorizontal="true" />
 
         <LinearLayout
+            style="?android:attr/buttonBarStyle"
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Button
-                android:padding="20dp"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tut_btn_repeat"
                 android:onClick="tut_btn_repeat"/>
 
             <Button
-                android:padding="20dp"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_done"

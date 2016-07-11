@@ -9,26 +9,26 @@ package au.net.nicksifniotis.amedatest.AMEDAManager;
  */
 public interface AMEDA
 {
-    public static final int RESPONSE = 1;
-    public static final int CONNECTED = 2;
+    int RESPONSE = 1;
+    int CONNECTED = 2;
 
-    public boolean GoToPosition (int position);
+    boolean GoToPosition(int position);
 
-    public boolean Calibrate();
+    boolean Calibrate();
 
 
     /**
      * Disconnects the device, if it's currently connected.
      */
-    public void Disconnect();
+    void Disconnect();
 
 
     /**
      * Creates the connection to the device, if no such connection exists.
      */
-    public void Connect();
+    void Connect();
 
-    public boolean Beep(int num_beeps);
+    boolean Beep(int num_beeps);
 
 
     /**
@@ -36,5 +36,5 @@ public interface AMEDA
      *
      * @param instruction The instruction to transmit.
      */
-    public void SendInstruction (AMEDAInstruction instruction);
+    void SendInstruction(AMEDAInstruction instruction);
 }

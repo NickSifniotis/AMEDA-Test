@@ -22,7 +22,7 @@
             android:id="@id/vu_layout_notes"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/vu_notes_1"
@@ -48,68 +48,68 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <LinearLayout
+                android:id="@+id/vu_layout_header"
+                android:layout_alignBottom="@id/vu_txt_notes"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:textColor="@color/mainBackground"
+                    android:background="@color/menuBackground"
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:text="@string/test_rca_date"
+                    android:padding="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:textColor="@color/mainBackground"
+                    android:background="@color/menuBackground"
+                    android:text="@string/test_rca_score"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:padding="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@id/vu_list_tests"
+                android:layout_below="@+id/vu_layout_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:orientation="horizontal">
+
+                <Button style="?android:attr/buttonBarButtonStyle"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/btn_cancel"
+                    android:onClick="vu_btn_close">
+                </Button>
+
+                <Button style="?android:attr/buttonBarButtonStyle"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/vu_btn_new"
+                    android:onClick="vu_btn_new">
+                </Button>
+
+            </LinearLayout>
+
         </RelativeLayout>
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/manage_list_header"
-            android:layout_below="@+id/manage_searchbar">
-
-            <TextView
-                android:textColor="@color/mainBackground"
-                android:background="@color/menuBackground"
-                android:layout_width="0dp"
-                android:layout_weight="6"
-                android:text="Date of Test"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:textColor="@color/mainBackground"
-                android:background="@color/menuBackground"
-                android:text="Score"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-        <ListView
-            android:layout_below="@id/vu_layout_notes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@id/vu_list_tests" />
-
-        <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:padding="40dp"
-            android:orientation="horizontal">
-
-            <Button style="?android:attr/buttonBarButtonStyle"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="0.5"
-                android:text="Start New Test"
-                android:onClick="vu_btn_new">
-            </Button>
-
-            <Button style="?android:attr/buttonBarButtonStyle"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/btn_cancel"
-                android:onClick="vu_btn_close">
-            </Button>
-
-        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

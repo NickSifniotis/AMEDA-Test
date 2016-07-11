@@ -13,6 +13,7 @@
 
     <!-- Strings -->
     <string name="vu_string_page_title">Viewing User %1$s</string>
+    <string name="vu_btn_new">Start New Test</string>
     <string name="vu_btn_edit">Edit ..</string>
     <string name="vu_selected_delete">Delete</string>
     <string name="vu_selected_view">View Results</string>

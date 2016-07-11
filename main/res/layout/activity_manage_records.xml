@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:padding="10px"
+        android:padding="10dp"
         android:layout_height="0dp"
         android:layout_weight="8">
 
@@ -32,7 +32,7 @@
             <Button
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:text="View Last Record"
+                android:text="@string/amr_btn_view_last"
                 android:onClick="manage_searchbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -57,7 +57,7 @@
                 android:background="@color/menuBackground"
                 android:layout_width="0dp"
                 android:layout_weight="6"
-                android:text="Name"
+                android:text="@string/amr_column_name"
                 android:padding="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_height="match_parent" />
@@ -65,7 +65,7 @@
             <TextView
                 android:textColor="@color/mainBackground"
                 android:background="@color/menuBackground"
-                android:text="Date of Last Test"
+                android:text="@string/amr_column_last_date"
                 android:layout_width="0dp"
                 android:layout_weight="4"
                 android:padding="10dp"
@@ -93,16 +93,16 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="0.5"
-                android:text="New User"
-                android:onClick="amr_btn_new">
+                android:text="@string/btn_cancel"
+                android:onClick="amr_btn_close">
             </Button>
 
             <Button style="?android:attr/buttonBarButtonStyle"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/btn_cancel"
-                android:onClick="amr_btn_close">
+                android:text="@string/btn_new"
+                android:onClick="amr_btn_new">
             </Button>
 
         </LinearLayout>
