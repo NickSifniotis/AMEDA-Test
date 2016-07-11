@@ -1,9 +1,9 @@
 package au.net.nicksifniotis.amedatest;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SearchView;
+
 
 /**
  * Static global class for storing global config / build options.
@@ -27,15 +27,22 @@ public class Globals
      * Displays an error message dialog to the user. Only one button is provided to the user.
      * The calling function is responsible for shutting itself down correctly.
      *
-     * @param context The activity to display the dialog in.
-     * @param error_message The message to display to the userf.
+     * @param activity The activity to display the dialog in.
+     * @param error_message The message to display to the user.
      */
-    public static void Error(Context context, String error_message, DialogInterface.OnClickListener callback)
+    public static void Error(final Activity activity, String error_message)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.error_title)
                 .setMessage(error_message)
-                .setPositiveButton(R.string.btn_done, callback);
+                .setPositiveButton(R.string.btn_done, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        activity.finish();
+                    }
+                });
         builder.create().show();
     }
 }

@@ -1,6 +1,5 @@
 package au.net.nicksifniotis.amedatest.activities;
 
-import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.VideoView;
 
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
+
 
 /**
  * Launches the 'short tutorial_activity video' activity!
@@ -147,13 +147,7 @@ public class Tutorial extends AppCompatActivity
         }
         catch (Exception e)
         {
-            Globals.Error(this, getString(R.string.error_resource_not_found), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    finish();
-                }
-            });
+            Globals.Error(this, getString(R.string.error_resource_not_found));
         }
 
         _tutorial_viewer.requestFocus();
