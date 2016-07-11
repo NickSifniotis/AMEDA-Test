@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,9 +33,6 @@ import au.net.nicksifniotis.amedatest.R;
  *   - edit the personal details of an existing user
  *   - delete a user
  *   - launch into a new test with a user
- *
- * Outstanding issues @todo
- *   - Raghu asked for radio buttons instead of a spinner for gender
  */
 public class EditUserActivity extends AppCompatActivity
 {
@@ -162,8 +160,10 @@ public class EditUserActivity extends AppCompatActivity
 
 
         // until the address situation is clarified, this is becoming a thing.
-        findViewById(R.id.mpr_layout_address).setVisibility(
-                (Globals.USING_ADDRESSES) ? View.VISIBLE : View.GONE);
+        LinearLayout _address_layout = (LinearLayout) findViewById(R.id.mpr_layout_address);
+        if (_address_layout != null)
+            _address_layout.setVisibility(
+                    (Globals.USING_ADDRESSES) ? View.VISIBLE : View.GONE);
 
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AlertDialog;
 
-import au.net.nicksifniotis.amedatest.LocalDB.DB;
 
 /**
  * Database helper class that uses the contracts and strings inside of DB.
@@ -50,7 +49,8 @@ public class DBOpenHelper extends SQLiteOpenHelper
     /**
      * These standard tests have been extracted from the five Excel spreadsheets sent
      * through to me by Gordon.
-     * @param db
+     *
+     * @param db A writable database to save the tests into.
      */
     private void createStandardTests(SQLiteDatabase db)
     {
@@ -61,13 +61,12 @@ public class DBOpenHelper extends SQLiteOpenHelper
                 "51352234454133344435345123555541124412223435541342",
                 "34345325212323412234345132424512125355114534511451" };
 
-        for (int i = 0, j = standard_tests.length; i < j; i ++)
+        for (String s: standard_tests)
         {
             ContentValues values = new ContentValues();
-            values.put(DB.StandardTestTable.ANSWER_KEY, standard_tests[i]);
-            long newRowId;
-            newRowId = db.insert(DB.StandardTestTable.TABLE_NAME, null, values);
+            values.put(DB.StandardTestTable.ANSWER_KEY, s);
 
+            long newRowId = db.insert(DB.StandardTestTable.TABLE_NAME, null, values);
             if (newRowId == -1)
                 databaseError ("Unable to save record into the database.");
         }

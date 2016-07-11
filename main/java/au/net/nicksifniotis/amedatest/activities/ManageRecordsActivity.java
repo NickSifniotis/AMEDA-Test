@@ -214,9 +214,9 @@ public class ManageRecordsActivity extends AppCompatActivity
     /**
      * Inflate the context menu.
      *
-     * @param menu
-     * @param v
-     * @param menuInfo
+     * @param menu The menu to inflate.
+     * @param v The view to inflate it in.
+     * @param menuInfo Not sure what this does.
      */
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
@@ -229,16 +229,25 @@ public class ManageRecordsActivity extends AppCompatActivity
     /**
      * Handler for the context menu selection.
      *
-     * @param item
-     * @return
+     * @param item The menu item that the user selected.
+     * @return True on a successful event handling, false otherwise.
      */
     @Override
     public boolean onContextItemSelected(MenuItem item)
     {
         ListView lv = (ListView) findViewById(R.id.amr_list_records);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        SQLiteCursor entry = (SQLiteCursor) lv.getItemAtPosition(info.position);
-        int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
+        SQLiteCursor entry = null;
+        if (lv != null)
+            entry = (SQLiteCursor) lv.getItemAtPosition(info.position);
+
+        int record_id = -1;
+        if (entry != null)
+            record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
+
+        if (record_id == -1)
+            return false;
+
 
         switch (item.getItemId())
         {
@@ -260,6 +269,7 @@ public class ManageRecordsActivity extends AppCompatActivity
         }
         return true;
     }
+
 
     /**
      * Delete the existing record from the system - including all tests that this person may
@@ -324,5 +334,4 @@ public class ManageRecordsActivity extends AppCompatActivity
 
         builder.create().show();
     }
-
 }
