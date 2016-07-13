@@ -104,7 +104,7 @@ public class CalibrationActivity extends AMEDAActivity
     {
         AMEDAInstructionEnum instruction_code = instruction.GetInstruction();
 
-        if (!instruction_code.IsValidResponse(response))
+        if (!instruction_code.IsValidResponse(response)) // todo instruction recognition failure needs to be handled properly
             FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
 
         if (instruction_code == AMEDAInstructionEnum.CALIBRATE && response.GetCode() == AMEDAResponse.Code.CALIBRATION_FAIL)
