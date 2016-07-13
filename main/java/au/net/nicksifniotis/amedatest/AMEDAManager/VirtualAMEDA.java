@@ -76,7 +76,8 @@ public class VirtualAMEDA implements AMEDA
             _beep();
         else
         {
-            Message msg = _response_handler.obtainMessage(AMEDA.RESPONSE, AMEDAResponse.READY);
+            AMEDAResponse response = new AMEDAResponse("[READYp]");
+            Message msg = _response_handler.obtainMessage(AMEDA.RESPONSE, response);
             _response_handler.sendMessageDelayed(msg, 100);
         }
     }

@@ -253,7 +253,7 @@ public class AMEDAImplementation implements AMEDA
 
         List<BluetoothDevice> pairedDevices = new ArrayList<>(_bt_adaptor.getBondedDevices());
         for (BluetoothDevice d: pairedDevices)
-            if (d.getName().equals(device_name))
+            if (d.getName().trim().equals(device_name))
                 device = d;
 
         if (device == null)
@@ -322,6 +322,10 @@ public class AMEDAImplementation implements AMEDA
     @Override
     public void Disconnect()
     {
+        // because this method will be called whether or not we are connected.
+        if (!_connected)
+            return;
+
         _read_thread.interrupt();
         try
         {

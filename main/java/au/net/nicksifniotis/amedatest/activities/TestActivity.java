@@ -386,7 +386,7 @@ public class TestActivity extends AMEDAActivity
         }
 
         if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION)
-            if (response == AMEDAResponse.CANNOT_MOVE)
+            if (response.GetCode() == AMEDAResponse.Code.CANNOT_MOVE)
                 CannotMoveDialog();
             else
                 if (HasMoreInstructions())

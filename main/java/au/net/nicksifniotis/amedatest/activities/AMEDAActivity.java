@@ -133,7 +133,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
             /**
              * Cleverly, do not attempt to connect to the device until the dialog box has been
              * presented to the user. This is to prevent the UI thread from hanging on the call
-             * to Connect.
+             * to Connect. todo its not that clever, its not working
              *
              * @param dialog Not used.
              */

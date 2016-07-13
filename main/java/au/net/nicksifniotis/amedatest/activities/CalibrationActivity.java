@@ -107,9 +107,9 @@ public class CalibrationActivity extends AMEDAActivity
         if (!instruction_code.IsValidResponse(response))
             FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
 
-        if (instruction_code == AMEDAInstructionEnum.CALIBRATE && response == AMEDAResponse.CALIBRATION_FAIL)
+        if (instruction_code == AMEDAInstructionEnum.CALIBRATE && response.GetCode() == AMEDAResponse.Code.CALIBRATION_FAIL)
             CalibrationFailedDialog();
-        else if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION && response == AMEDAResponse.CANNOT_MOVE)
+        else if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION && response.GetCode() == AMEDAResponse.Code.CANNOT_MOVE)
             CannotMoveDialog();
         else
             _images[instruction_code == AMEDAInstructionEnum.CALIBRATE ? 0 : instruction.GetN()].setVisibility(View.VISIBLE);

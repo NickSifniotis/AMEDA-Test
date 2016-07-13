@@ -180,7 +180,7 @@ public class FamiliarisationActivity extends AMEDAActivity
     {
         if (instruction.GetInstruction().IsValidResponse(response))
         {
-            switch (response)
+            switch (response.GetCode())
             {
                 case READY:
                     ExecuteNextInstruction();
