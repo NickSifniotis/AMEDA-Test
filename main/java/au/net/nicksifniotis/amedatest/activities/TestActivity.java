@@ -614,6 +614,7 @@ public class TestActivity extends AMEDAActivity
         updateState(TestState.FINISHING);
 
         ContentValues values = new ContentValues();
+        values.put(DB.TestTable.INTERRUPTED, 0);
         values.put(DB.TestTable.SCORE, _compute_score());
 
         SQLiteDatabase db = _database_helper.getWritableDatabase();
@@ -632,9 +633,9 @@ public class TestActivity extends AMEDAActivity
      *
      * @return The number of questions that the user got correct in this test.
      */
-    private int _compute_score()
+    private double _compute_score()
     {
-        int res = 0;
+        int [] _answers = new int [_test_questions.length];
 
         SQLiteDatabase db = _database_helper.getReadableDatabase();
         String query = "SELECT * FROM " + DB.QuestionTable.TABLE_NAME +
@@ -646,12 +647,11 @@ public class TestActivity extends AMEDAActivity
         {
             int answer = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.USER_ANSWER));
             int question_number = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.QUESTION_NUMBER));
-            if (answer == _test_questions[question_number])
-                res ++;
+            _answers[question_number] = answer;
         }
         resultSet.close();
         db.close();
 
-        return res;
+        return Globals.ScoreTest(_test_questions, _answers);
     }
 }

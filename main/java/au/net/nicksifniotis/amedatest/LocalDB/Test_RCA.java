@@ -63,13 +63,13 @@ public class Test_RCA extends CursorAdapter
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         String date = format.format(new Date(d));
 
-        int score = cursor.getInt(cursor.getColumnIndex(DB.TestTable.SCORE));
-        int numq = cursor.getInt(cursor.getColumnIndex(DB.TestTable.NUM_QUESTIONS));
+        double score = cursor.getDouble(cursor.getColumnIndex(DB.TestTable.SCORE));
         int interrupted = cursor.getInt(cursor.getColumnIndex(DB.TestTable.INTERRUPTED));
 
-        String score_text = (interrupted == 1)
-                ? context.getString(R.string.test_rca_incomplete)
-                : context.getString(R.string.test_rca_score_template, score, numq);
+//        String score_text = (interrupted == 1)
+//                ? context.getString(R.string.test_rca_incomplete)
+//                : context.getString(R.string.test_rca_score_template, score);
+        String score_text = context.getString(R.string.test_rca_score_template, score);
 
         txt_test_date.setText(date);
         txt_test_score.setText(score_text);

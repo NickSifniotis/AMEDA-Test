@@ -45,4 +45,79 @@ public class Globals
                 });
         builder.create().show();
     }
+
+
+    /**
+     * Scores a recorded test. The score is something called a 'mean AUC', which I have had to
+     * reverse engineer from undocumented Excel spreadsheet formulae.
+     *
+     * @param correct The set of correct responses to the test.
+     * @param responses The responses as recorded by the user.
+     * @return The 'mean AUC' for the test.
+     */
+    public static double ScoreTest(int [] correct, int [] responses)
+    {
+        double res = 0.0;
+        int [] [] matrix = _get_matrix(correct, responses);
+
+        for (int i = 1; i < 5; i ++)
+            res += _get_auc(matrix, i, i + 1);
+
+        return res / 4;
+    }
+
+
+    /**
+     * I'd be lying if I said I understood this method.
+     *
+     * It's been tested against the Excel spreadsheet data and produces the correct results.
+     *
+     * @param matrix todo
+     * @param row1
+     * @param row2
+     * @return
+     */
+    private static double _get_auc(int [] [] matrix, int row1, int row2)
+    {
+        double res = 0.0;
+        int t_r1 = 0;
+        int t_r2 = 0;
+
+        for (int i = 1; i <= 5; i ++)
+        {
+            res += (matrix[row1][i] * matrix[row2][i]);
+            t_r1 += matrix[row1][i];
+            t_r2 += matrix[row2][i];
+        }
+        res /= 2;
+
+        for (int i = 2; i <= 5; i ++)
+        {
+            int temp = 0;
+            for (int j = 1; j < i; j ++)
+                temp += matrix[row1][j];
+
+            res += (temp * matrix[row2][i]);
+        }
+
+        return res / (t_r1 * t_r2);
+    }
+
+
+    /**
+     * Generates the matrix used in the calculation of the mean AUC.
+     *
+     * @param correct todo
+     * @param responses todo
+     * @return todo
+     */
+    private static int [] [] _get_matrix(int [] correct, int [] responses)
+    {
+        int [] [] result_matrix = new int [6] [6];
+
+        for (int i = 0, j = correct.length; i < j; i ++)
+            result_matrix[correct[i]][responses[i]] ++;
+
+        return result_matrix;
+    }
 }
