@@ -1,10 +1,14 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager;
+package au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
+import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.R;
 
 /**
@@ -13,7 +17,7 @@ import au.net.nicksifniotis.amedatest.R;
  * This fully implements the AMEDA interface to enable testing and integration
  * with the remainder of the system.
  */
-public class VirtualAMEDA implements AMEDA
+public class Connection implements AMEDA
 {
     final private Context _context;
     final private Handler _response_handler;
@@ -25,7 +29,7 @@ public class VirtualAMEDA implements AMEDA
      * @param context The activity that owns this device.
      * @param handler The handler to send response messages through to.
      */
-    public VirtualAMEDA(Context context, Handler handler)
+    public Connection(Context context, Handler handler)
     {
         _context = context;
         _response_handler = handler;

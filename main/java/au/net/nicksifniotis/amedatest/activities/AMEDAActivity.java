@@ -16,7 +16,7 @@ import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
-import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
+import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA.Connection;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
 
@@ -70,7 +70,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
         _connecting = false;
         _device = (Globals.AMEDA_FREE)
-                ? new VirtualAMEDA(this, _response_handler)
+                ? new Connection(this, _response_handler)
                 : new AMEDAImplementation(this, _response_handler);
     }
 
