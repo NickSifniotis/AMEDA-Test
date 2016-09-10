@@ -5,12 +5,12 @@ import android.provider.BaseColumns;
 /**
  * Holds all the database 'contracts' used by the application.
  *
- * Created by nsifniotis on 23/05/16.
+ * Created by Nick Sifniotis on 23/05/16.
  */
 public class DB
 {
     public static final String filename = "AMEDA.db";
-    public static final int version = 11;
+    public static final int version = 12;
 
     /**
      * Blank constructor, to make sure nobody accidentally instantiates a copy of this non-object.
@@ -21,7 +21,8 @@ public class DB
     {
         public static final String TABLE_NAME = "_person";
 
-        public static final String NAME = "Name" + TABLE_NAME;
+        public static final String FIRST_NAME = "FirstName" + TABLE_NAME;
+        public static final String SURNAME = "Surname" + TABLE_NAME;
         public static final String DOB = "DateOfBirth" + TABLE_NAME;
         public static final String GENDER = "Gender" + TABLE_NAME;
         public static final String HEIGHT = "Height" + TABLE_NAME;
@@ -34,7 +35,8 @@ public class DB
 
         public static final String CreateSQL = "CREATE TABLE " + TABLE_NAME + " ("
                                                 + _ID + " INTEGER PRIMARY KEY, "
-                                                + NAME + " TEXT, "
+                                                + FIRST_NAME + " TEXT, "
+                                                + SURNAME + " TEXT, "
                                                 + DOB + " TEXT, "
                                                 + GENDER + " TEXT, "
                                                 + HEIGHT + " INTEGER, "

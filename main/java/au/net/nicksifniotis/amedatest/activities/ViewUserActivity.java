@@ -82,7 +82,8 @@ public class ViewUserActivity extends AppCompatActivity
         Cursor resultSet = _db.rawQuery(query, null);
         resultSet.moveToNext();
 
-        String username = resultSet.getString(resultSet.getColumnIndex(DB.PersonTable.NAME));
+        String username = resultSet.getString(resultSet.getColumnIndex(DB.PersonTable.FIRST_NAME))
+                + " " + resultSet.getString(resultSet.getColumnIndex(DB.PersonTable.SURNAME));
         _title.setText(getString(R.string.vu_string_page_title, username));
 
         String notes = resultSet.getString(resultSet.getColumnIndex(DB.PersonTable.NOTES));

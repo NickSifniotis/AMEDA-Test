@@ -92,7 +92,8 @@ public class ManageRecordsActivity extends AppCompatActivity
     {
         String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME
                 + " WHERE " + DB.PersonTable.ACTIVE + " = 1"
-                + " ORDER BY " + DB.PersonTable.NAME;
+                + " ORDER BY " + DB.PersonTable.SURNAME
+                + ", " + DB.PersonTable.FIRST_NAME;
 
         Cursor _record_cursor = _db.rawQuery(query, null);
         _record_cursor.moveToFirst();

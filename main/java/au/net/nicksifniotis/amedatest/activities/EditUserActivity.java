@@ -36,7 +36,8 @@ import au.net.nicksifniotis.amedatest.R;
  */
 public class EditUserActivity extends AppCompatActivity
 {
-    private EditText _name;
+    private EditText _first_name;
+    private EditText _surname;
     private EditText _weight;
     private EditText _dob;
     private EditText _height;
@@ -106,14 +107,15 @@ public class EditUserActivity extends AppCompatActivity
 
             c.moveToFirst();
 
-            _name.setText     (c.getString(c.getColumnIndex(DB.PersonTable.NAME)));
-            _dob.setText      (c.getString(c.getColumnIndex(DB.PersonTable.DOB)));
-            _height.setText   (c.getString(c.getColumnIndex(DB.PersonTable.HEIGHT)));
-            _weight.setText   (c.getString(c.getColumnIndex(DB.PersonTable.WEIGHT)));
-            _address.setText  (c.getString(c.getColumnIndex(DB.PersonTable.ADDRESS)));
-            _notes.setText    (c.getString(c.getColumnIndex(DB.PersonTable.NOTES)));
+            _first_name.setText (c.getString(c.getColumnIndex(DB.PersonTable.FIRST_NAME)));
+            _surname.setText    (c.getString(c.getColumnIndex(DB.PersonTable.SURNAME)));
+            _dob.setText        (c.getString(c.getColumnIndex(DB.PersonTable.DOB)));
+            _height.setText     (c.getString(c.getColumnIndex(DB.PersonTable.HEIGHT)));
+            _weight.setText     (c.getString(c.getColumnIndex(DB.PersonTable.WEIGHT)));
+            _address.setText    (c.getString(c.getColumnIndex(DB.PersonTable.ADDRESS)));
+            _notes.setText      (c.getString(c.getColumnIndex(DB.PersonTable.NOTES)));
 
-            _set_gender_spinner(c.getString(c.getColumnIndex(DB.PersonTable.GENDER)));
+            _set_gender_spinner (c.getString(c.getColumnIndex(DB.PersonTable.GENDER)));
 
             c.close();
         }
@@ -148,13 +150,14 @@ public class EditUserActivity extends AppCompatActivity
      */
     private void _get_gui_components()
     {
-        _name    = (EditText) findViewById(R.id.mpr_txt_name);
-        _dob     = (EditText) findViewById(R.id.mpr_txt_dob);
-        _gender  = (Spinner)  findViewById(R.id.mpr_spn_gender);
-        _height  = (EditText) findViewById(R.id.mpr_txt_height);
-        _weight  = (EditText) findViewById(R.id.mpr_txt_weight);
-        _address = (EditText) findViewById(R.id.mpr_txt_address);
-        _notes   = (EditText) findViewById(R.id.mpr_txt_notes);
+        _first_name = (EditText) findViewById(R.id.mpr_txt_first_name);
+        _surname    = (EditText) findViewById(R.id.mpr_txt_surname);
+        _dob        = (EditText) findViewById(R.id.mpr_txt_dob);
+        _gender     = (Spinner)  findViewById(R.id.mpr_spn_gender);
+        _height     = (EditText) findViewById(R.id.mpr_txt_height);
+        _weight     = (EditText) findViewById(R.id.mpr_txt_weight);
+        _address    = (EditText) findViewById(R.id.mpr_txt_address);
+        _notes      = (EditText) findViewById(R.id.mpr_txt_notes);
 
         _delete_record = (Button) findViewById(R.id.mpr_btn_delete);
 
@@ -267,14 +270,16 @@ public class EditUserActivity extends AppCompatActivity
     {
         ContentValues res = new ContentValues();
 
-        res.put(DB.PersonTable.NAME   , _name.getText().toString());
-        res.put(DB.PersonTable.DOB    , _dob.getText().toString());
-        res.put(DB.PersonTable.GENDER , _gender.getSelectedItem().toString());
-        res.put(DB.PersonTable.HEIGHT , _height.getText().toString());
-        res.put(DB.PersonTable.WEIGHT , _weight.getText().toString());
-        res.put(DB.PersonTable.ADDRESS, _address.getText().toString());
-        res.put(DB.PersonTable.NOTES  , _notes.getText().toString());
-        res.put(DB.PersonTable.ACTIVE , Integer.toString(1));
+        res.put(DB.PersonTable.FIRST_NAME, _first_name.getText().toString());
+        res.put(DB.PersonTable.SURNAME   , _surname.getText().toString());
+        res.put(DB.PersonTable.DOB       , _dob.getText().toString());
+        res.put(DB.PersonTable.GENDER    , _gender.getSelectedItem().toString());
+        res.put(DB.PersonTable.HEIGHT    , _height.getText().toString());
+        res.put(DB.PersonTable.WEIGHT    , _weight.getText().toString());
+        res.put(DB.PersonTable.ADDRESS   , _address.getText().toString());
+        res.put(DB.PersonTable.NOTES     , _notes.getText().toString());
+
+        res.put(DB.PersonTable.ACTIVE    , Integer.toString(1));
 
         return res;
     }
