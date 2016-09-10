@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -92,6 +93,32 @@ public class TestActivity extends AMEDAActivity
             _resume_test(test_id);
     }
 
+
+    /**
+     * Abort the test before shutting down completely.
+     */
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        _abort_test();
+    }
+
+
+    /**
+     * (Re)connect to the AMEDA device when the activity is (resumed)shown.
+     *
+     */
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        updateState(TestState.STARTING);
+    }
 
     /**
      * Sets up the GUI-y things, like the progress dialog and the text for certain elements.
@@ -336,31 +363,6 @@ public class TestActivity extends AMEDAActivity
         }
 
         return true;
-    }
-
-
-    /**
-     * Abort the test before shutting down completely.
-     */
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        _abort_test();
-    }
-
-
-    /**
-     * (Re)connect to the AMEDA device when the activity is (resumed)shown.
-     *
-     */
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        updateState(TestState.STARTING);
     }
 
 
