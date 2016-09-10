@@ -3,7 +3,7 @@
     <!-- Resource IDs -->
     <item type="id" name="mpr_txt_first_name" />
     <item type="id" name="mpr_txt_surname" />
-    <item type="id" name="mpr_txt_dob" />
+    <item type="id" name="mpr_date_dob" />
     <item type="id" name="mpr_spn_gender" />
     <item type="id" name="mpr_txt_height" />
     <item type="id" name="mpr_txt_weight" />

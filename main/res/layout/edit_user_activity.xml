@@ -77,18 +77,18 @@
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:labelFor="@id/mpr_txt_dob"
+                    android:labelFor="@id/mpr_date_dob"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/mpr_str_dob" />
 
-                <EditText
-                    android:inputType="date"
-                    android:id="@id/mpr_txt_dob"
+                <TextView
+                    android:id="@id/mpr_date_dob"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    style="@android:style/Widget.DeviceDefault.Light.Spinner"
                     android:ems="10" />
             </LinearLayout>
 

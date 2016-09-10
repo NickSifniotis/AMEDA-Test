@@ -1,5 +1,7 @@
 package au.net.nicksifniotis.amedatest.activities;
 
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.Globals;
@@ -39,7 +42,7 @@ public class EditUserActivity extends AppCompatActivity
     private EditText _first_name;
     private EditText _surname;
     private EditText _weight;
-    private EditText _dob;
+    private TextView _dob;
     private EditText _height;
     private EditText _notes;
     private EditText _address;
@@ -152,7 +155,7 @@ public class EditUserActivity extends AppCompatActivity
     {
         _first_name = (EditText) findViewById(R.id.mpr_txt_first_name);
         _surname    = (EditText) findViewById(R.id.mpr_txt_surname);
-        _dob        = (EditText) findViewById(R.id.mpr_txt_dob);
+        _dob        = (TextView) findViewById(R.id.mpr_date_dob);
         _gender     = (Spinner)  findViewById(R.id.mpr_spn_gender);
         _height     = (EditText) findViewById(R.id.mpr_txt_height);
         _weight     = (EditText) findViewById(R.id.mpr_txt_weight);
@@ -161,6 +164,18 @@ public class EditUserActivity extends AppCompatActivity
 
         _delete_record = (Button) findViewById(R.id.mpr_btn_delete);
 
+
+        // Link up the DOB textview to the appropriate onClick handlers.
+        _dob.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                DialogFragment newFragment = DatePickerDialogFragment.newInstance(_dob);
+                newFragment.show(ft, "date_dialog");
+            }
+        });
 
         // until the address situation is clarified, this is becoming a thing.
         LinearLayout _address_layout = (LinearLayout) findViewById(R.id.mpr_layout_address);
