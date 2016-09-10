@@ -14,7 +14,6 @@ import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionFactory;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
@@ -212,7 +211,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
         if (position >= 1 && position <= 5)
         {
             _instruction_buffer.Enqueue(
-                    AMEDAInstructionFactory.Create()
+                    AMEDAInstruction.Create()
                     .Instruction(AMEDAInstructionEnum.MOVE_TO_POSITION)
                     .N(position)
             );
@@ -226,7 +225,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     void Calibrate ()
     {
         _instruction_buffer.Enqueue(
-                AMEDAInstructionFactory.Create()
+                AMEDAInstruction.Create()
                 .Instruction(AMEDAInstructionEnum.CALIBRATE)
         );
     }
@@ -238,7 +237,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     protected void Ping ()
     {
         _instruction_buffer.Enqueue(
-                AMEDAInstructionFactory.Create()
+                AMEDAInstruction.Create()
                 .Instruction(AMEDAInstructionEnum.HELLO)
         );
     }
@@ -268,7 +267,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
             num_times = 9;
 
         _instruction_buffer.Enqueue(
-                AMEDAInstructionFactory.Create()
+                AMEDAInstruction.Create()
                 .Instruction(AMEDAInstructionEnum.BUZZER_SHORT)
                 .N(num_times)
         );

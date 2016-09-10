@@ -18,10 +18,21 @@ public class AMEDAInstruction {
     /**
      * Null constructor.
      */
-    public AMEDAInstruction()
+    private AMEDAInstruction()
     {
         this._instruction = AMEDAInstructionEnum.HELLO;
         this._n = 0;
+    }
+
+
+    /**
+     * Factory constructor method.
+     *
+     * @return A new Instruction object.
+     */
+    public static AMEDAInstruction Create()
+    {
+        return new AMEDAInstruction();
     }
 
 
