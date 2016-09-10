@@ -55,15 +55,18 @@ public class DatePickerDialogFragment extends DialogFragment implements OnDateSe
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        String [] parts = _dob_text.getText().toString().split("/");
-        int starting_year = Integer.parseInt(parts[2]);
-        int starting_month = Integer.parseInt(parts[1]);
-        int starting_day = Integer.parseInt(parts[0]);
-
         Calendar cal = Calendar.getInstance();
-        starting_year = (starting_year == 0) ? cal.get(Calendar.YEAR) : starting_year;
-        starting_month = (starting_month == 0) ? cal.get(Calendar.MONTH) : starting_month - 1;
-        starting_day = (starting_day == 0) ? cal.get(Calendar.DAY_OF_MONTH) : starting_day;
+        int starting_year = cal.get(Calendar.YEAR);
+        int starting_month = cal.get(Calendar.MONTH);
+        int starting_day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String [] parts = _dob_text.getText().toString().split("/");
+        if (tryParseInt(parts[0]) > 0)
+            starting_day = tryParseInt(parts[0]);
+        if (parts.length > 1 && tryParseInt(parts[1]) > 0)
+            starting_month = tryParseInt(parts[1]) - 1;
+        if (parts.length > 2 && tryParseInt(parts[2]) > 0)
+            starting_year = tryParseInt(parts[2]);
 
         return new DatePickerDialog(getActivity(), this, starting_year, starting_month, starting_day);
     }
@@ -83,5 +86,24 @@ public class DatePickerDialogFragment extends DialogFragment implements OnDateSe
         Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // todo improve date local stuff
         _dob_text.setText(sdf.format(cal.getTime()));
+    }
+
+
+    /**
+     * Trust Java to make this method necessary!!
+     *
+     * @param value The string to try and convert to an integer.
+     * @return An integer, or zero if the string is unconvertable.
+     */
+    private int tryParseInt(String value)
+    {
+        try
+        {
+            return Integer.parseInt(value);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return 0;
+        }
     }
 }
