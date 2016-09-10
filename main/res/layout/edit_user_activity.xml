@@ -36,7 +36,7 @@
                     android:text="@string/mpr_str_surname" />
 
                 <EditText
-                    android:inputType="textPersonName"
+                    android:inputType="textCapWords"
                     android:id="@id/mpr_txt_surname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     android:text="@string/mpr_str_first_name" />
 
                 <EditText
-                    android:inputType="textPersonName"
+                    android:inputType="textCapWords"
                     android:id="@id/mpr_txt_first_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
                     android:text="@string/mpr_str_address" />
 
                 <EditText
-                    android:inputType="number"
+                    android:inputType="textCapSentences"
                     android:id="@id/mpr_txt_address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
 
                 <EditText
                     android:id="@id/mpr_txt_notes"
-                    android:inputType="textMultiLine"
+                    android:inputType="textMultiLine|textCapSentences"
                     android:lines="4"
                     android:minLines="4"
                     android:layout_width="0dp"
