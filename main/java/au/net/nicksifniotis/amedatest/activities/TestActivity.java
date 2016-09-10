@@ -420,14 +420,16 @@ public class TestActivity extends AMEDAActivity
     /**
      * Move the AMEDA to the next position (block until the device reports ready) and advance
      * to the STEP state.
+     *
+     * Updated 10/9 to move to one random position before next step, instead of five.
+     * Done to speed up the cam moving to the next position.
      */
     private void _move_to_next_pos()
     {
         updateState(TestState.SETTING);
         DebugToast("Setting device to position " + _test_questions[_current_question]);
 
-        for (int i = 0; i < 5; i ++)
-            GoToPosition(randomiser.nextInt(5) + 1);
+        GoToPosition(randomiser.nextInt(5) + 1);
         GoToPosition(_test_questions[_current_question]);
 
         ExecuteNextInstruction();
