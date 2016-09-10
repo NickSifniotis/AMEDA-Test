@@ -61,8 +61,15 @@ public class VirtualDevice implements Runnable, Handler.Callback
     @Override
     public boolean handleMessage(Message msg)
     {
+        if (msg.what == 2)
+        {
+            // A shutdown signal!
+            Thread.currentThread().interrupt();
+            return true;
+        }
+
         if (msg.what != 1)
-            return false;   // I'll only be transmitting messages of type '1'
+            return false;   // I'll only be transmitting messages of type 1 (ordinary) or 2 (shutdown)
 
         String byte_code = validate_command((String) msg.obj);
         if (byte_code == null)
@@ -86,8 +93,8 @@ public class VirtualDevice implements Runnable, Handler.Callback
             // only mean that the virtual AMEDA connection has gone down.
             // So shut this thing down!
 
-            shutdown();
-            return false;
+            Thread.currentThread().interrupt();
+            return true;
         }
 
         return true;
@@ -108,7 +115,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
             }
             catch (InterruptedException e)
             {
-                // Empty catch block!
+                Thread.currentThread().interrupt();
             }
         }
 
@@ -168,7 +175,16 @@ public class VirtualDevice implements Runnable, Handler.Callback
         else if (instruction_code.equals("RQAGL"))
             res = "A10.0";          // todo implement some logic to remember the stopper position
                                     // todo and return it, for a more realistic simulation.
-        
+
+        try
+        {
+            Thread.sleep (500);     // not so fast, cowboy!
+        }
+        catch (InterruptedException e)
+        {
+            Thread.currentThread().interrupt();
+        }
+
         return res;
     }
 
