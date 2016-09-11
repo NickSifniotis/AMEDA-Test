@@ -1,10 +1,12 @@
 package au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
@@ -25,7 +27,7 @@ public class Connection implements AMEDA
     private Messenger _data_sent;
 
     // Members that deal with the connection to the UI / 'main' thread.
-    final private Context _context;
+    final private Activity _context;
     final private Handler _response_handler;
 
 
@@ -35,7 +37,7 @@ public class Connection implements AMEDA
      * @param context The activity that owns this device.
      * @param handler The handler to send response messages through to.
      */
-    public Connection(Context context, Handler handler)
+    public Connection(Activity context, Handler handler)
     {
         _context = context;
         _response_handler = handler;
@@ -83,6 +85,8 @@ public class Connection implements AMEDA
         _data_received = new Messenger(new Handler(new AMEDA_Handler()));
         _device = new VirtualDevice(_context, _data_received);
         _data_sent = _device.GetMessenger();
+
+        new Thread(_device).start();
 
         Message msg = _response_handler.obtainMessage(AMEDA.CONNECTED);
         _response_handler.sendMessageDelayed(msg, 2000);
@@ -139,6 +143,10 @@ public class Connection implements AMEDA
         @Override
         public boolean handleMessage(Message msg)
         {
+            Toast.makeText(_context,
+                    "Connection received response from virtual device: " + (String)msg.obj,
+                    Toast.LENGTH_SHORT).show();
+
             AMEDAResponse response = new AMEDAResponse((String) msg.obj);
             msg = _response_handler.obtainMessage(AMEDA.RESPONSE, response);
             _response_handler.sendMessage(msg);

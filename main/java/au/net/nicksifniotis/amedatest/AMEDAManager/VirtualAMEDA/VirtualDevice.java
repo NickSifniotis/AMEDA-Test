@@ -1,6 +1,6 @@
 package au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
 
-import android.content.Context;
+import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +8,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 
 import au.net.nicksifniotis.amedatest.R;
+
 
 /**
  * Created by Nick Sifniotis on 10/09/16.
@@ -21,9 +22,11 @@ import au.net.nicksifniotis.amedatest.R;
  */
 public class VirtualDevice implements Runnable, Handler.Callback
 {
-    private Context _context;                       // A connection to the application context.
-    private Messenger _inbound_message_buffer;      // Inbound commands are queued here.
-    private Messenger _outbound_message_buffer;     // The virtual device's responses
+    private volatile boolean _alive;                   // The mechanism used to shut down.
+    private int              _virtual_position;        // The make-believe position of the device.
+    private Activity         _context;                 // A connection to the application context.
+    private Messenger        _inbound_message_buffer;  // Inbound commands are queued here.
+    private Messenger        _outbound_message_buffer; // The virtual device's responses
 
 
     /**
@@ -31,8 +34,10 @@ public class VirtualDevice implements Runnable, Handler.Callback
      *
      * Connect the two Messenger objects to the parent thread as well.
      */
-    public VirtualDevice(Context context, Messenger outbound)
+    public VirtualDevice(Activity context, Messenger outbound)
     {
+        _alive = true;
+        _virtual_position = 1;
         _context = context;
         _outbound_message_buffer = outbound;
 
@@ -64,7 +69,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
         if (msg.what == 2)
         {
             // A shutdown signal!
-            Thread.currentThread().interrupt();
+            _alive = false;
             return true;
         }
 
@@ -92,7 +97,6 @@ public class VirtualDevice implements Runnable, Handler.Callback
             // What the hell is going on? If the outbound buffer has disappeared, it can
             // only mean that the virtual AMEDA connection has gone down.
             // So shut this thing down!
-
             Thread.currentThread().interrupt();
             return true;
         }
@@ -107,7 +111,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
     @Override
     public void run()
     {
-        while (!Thread.interrupted())
+        while (_alive)
         {
             try
             {
@@ -115,7 +119,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
             }
             catch (InterruptedException e)
             {
-                Thread.currentThread().interrupt();
+                _alive = false;
             }
         }
 
@@ -143,7 +147,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
         for (char c: instruction.toCharArray())
             chk += c;
 
-        return (chk == (int)payload.charAt(6)) ? instruction : null;
+        return ((chk % 256) == (int)payload.charAt(6)) ? instruction : null;
     }
 
 
@@ -171,10 +175,18 @@ public class VirtualDevice implements Runnable, Handler.Callback
             res = "";
         }
         else if (instruction_code.substring (0, 4).equals ("GOPN"))
+        {
+            _virtual_position = Integer.parseInt(instruction_code.substring(4, 5));
             res = "READY";
+        }
         else if (instruction_code.equals("RQAGL"))
-            res = "A10.0";          // todo implement some logic to remember the stopper position
-                                    // todo and return it, for a more realistic simulation.
+        {
+            String pos = Integer.toString(_virtual_position + 8);
+            if (pos.length() == 1)
+                pos = "0" + pos;
+
+            res = "A" + pos + ".0";
+        }
 
         try
         {
@@ -198,6 +210,9 @@ public class VirtualDevice implements Runnable, Handler.Callback
      */
     private String encode_response(String response)
     {
+        if (response.equals(""))
+            return null;
+
         int chk = 0;
         for (char c: response.toCharArray())
             chk += c;

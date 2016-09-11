@@ -145,8 +145,8 @@ public class FamiliarisationActivity extends AMEDAActivity
                 // load up with a series of 'fake' movements to random positions
                 // to prevent the user from gaming the system by timing how long the
                 // AMEDA takes to reposition itself.
-                for (int i = 0; i < 5; i ++)
-                    GoToPosition(randomiser.nextInt(5) + 1);
+//                for (int i = 0; i < 5; i ++) todo decide what to do here
+//                    GoToPosition(randomiser.nextInt(5) + 1);
                 GoToPosition(num);
                 Beep(1);
 
