@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager.VirtualAMEDA;
+package au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -66,14 +66,16 @@ public class VirtualDevice implements Runnable, Handler.Callback
     @Override
     public boolean handleMessage(Message msg)
     {
-        if (msg.what == 2)
+        VirtualAMEDAMessage message_type = VirtualAMEDAMessage.index(msg.what);
+
+        if (message_type == VirtualAMEDAMessage.SHUTDOWN)
         {
             // A shutdown signal!
             _alive = false;
             return true;
         }
 
-        if (msg.what != 1)
+        if (message_type != VirtualAMEDAMessage.INSTRUCTION)
             return false;   // I'll only be transmitting messages of type 1 (ordinary) or 2 (shutdown)
 
         String byte_code = validate_command((String) msg.obj);
@@ -85,7 +87,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
             return true;    // Not every message received requires a response.
 
         Message message = new Message();
-        message.what = 1;
+        message.what = VirtualAMEDAMessage.INSTRUCTION.ordinal();
         message.obj = response;
 
         try
