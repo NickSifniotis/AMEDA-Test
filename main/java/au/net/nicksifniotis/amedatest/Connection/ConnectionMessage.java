@@ -8,7 +8,7 @@ package au.net.nicksifniotis.amedatest.Connection;
  */
 public enum ConnectionMessage
 {
-    RCVD, XMIT, SHUTDOWN;
+    RCVD, XMIT, SHUTDOWN, CONNECTED, DISCONNECTED;
 
 
     /**
