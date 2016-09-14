@@ -11,12 +11,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDA;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAImplementation;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDA;
+import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionQueue;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.Globals;
@@ -74,7 +74,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _connecting = false;
         _device = (Globals.AMEDA_FREE)
                 ? new VirtualConnection(_data_received)
-                : new AMEDAImplementation(this, _data_received);
+                : new AMEDAConnection(this, _data_received);
     }
 
 
@@ -201,7 +201,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     void Disconnect()
     {
         Message msg = new Message();
-        
+
         _device.Disconnect();
     }
 

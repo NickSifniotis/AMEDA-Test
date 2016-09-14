@@ -8,9 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.R;
 
 

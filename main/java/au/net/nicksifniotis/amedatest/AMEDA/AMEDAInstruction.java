@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager;
+package au.net.nicksifniotis.amedatest.AMEDA;
 
 /**
  * Created by nsifniotis on 9/06/16.

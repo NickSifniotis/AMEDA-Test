@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager;
+package au.net.nicksifniotis.amedatest.AMEDA;
 
 /**
  * Abstract interface for communicating with the AMEDA device.

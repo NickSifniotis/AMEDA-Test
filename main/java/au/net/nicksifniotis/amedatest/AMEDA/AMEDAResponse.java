@@ -1,7 +1,5 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager;
+package au.net.nicksifniotis.amedatest.AMEDA;
 
-
-import au.net.nicksifniotis.amedatest.Globals;
 
 /**
  * Class that represents the various response codes that the AMEDA device generates.

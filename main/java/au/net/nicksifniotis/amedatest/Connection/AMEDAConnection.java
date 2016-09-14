@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager;
+package au.net.nicksifniotis.amedatest.Connection;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import au.net.nicksifniotis.amedatest.Connection.Connection;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDA;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
 import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
@@ -29,7 +31,7 @@ import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
  * New AMEDA implementation class using code reverse engineered from other bluetooth projects.
  *
  */
-public class AMEDAImplementation extends Connection
+public class AMEDAConnection extends Connection
 {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private String _data_received_buffer;
@@ -51,7 +53,7 @@ public class AMEDAImplementation extends Connection
      * @param context The activity to send UI requests to todo this will not work, revisit this
      * @param responses The messenger to use to send messages back to the connection manager.
      */
-    public AMEDAImplementation(AMEDAActivity context, Messenger responses)
+    public AMEDAConnection(AMEDAActivity context, Messenger responses)
     {
         super (responses);
 

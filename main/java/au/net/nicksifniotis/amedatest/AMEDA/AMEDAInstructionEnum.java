@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager;
+package au.net.nicksifniotis.amedatest.AMEDA;
 
 /**
  * Enumeration class containing the commands that can be sent to the AMEDA,

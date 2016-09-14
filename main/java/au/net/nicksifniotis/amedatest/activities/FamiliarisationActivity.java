@@ -10,8 +10,8 @@ import android.widget.TextView;
 import java.util.Locale;
 import java.util.Random;
 
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
-import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.R;
 
 

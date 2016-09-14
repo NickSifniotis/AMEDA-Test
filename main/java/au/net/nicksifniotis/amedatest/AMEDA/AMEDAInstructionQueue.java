@@ -1,4 +1,4 @@
-package au.net.nicksifniotis.amedatest.AMEDAManager;
+package au.net.nicksifniotis.amedatest.AMEDA;
 
 import java.util.LinkedList;
 import java.util.Queue;
