@@ -1,6 +1,5 @@
 package au.net.nicksifniotis.amedatest.Connection;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
@@ -79,7 +78,7 @@ public class VirtualConnection extends Connection
     private boolean connect()
     {
         _device_data_received = new Messenger(new Handler(new AMEDA_Handler()));
-        _device = new VirtualDevice(, _device_data_received);
+        _device = new VirtualDevice(_device_data_received);
         _device_data_sent = _device.GetMessenger();
 
         new Thread(_device).start();
