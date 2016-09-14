@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Messenger;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDAManager.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.Connection.Connection;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
@@ -29,11 +31,12 @@ import au.net.nicksifniotis.amedatest.R;
  */
 public abstract class AMEDAActivity extends AppCompatActivity
 {
-    private AMEDA _device;
+    private Connection _device;
     private boolean _connecting;
     private ProgressDialog _connect_progress;
     private AMEDAInstructionQueue _instruction_buffer;
-    private Handler _response_handler;
+    private Messenger _data_received;
+    private Messenger _data_sent;
 
 
     /**
@@ -47,7 +50,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         _instruction_buffer = new AMEDAInstructionQueue();
-        _response_handler = new Handler(new Handler.Callback()
+        _data_received = new Messenger (new Handler(new Handler.Callback()
         {
             @Override
             public boolean handleMessage(Message msg)
@@ -66,12 +69,12 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
                 return true;
             }
-        });
+        }));
 
         _connecting = false;
         _device = (Globals.AMEDA_FREE)
-                ? new VirtualConnection(this, _response_handler)
-                : new AMEDAImplementation(this, _response_handler);
+                ? new VirtualConnection(_data_received)
+                : new AMEDAImplementation(this, _data_received);
     }
 
 
@@ -107,7 +110,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     {
         super.onDestroy();
 
-        _response_handler.removeCallbacksAndMessages(null);
+        _data_received = null;
     }
 
 
@@ -197,6 +200,8 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void Disconnect()
     {
+        Message msg = new Message();
+        
         _device.Disconnect();
     }
 

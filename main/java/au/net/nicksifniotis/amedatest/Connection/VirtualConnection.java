@@ -46,7 +46,7 @@ public class VirtualConnection extends Connection
      *
      * Shut down the thread, and null out the communications channels.
      */
-    private void disconnect()
+    private void destroy_device()
     {
         if (_device == null)
             return;
@@ -75,7 +75,7 @@ public class VirtualConnection extends Connection
      *
      * Once this is done, signal a successful connection to the UI thread.
      */
-    private boolean connect()
+    private boolean create_device()
     {
         _device_data_received = new Messenger(new Handler(new AMEDA_Handler()));
         _device = new VirtualDevice(_device_data_received);
@@ -173,10 +173,29 @@ public class VirtualConnection extends Connection
     }
 
 
+    /**
+     * The main activity of this thread - create a virtual device, connect to it, and keep looping
+     * until the message to shut down is received.
+     */
     @Override
     public void run()
     {
+        create_device();
+        _alive = true;
 
+        while (_alive)
+        {
+            try
+            {
+                Thread.sleep(500);
+            }
+            catch (InterruptedException e)
+            {
+                _alive = false;
+            }
+        }
+
+        destroy_device();
     }
 
 
@@ -191,6 +210,11 @@ public class VirtualConnection extends Connection
     {
         switch (ConnectionMessage.index(msg.what))
         {
+            case XMIT:
+                // This instruction needs to be transmitted to the virtua AMEDA asap.
+                AMEDAInstruction instruction = (AMEDAInstruction) msg.obj;
+                send_instruction(instruction);
+                break;
             case RCVD:
                 break;
             case SHUTDOWN:

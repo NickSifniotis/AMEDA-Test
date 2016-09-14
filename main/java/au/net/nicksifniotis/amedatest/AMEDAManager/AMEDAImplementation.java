@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import au.net.nicksifniotis.amedatest.Connection.Connection;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
 import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
@@ -26,7 +29,7 @@ import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
  * New AMEDA implementation class using code reverse engineered from other bluetooth projects.
  *
  */
-public class AMEDAImplementation implements AMEDA
+public class AMEDAImplementation extends Connection
 {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private String _data_received_buffer;
@@ -36,21 +39,22 @@ public class AMEDAImplementation implements AMEDA
     private BluetoothSocket _bt_sockets = null;
 
     final private Handler _read_handler;
-    final private Handler _response_handler;
+    final private Messenger _response_handler;
     final private AMEDAActivity _parent;
 
     private ConnectedThread _read_thread;
 
 
     /**
-     * Constructor for the AMEDA Implementation object.
-     * Note that connection to the device is not automatic. You need to
-     * call connect() on this object after instantiating it.
+     * Constructor for the AMEDA connection object.
      *
-     * @param context The context that this instance serves.
+     * @param context The activity to send UI requests to todo this will not work, revisit this
+     * @param responses The messenger to use to send messages back to the connection manager.
      */
-    public AMEDAImplementation(AMEDAActivity context, Handler responses)
+    public AMEDAImplementation(AMEDAActivity context, Messenger responses)
     {
+        super (responses);
+
         _connected = false;
         _response_handler = responses;
         _parent = context;
@@ -102,8 +106,18 @@ public class AMEDAImplementation implements AMEDA
             {
                 _parent.DebugToast("Sending message: " + response.toString());
 
-                Message message = _response_handler.obtainMessage(1, response);
-                _response_handler.sendMessage(message);
+                Message message = new Message();
+                message.what = 1;
+                message.obj = response;
+
+                try
+                {
+                    _response_handler.send(message);
+                }
+                catch (RemoteException e)
+                {
+                    // ha ha
+                }
             }
         }
     }
@@ -242,7 +256,6 @@ public class AMEDAImplementation implements AMEDA
      * Connects to the AMEDA device.
      *
      */
-    @Override
     public boolean Connect()
     {
         _bt_adaptor = BluetoothAdapter.getDefaultAdapter();
@@ -297,9 +310,17 @@ public class AMEDAImplementation implements AMEDA
 
 
         // Signal the success of the connection by sending a message back to the parent UI
-        // Delay it by half a second so that the user gets to see the spinner a little before it's dismissed.
-        Message success_message = _response_handler.obtainMessage(AMEDA.CONNECTED);
-        _response_handler.sendMessageDelayed(success_message, 500);
+        Message message = new Message();
+        message.what = AMEDA.CONNECTED;
+
+        try
+        {
+            _response_handler.send(message);
+        }
+        catch (RemoteException e)
+        {
+            // ha ha
+        }
 
         return true;
     }
@@ -319,7 +340,6 @@ public class AMEDAImplementation implements AMEDA
     /**
      * Close the connection to the AMEDA device.
      */
-    @Override
     public void Disconnect()
     {
         // because this method will be called whether or not we are connected.
@@ -337,5 +357,16 @@ public class AMEDAImplementation implements AMEDA
         {
             _parent.DebugToast("Error closing AMEDA connection. " + e.getMessage());
         }
+    }
+
+    @Override
+    public void run()
+    {
+
+    }
+
+    @Override
+    public boolean handle_manager_message(Message msg) {
+        return false;
     }
 }
