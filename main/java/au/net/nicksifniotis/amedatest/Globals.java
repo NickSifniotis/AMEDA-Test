@@ -1,6 +1,9 @@
 package au.net.nicksifniotis.amedatest;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -8,8 +11,16 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
@@ -46,6 +57,7 @@ public class Globals
     public static ImageView ConnectionLamp;
     public static Messenger activity_sent;
     public static Messenger activity_received;
+    public static HomeActivity too_many_variables;
 
     public static Drawable green;
     public static Drawable yellow;
@@ -54,6 +66,7 @@ public class Globals
 
     public static void InitialiseServices (final HomeActivity base_activity)
     {
+        too_many_variables = base_activity;
         green  = base_activity.getResources().getDrawable
                 (R.drawable.liveness_green , base_activity.getTheme());
         yellow = base_activity.getResources().getDrawable
@@ -83,24 +96,6 @@ public class Globals
 
         new Thread(DebugToast).start();
 
-
-        // Fire up the connection.
-        DeviceConnection = (Globals.AMEDA_FREE) ?
-                new VirtualConnection(base_activity) :
-                new AMEDAConnection(base_activity);
-        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                ManagerCallback(msg);
-                return true;
-            }
-        })));
-        new Thread(DeviceConnection).start();
-
-        Disconnected();
-
-
         activity_received = new Messenger(new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
@@ -116,6 +111,41 @@ public class Globals
         }));
     }
 
+
+    private static void open_virtual ()
+    {
+        // Fire up the connection.
+        DeviceConnection = new VirtualConnection(too_many_variables);
+        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                ManagerCallback(msg);
+                return true;
+            }
+        })));
+        new Thread(DeviceConnection).start();
+
+        Disconnected();
+    }
+
+
+    public static void open_bluetooth (String device_name)
+    {
+        // Fire up the connection.
+        DeviceConnection = new AMEDAConnection(too_many_variables, device_name);
+        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                ManagerCallback(msg);
+                return true;
+            }
+        })));
+        new Thread(DeviceConnection).start();
+
+        Disconnected();
+    }
 
     /**
      * The master callback, that filters out heartbeat and connection related messages.
@@ -156,6 +186,11 @@ public class Globals
                 break;
             case MESSENGER_READY:
                 _data_sent = DeviceConnection.get_connection();
+
+                Message new_message = new Message();
+                new_message.what = ConnectionMessage.CONNECT.ordinal();
+                send_connection(new_message);
+
                 break;
             case CONNECTED:
                 Connected();
@@ -178,7 +213,7 @@ public class Globals
         if (Connected)
             Disconnect();
         else
-            Connect();
+            SelectDeviceToConnect(too_many_variables);
     }
 
 
@@ -206,21 +241,6 @@ public class Globals
     public static void RefreshLamp()
     {
         ConnectionLamp.setImageDrawable((Connected) ? green : red);
-    }
-
-
-    /** Open up a connection to the device **/
-    public static void Connect()
-    {
-        if (Connected)
-            return;
-
-        if (_data_sent == null)     // the connection has not signalled that it is ready yet.
-            return;
-
-        Message msg = new Message();
-        msg.what = ConnectionMessage.CONNECT.ordinal();
-        send_connection(msg);
     }
 
 
@@ -257,6 +277,49 @@ public class Globals
     public static void SetCallback(Handler.Callback callback)
     {
         activity_sent = new Messenger(new Handler(callback));
+    }
+
+
+    public static void SelectDeviceToConnect (final Activity activity)
+    {
+        List<BluetoothDevice> pairedDevices = new ArrayList<> (BluetoothAdapter
+                .getDefaultAdapter().getBondedDevices());
+        List<String> list_names = new LinkedList<>();
+        list_names.add("Virtual Device");
+
+        for (BluetoothDevice d: pairedDevices)
+            list_names.add (d.getName().trim());
+
+        final Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.bluetooth_selector);
+
+        final ListView lv = (ListView) dialog.findViewById(R.id.bt_sel_list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
+                android.R.layout.simple_list_item_1, list_names);
+        lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0)
+                {
+                    // open up a new virtual connection.
+                    open_virtual();
+                }
+                else
+                {
+                    // go for the real thing!
+                    String device_selected = parent.getAdapter().getItem(position).toString();
+                    open_bluetooth(device_selected);
+                }
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setCancelable(true);
+        dialog.setTitle("Select Device");
+
+        dialog.show();
     }
 
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="bt_sel_list" />
+    <item type="id" name="bt_sel_done" />
+    <item type="id" name="bt_sel_cancel" />
+
+</resources>

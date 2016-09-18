@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -20,12 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
-import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
 
 
 /**
@@ -36,13 +35,13 @@ public class AMEDAConnection extends Connection
 {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private String _data_received_buffer;
+    private String device_name;
     private boolean _connected;
 
     private BluetoothAdapter _bt_adaptor = null;
     private BluetoothSocket _bt_sockets = null;
 
     final private Handler _read_handler;
-    private Messenger _response_handler;
     final private Activity _parent;
 
     private ConnectedThread _read_thread;
@@ -53,11 +52,13 @@ public class AMEDAConnection extends Connection
      *
      * @param context The activity to send UI requests to.
      */
-    public AMEDAConnection(Activity context)
+    public AMEDAConnection(Activity context, String d_n)
     {
+        device_name = d_n;
         _connected = false;
         _parent = context;
         _data_received_buffer = "";
+        _bt_adaptor = BluetoothAdapter.getDefaultAdapter();
 
         _read_handler = new Handler(new Handler.Callback()
         {
@@ -77,13 +78,16 @@ public class AMEDAConnection extends Connection
                 return true;
             }
         });
+
+        checkBTState();
     }
 
 
     @Override
     public void Shutdown()
     {
-
+        if (Looper.myLooper() != null)
+            Looper.myLooper().quitSafely();
     }
 
 
@@ -113,17 +117,10 @@ public class AMEDAConnection extends Connection
                 Globals.DebugToast.Send("Sending message: " + response.toString());
 
                 Message message = new Message();
-                message.what = 1;
+                message.what = ConnectionMessage.RCVD.ordinal();
                 message.obj = response;
 
-                try
-                {
-                    _response_handler.send(message);
-                }
-                catch (RemoteException e)
-                {
-                    // ha ha
-                }
+                send_manager (message);
             }
         }
     }
@@ -262,13 +259,9 @@ public class AMEDAConnection extends Connection
      * Connects to the AMEDA device.
      *
      */
-    public boolean Connect()
+    private void _handle_connect()
     {
-        _bt_adaptor = BluetoothAdapter.getDefaultAdapter();
-        checkBTState();
-
         BluetoothDevice device = null;
-        String device_name = "AMEDA";
 
         List<BluetoothDevice> pairedDevices = new ArrayList<>(_bt_adaptor.getBondedDevices());
         for (BluetoothDevice d: pairedDevices)
@@ -278,7 +271,7 @@ public class AMEDAConnection extends Connection
         if (device == null)
         {
             Globals.DebugToast.Send("Unable to find AMEDA. Has it been paired to this device?");
-            return false;
+            return;
         }
 
         try
@@ -288,13 +281,13 @@ public class AMEDAConnection extends Connection
         catch (Exception e)
         {
             Globals.DebugToast.Send("Socket create failed: " + e.getMessage());
-            return false;
+            return;
         }
 
         if (_bt_sockets == null)
         {
             Globals.DebugToast.Send("Socket created was null.");
-            return false;
+            return;
         }
 
         _bt_adaptor.cancelDiscovery();
@@ -306,7 +299,7 @@ public class AMEDAConnection extends Connection
         catch (Exception e)
         {
             Globals.DebugToast.Send("Socket connection failure: " + e.getMessage());
-            return false;
+            return;
         }
 
         _read_thread = new ConnectedThread(_bt_sockets);
@@ -317,18 +310,9 @@ public class AMEDAConnection extends Connection
 
         // Signal the success of the connection by sending a message back to the parent UI
         Message message = new Message();
-        message.what = AMEDA.CONNECTED;
+        message.what = ConnectionMessage.CONNECTED.ordinal();
 
-        try
-        {
-            _response_handler.send(message);
-        }
-        catch (RemoteException e)
-        {
-            // ha ha
-        }
-
-        return true;
+        send_manager(message);
     }
 
 
@@ -337,7 +321,7 @@ public class AMEDAConnection extends Connection
      *
      * @param i The instruction to execute.
      */
-    public void SendInstruction (AMEDAInstruction i)
+    private void _handle_transmission(AMEDAInstruction i)
     {
         _read_thread.write(i.Build());
     }
@@ -346,7 +330,7 @@ public class AMEDAConnection extends Connection
     /**
      * Close the connection to the AMEDA device.
      */
-    public void Disconnect()
+    private void _handle_disconnect()
     {
         // because this method will be called whether or not we are connected.
         if (!_connected)
@@ -363,16 +347,92 @@ public class AMEDAConnection extends Connection
         {
             Globals.DebugToast.Send("Error closing AMEDA connection. " + e.getMessage());
         }
+
+        // Signal the success of the disconnection by sending a message back to the manager
+        Message message = new Message();
+        message.what = ConnectionMessage.DISCONNECTED.ordinal();
+
+        send_manager(message);
     }
+
 
     @Override
     public void run()
     {
+        Looper.prepare();
 
+        _connection_in = new Messenger(new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                handle_manager_message(msg);
+                return true;
+            }
+        }));
+
+        Message m = new Message();
+        m.what = ConnectionMessage.MESSENGER_READY.ordinal();
+        send_manager(m);
+
+        Looper.loop();
+
+        _handle_disconnect();
     }
 
+
     @Override
-    public boolean handle_manager_message(Message msg) {
-        return false;
+    public boolean handle_manager_message(Message msg)
+    {
+        ConnectionMessage message = ConnectionMessage.index(msg.what);
+
+        switch (message)
+        {
+            case XMIT:
+                AMEDAInstruction instruction = (AMEDAInstruction) msg.obj;
+                _handle_transmission(instruction);
+                break;
+
+            case CONNECT:
+                _handle_connect();
+                break;
+
+            case DISCONNECT:
+                _handle_disconnect();
+                break;
+
+            case SHUTDOWN:
+                _handle_disconnect();
+                Shutdown();
+                break;
+
+            case CONNECTED:
+            case DISCONNECTED:
+            case MESSENGER_READY:
+            case RCVD:
+                Globals.DebugToast.Send("Invalid message received from " +
+                        "connection manager in AMEDA connection: " + message.toString());
+                break;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Dispatches a message to the connection manager (current todo make this not the global)
+     * @param m
+     */
+    private void send_manager(Message m)
+    {
+        if (_connection_out != null)
+        {
+            try
+            {
+                _connection_out.send (m);
+            }
+            catch (RemoteException e)
+            {
+                // jkdfkjdf
+            }
+        }
     }
 }

@@ -109,7 +109,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
 //    private void _reconnect()
 //    {
 //        if (_device != null)
-//            Disconnect();
+//            _handle_disconnect();
 //
 //        // Display the 'connecting' dialog box.
 //        if (_connect_progress != null)

@@ -34,5 +34,5 @@ public abstract class Connection implements Runnable
 
     public abstract void run();
 
-    public abstract boolean handle_manager_message(Message msg);
+    public abstract boolean handle_manager_message(Message msg); // todo the fuck you returning a boolean for?
 }
