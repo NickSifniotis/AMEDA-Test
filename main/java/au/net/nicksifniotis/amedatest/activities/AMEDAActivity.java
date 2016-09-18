@@ -81,6 +81,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
         });
 
         Globals.RefreshLamp();
+
+        if (!Globals.Connected)
+            FailButDontDie("No connection detected. Please connect before attempting to begin this activity.");
     }
 
 
@@ -142,6 +145,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void GoToPosition (int position)
     {
+        if (!Globals.Connected)
+            return;
+
         if (position >= 1 && position <= 5)
         {
             _instruction_buffer.Enqueue(
@@ -158,6 +164,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void Calibrate ()
     {
+        if (!Globals.Connected)
+            return;
+
         _instruction_buffer.Enqueue(
                 AMEDAInstruction.Create()
                 .Instruction(AMEDAInstructionEnum.CALIBRATE)
@@ -170,6 +179,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     protected void Ping ()
     {
+        if (!Globals.Connected)
+            return;
+
         _instruction_buffer.Enqueue(
                 AMEDAInstruction.Create()
                 .Instruction(AMEDAInstructionEnum.HELLO)
@@ -197,6 +209,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void Beep (int num_times)
     {
+        if (!Globals.Connected)
+            return;
+
         if (num_times > 9)
             num_times = 9;
 
@@ -215,6 +230,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void ExecuteNextInstruction()
     {
+        if (!Globals.Connected)
+            return;
+
         _instruction_buffer.Advance();
         RepeatInstruction();
     }
@@ -225,6 +243,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void RepeatInstruction()
     {
+        if (!Globals.Connected)
+            return;
+
         Globals.DebugToast.Send("Executing " + _instruction_buffer.Current().Build());
 
         Message m = new Message();
@@ -349,7 +370,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     void FailButDontDie(String message)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.error_title))
+        builder.setTitle("Alert")
                 .setMessage(message)
                 .setCancelable(false)
                 .setNegativeButton(getString(R.string.btn_done), null);
