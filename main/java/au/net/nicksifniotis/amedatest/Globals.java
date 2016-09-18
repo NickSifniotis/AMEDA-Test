@@ -57,7 +57,7 @@ public class Globals
     public static ImageView ConnectionLamp;
     public static Messenger activity_sent;
     public static Messenger activity_received;
-    public static HomeActivity too_many_variables;
+    public static Activity too_many_variables;
 
     public static Drawable green;
     public static Drawable yellow;
@@ -66,7 +66,6 @@ public class Globals
 
     public static void InitialiseServices (final HomeActivity base_activity)
     {
-        too_many_variables = base_activity;
         green  = base_activity.getResources().getDrawable
                 (R.drawable.liveness_green , base_activity.getTheme());
         yellow = base_activity.getResources().getDrawable
@@ -106,6 +105,8 @@ public class Globals
 
                     send_connection(new_msg);
                 }
+                else
+                    DebugToast.Send ("Cannot transmit packet at this time. Please try reconnecting.");
                 return true;
             }
         }));
@@ -114,6 +115,14 @@ public class Globals
 
     private static void open_virtual ()
     {
+        if (DeviceConnection != null)
+        {
+            // shut down the old one first hey.
+            Message msg = new Message();
+            msg.what = ConnectionMessage.SHUTDOWN.ordinal();
+            send_connection(msg);
+        }
+
         // Fire up the connection.
         DeviceConnection = new VirtualConnection(too_many_variables);
         DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
@@ -132,6 +141,14 @@ public class Globals
 
     public static void open_bluetooth (String device_name)
     {
+        if (DeviceConnection != null)
+        {
+            // shut down the old one first hey.
+            Message msg = new Message();
+            msg.what = ConnectionMessage.SHUTDOWN.ordinal();
+            send_connection(msg);
+        }
+
         // Fire up the connection.
         DeviceConnection = new AMEDAConnection(too_many_variables, device_name);
         DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {

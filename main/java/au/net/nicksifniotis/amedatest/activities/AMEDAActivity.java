@@ -70,6 +70,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     {
         super.onStart();
 
+        Globals.too_many_variables = this;
         // Add the connection lamp icon to the globals.
         Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
         Globals.ConnectionLamp.setOnClickListener(new View.OnClickListener() {

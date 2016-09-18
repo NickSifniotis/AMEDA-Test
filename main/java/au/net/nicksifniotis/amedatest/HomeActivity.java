@@ -55,6 +55,8 @@ public class HomeActivity extends AppCompatActivity
     protected void onStart()
     {
         super.onStart();
+
+        Globals.too_many_variables = this;
         Globals.RefreshLamp();
     }
 

@@ -54,6 +54,8 @@ public class AMEDAConnection extends Connection
      */
     public AMEDAConnection(Activity context, String d_n)
     {
+        Globals.DebugToast.Send ("AMEDA Connection constructor called!");
+
         device_name = d_n;
         _connected = false;
         _parent = context;
@@ -78,14 +80,14 @@ public class AMEDAConnection extends Connection
                 return true;
             }
         });
-
-        checkBTState();
     }
 
 
     @Override
     public void Shutdown()
     {
+        Globals.DebugToast.Send("Shutting down AMEDA connection");
+
         if (Looper.myLooper() != null)
             Looper.myLooper().quitSafely();
     }
@@ -211,6 +213,7 @@ public class AMEDAConnection extends Connection
         @Override
         public void run()
         {
+            Globals.DebugToast.Send("AMEDA slave thread entering run phase");
             byte[] buffer = new byte[0x100];
 
             while (!interrupted() && _connected)
@@ -224,9 +227,10 @@ public class AMEDAConnection extends Connection
                 catch (Exception e)
                 {
                     Globals.DebugToast.Send("Error reading from AMEDA device. " + e.getMessage());
-                    return;
                 }
             }
+
+            Globals.DebugToast.Send("AMEDA slave thread leaving run phase");
         }
 
 
@@ -359,6 +363,8 @@ public class AMEDAConnection extends Connection
     @Override
     public void run()
     {
+        Globals.DebugToast.Send("AMEDA Connection entering run phase");
+
         Looper.prepare();
 
         _connection_in = new Messenger(new Handler(new Handler.Callback() {
@@ -376,6 +382,8 @@ public class AMEDAConnection extends Connection
         Looper.loop();
 
         _handle_disconnect();
+
+        Globals.DebugToast.Send("AMEDA Connection leaving run phase");
     }
 
 
