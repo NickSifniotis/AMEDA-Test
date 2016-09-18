@@ -23,7 +23,6 @@ public class FamiliarisationActivity extends AMEDAActivity
 {
     private TextView[] _fields;
     private Button[] _buttons;
-    private Random randomiser;
 
 
     /**
@@ -40,9 +39,6 @@ public class FamiliarisationActivity extends AMEDAActivity
         setContentView(R.layout.familiarisation_activity);
 
         _connect_gui();
-
-        randomiser = new Random();
-
 
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);
@@ -143,24 +139,10 @@ public class FamiliarisationActivity extends AMEDAActivity
             int curr_value = Integer.parseInt(_fields[num].getText().toString());
             if (curr_value < 5)
             {
-                // load up with a series of 'fake' movements to random positions
-                // to prevent the user from gaming the system by timing how long the
-                // AMEDA takes to reposition itself.
-//                for (int i = 0; i < 5; i ++) todo decide what to do here
-//                    GoToPosition(randomiser.nextInt(5) + 1);
                 GoToPosition(num);
                 Beep(1);
 
                 ExecuteNextInstruction();
-
-                curr_value++;
-                _fields[num].setText(String.format(Locale.ENGLISH, "%d", curr_value));
-
-                if (curr_value >= 5)
-                {
-                    _fields[num].setEnabled(false);
-                    _buttons[num].setEnabled(false);
-                }
             }
             else
                 Globals.DebugToast.Send (getString(R.string.f_sorry_five));
@@ -184,6 +166,16 @@ public class FamiliarisationActivity extends AMEDAActivity
             switch (response.GetCode())
             {
                 case READY:
+                    int n = instruction.GetN();
+                    int curr_value = Integer.parseInt(_fields[n].getText().toString()) + 1;
+                    _fields[n].setText(String.format(Locale.ENGLISH, "%d", curr_value));
+
+                    if (curr_value >= 5)
+                    {
+                        _fields[n].setEnabled(false);
+                        _buttons[n].setEnabled(false);
+                    }
+
                     ExecuteNextInstruction();
                     break;
                 case CANNOT_MOVE:

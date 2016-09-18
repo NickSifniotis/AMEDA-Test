@@ -12,20 +12,15 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDA;
-import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
-import au.net.nicksifniotis.amedatest.Connection.Connection;
-import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
-import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.ConnectionManager.ManagerMessages;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
+
 
 /**
  * Extension of the default activity class, which hides boilerplate code
@@ -36,7 +31,6 @@ import au.net.nicksifniotis.amedatest.R;
  */
 public abstract class AMEDAActivity extends AppCompatActivity
 {
-    private ProgressDialog _connect_progress;
     private AMEDAInstructionQueue _instruction_buffer;
 
     private Messenger _data_sent;

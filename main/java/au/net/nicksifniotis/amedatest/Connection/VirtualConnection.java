@@ -7,7 +7,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDA;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualAMEDAMessage;
