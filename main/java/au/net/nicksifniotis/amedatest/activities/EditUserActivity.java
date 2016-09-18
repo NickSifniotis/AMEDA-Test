@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -183,6 +184,9 @@ public class EditUserActivity extends AppCompatActivity
             _address_layout.setVisibility(
                     (Globals.USING_ADDRESSES) ? View.VISIBLE : View.GONE);
 
+        // hide the connection status, on this screen only.
+        ImageView i = Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
+        i.setVisibility(View.GONE);
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);
         if (getSupportActionBar() != null)

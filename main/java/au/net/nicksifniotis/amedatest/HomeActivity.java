@@ -58,6 +58,13 @@ public class HomeActivity extends AppCompatActivity
         super.onStart();
 
         Globals.too_many_variables = this;
+        Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
+        Globals.ConnectionLamp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Globals.onLampClick();
+            }
+        });
         Globals.RefreshLamp();
 
         _data_sent = Globals.activity_received;         // the outbound communication channel
