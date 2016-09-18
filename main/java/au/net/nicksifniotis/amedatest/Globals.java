@@ -3,7 +3,6 @@ package au.net.nicksifniotis.amedatest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
@@ -12,10 +11,13 @@ import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
 import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
+import au.net.nicksifniotis.amedatest.ConnectionManager.ManagerMessages;
 
 
 /**
@@ -42,7 +44,8 @@ public class Globals
     private static Messenger _data_sent;
     public static boolean Connected;
     public static ImageView ConnectionLamp;
-
+    public static Messenger activity_sent;
+    public static Messenger activity_received;
 
     public static Drawable green;
     public static Drawable yellow;
@@ -85,15 +88,32 @@ public class Globals
         DeviceConnection = (Globals.AMEDA_FREE) ?
                 new VirtualConnection(base_activity) :
                 new AMEDAConnection(base_activity);
-        SetDeviceCallback(new Handler.Callback() {
+        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg)
             {
                 ManagerCallback(msg);
                 return true;
             }
-        });
+        })));
         new Thread(DeviceConnection).start();
+
+        Disconnected();
+
+
+        activity_received = new Messenger(new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                if (Connected) {
+                    Message new_msg = new Message();
+                    new_msg.what = ConnectionMessage.XMIT.ordinal();
+                    new_msg.obj = msg.obj;
+
+                    send_connection(new_msg);
+                }
+                return true;
+            }
+        }));
     }
 
 
@@ -105,13 +125,34 @@ public class Globals
      */
     public static void ManagerCallback (Message m)
     {
+        DebugToast.Send("Manager received message " + m.what + " from device.");
+
         ConnectionMessage msg = ConnectionMessage.values()[m.what];
 
         switch (msg)
         {
-            case XMIT:
-                break;
             case RCVD:
+                AMEDAResponse response = (AMEDAResponse) m.obj;
+                if (response.GetCode() == AMEDAResponse.Code.UNKNOWN_COMMAND)
+                    DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
+//                else if (response.GetCode() == AMEDAResponse.Code.READY)
+//                {
+//                  todo implement EHLLO
+//                }
+                else
+                {
+                    Message new_message = new Message();
+                    new_message.what = ManagerMessages.RECEIVE.ordinal();
+                    new_message.obj = m.obj;
+                    try
+                    {
+                        activity_sent.send(new_message);
+                    }
+                    catch (RemoteException e)
+                    {
+                        // fhlkjh
+                    }
+                }
                 break;
             case MESSENGER_READY:
                 _data_sent = DeviceConnection.get_connection();
@@ -124,10 +165,22 @@ public class Globals
                 break;
             case CONNECT:
             case SHUTDOWN:
+            case XMIT:
                 DebugToast.Send("Erroneous message received in master callback function: " + msg.toString());
                 break;
         }
     }
+
+
+    public static void onLampClick ()
+    {
+        DebugToast.Send("Lamp onclick triggered! connection status is " + Connected);
+        if (Connected)
+            Disconnect();
+        else
+            Connect();
+    }
+
 
     public static void TerminateServices()
     {
@@ -177,7 +230,7 @@ public class Globals
             return;
 
         Message msg = new Message();
-        msg.what = ConnectionMessage.SHUTDOWN.ordinal();
+        msg.what = ConnectionMessage.DISCONNECT.ordinal();
         send_connection(msg);
     }
 
@@ -195,13 +248,9 @@ public class Globals
     }
 
 
-    public static void SetDeviceCallback (Handler.Callback callback)
+    public static void SetCallback(Handler.Callback callback)
     {
-        if (DeviceConnection != null)
-        {
-            Messenger new_messenger = new Messenger(new Handler(callback));
-            DeviceConnection.UpdateCallback(new_messenger);
-        }
+        activity_sent = new Messenger(new Handler(callback));
     }
 
 

@@ -66,18 +66,15 @@ public class VirtualConnection extends Connection
         Message shutdown_msg = new Message();
         shutdown_msg.what = VirtualAMEDAMessage.SHUTDOWN.ordinal();
 
-        try
-        {
-            _device_data_sent.send(shutdown_msg);
-        }
-        catch (RemoteException e)
-        {
-            // Empty catch block, because java.
-        }
+        send_device(shutdown_msg);
 
         _device_data_sent = null;
         _device_data_received = null;
         _device = null;
+
+        shutdown_msg = new Message();
+        shutdown_msg.what = ConnectionMessage.DISCONNECTED.ordinal();
+        send_manager(shutdown_msg);
     }
 
 
@@ -216,14 +213,18 @@ public class VirtualConnection extends Connection
                 create_device();
                 break;
             case XMIT:
-                // This instruction needs to be transmitted to the virtua AMEDA asap.
+                // This instruction needs to be transmitted to the virtual AMEDA asap.
                 AMEDAInstruction instruction = (AMEDAInstruction) msg.obj;
                 send_instruction(instruction);
                 break;
             case RCVD:
                 break;
+            case DISCONNECT:
+                destroy_device();
+                break;
+
             case SHUTDOWN:
-                _alive = false;
+                Shutdown();
                 break;
             default:
                 return false;

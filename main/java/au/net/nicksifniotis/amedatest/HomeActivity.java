@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,23 +29,13 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
  * Displays the navigation drawer pane and the three big buttons that launch activities.
  *
  */
-public class HomeActivity extends AppCompatActivity implements Handler.Callback
+public class HomeActivity extends AppCompatActivity
 {
     private TextView _ameda_toggle;
     private TextView _debug_toggle;
     private TextView _short_test_toggle;
     private TextView _address_toggle;
     private DrawerLayout _drawer;
-
-
-    /**
-     * Todo - make this do more than nothing.
-     */
-    @Override
-    public boolean handleMessage(Message msg)
-    {
-        return true;
-    }
 
 
     protected void onCreate(Bundle savedInstanceState)
@@ -55,21 +46,23 @@ public class HomeActivity extends AppCompatActivity implements Handler.Callback
         _connect_gui();
 
         _update_drawer_toggles();
-    }
 
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
         Globals.InitialiseServices(this);
     }
 
 
+//    @Override
+//    protected void onStart()
+//    {
+//        super.onStart();
+//        Globals.InitialiseServices(this);
+//    }
+
+
     @Override
-    protected void onStop()
+    protected void onDestroy()
     {
-        super.onStop();
+        super.onDestroy();
         Globals.TerminateServices();
     }
 
@@ -101,6 +94,15 @@ public class HomeActivity extends AppCompatActivity implements Handler.Callback
         _debug_toggle = (TextView)findViewById(R.id.h_d_t_debug);
         _short_test_toggle = (TextView)findViewById(R.id.h_d_t_shorttest);
         _address_toggle = (TextView)findViewById(R.id.h_d_t_address);
+
+        // Add the connection lamp icon to the globals.
+        Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
+        Globals.ConnectionLamp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Globals.onLampClick();
+            }
+        });
     }
 
 

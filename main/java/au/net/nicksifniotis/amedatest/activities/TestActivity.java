@@ -339,7 +339,7 @@ public class TestActivity extends AMEDAActivity
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                Connect();
+                               // Connect();
                             }
                         });
                 builder.create().show();

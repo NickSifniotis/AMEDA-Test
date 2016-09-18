@@ -10,6 +10,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDA;
@@ -21,6 +23,7 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
 import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
+import au.net.nicksifniotis.amedatest.ConnectionManager.ManagerMessages;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
 
@@ -33,8 +36,6 @@ import au.net.nicksifniotis.amedatest.R;
  */
 public abstract class AMEDAActivity extends AppCompatActivity
 {
-    private Connection _device;
-    private boolean _connecting;
     private ProgressDialog _connect_progress;
     private AMEDAInstructionQueue _instruction_buffer;
 
@@ -52,59 +53,49 @@ public abstract class AMEDAActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         _instruction_buffer = new AMEDAInstructionQueue();
-        _connecting = false;
+
+        _data_sent = Globals.activity_received;         // the outbound communication channel
+        Globals.SetCallback(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                handleManagerMessage(msg);
+                return true;
+            }
+        });
     }
 
 
-    public class ActivityCallback implements Handler.Callback
-    {
-        @Override
-        public boolean handleMessage(Message msg)
-        {
-            Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
-
-            int msg_type = msg.what;
-
-            if (msg_type == ConnectionMessage.CONNECTED.ordinal())
-                _handle_connected();
-            else if (msg_type == ConnectionMessage.MESSENGER_READY.ordinal())
-            {
-                _data_sent = _device.get_connection();
-
-                Message m = new Message();
-                m.what = ConnectionMessage.CONNECT.ordinal();
-                send_connection(m);
-            }
-            else if (msg_type == ConnectionMessage.RCVD.ordinal())
-            {
-                AMEDAResponse response = (AMEDAResponse) msg.obj;
-                Globals.DebugToast.Send("Received " + response.toString() + " from connection");
-
-                ProcessAMEDAResponse(_instruction_buffer.Current(), response);
-            }
-
-            return true;
-        }
-    }
-
-
+    @Override
     protected void onStart()
     {
         super.onStart();
 
-        _reconnect();
+        // Add the connection lamp icon to the globals.
+        Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
+        Globals.ConnectionLamp.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                Globals.onLampClick();
+            }
+        });
     }
 
 
-    /**
-     * Disconnections happen automatically when the activity is asked to stop.
-     */
-    @Override
-    protected void onStop()
+    public boolean handleManagerMessage(Message msg)
     {
-        super.onStop();
+        Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
 
-        Disconnect();
+        int msg_type = msg.what;
+
+        if (msg_type == ManagerMessages.RECEIVE.ordinal())
+        {
+            AMEDAResponse response = (AMEDAResponse) msg.obj;
+            Globals.DebugToast.Send("Received " + response.toString() + " from connection");
+
+            ProcessAMEDAResponse(_instruction_buffer.Current(), response);
+        }
+
+        return true;
     }
 
 
@@ -113,24 +104,24 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * Displays a funky dialog to the user to keep them occupied.
      */
-    private void _reconnect()
-    {
-        if (_device != null)
-            Disconnect();
-
-        // Display the 'connecting' dialog box.
-        if (_connect_progress != null)
-            _connect_progress.dismiss();
-
-        _connecting = true;
-
-        _connect_progress = new ProgressDialog(this);
-        _connect_progress.setTitle(getString(R.string.connecting_title));
-        _connect_progress.setMessage(getString(R.string.connecting_desc));
-        _connect_progress.setCancelable(false);
-        _connect_progress.show();
-
-    }
+//    private void _reconnect()
+//    {
+//        if (_device != null)
+//            Disconnect();
+//
+//        // Display the 'connecting' dialog box.
+//        if (_connect_progress != null)
+//            _connect_progress.dismiss();
+//
+//        _connecting = true;
+//
+//        _connect_progress = new ProgressDialog(this);
+//        _connect_progress.setTitle(getString(R.string.connecting_title));
+//        _connect_progress.setMessage(getString(R.string.connecting_desc));
+//        _connect_progress.setCancelable(false);
+//        _connect_progress.show();
+//
+//    }
 
 
     /**
@@ -142,50 +133,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
         msg.what = ConnectionMessage.SHUTDOWN.ordinal();
 
         send_connection(msg);
-    }
-
-
-    /**
-     * The device being connected to reported a failure to connect.
-     *
-     * Handle this situation by shutting down the activity.
-     */
-    private void _connection_failure()
-    {
-        _connect_progress.dismiss();
-        FailAndDieDialog(getString(R.string.error_ameda_cannot_connect));
-    }
-
-
-    /**
-     * Handles a 'we are connected' message from the AMEDA device.
-     */
-    private void _handle_connected()
-    {
-        Globals.DebugToast.Send("Received connection confirmation.");
-        if (_connecting)
-        {
-            if (_connect_progress != null)
-            {
-                _connect_progress.dismiss();
-                _connect_progress = null;
-            }
-
-            _connecting = false;
-        }
-    }
-
-
-    /**
-     * Allows the child activity to (re)open a connection to the AMEDA device.
-     * This call would usually follow on from a user-induced pause or stop in the activity.
-     *
-     * Don't call this method unless you've already called Disconnect(). Activity start
-     * events connect themselves.
-     */
-    void Connect()
-    {
-        _reconnect();
     }
 
 
@@ -282,7 +229,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
         Globals.DebugToast.Send("Executing " + _instruction_buffer.Current().Build());
 
         Message m = new Message();
-        m.what = ConnectionMessage.XMIT.ordinal();
+        m.what = ManagerMessages.SEND.ordinal();
         m.obj = _instruction_buffer.Current();
 
         send_connection(m);
