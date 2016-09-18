@@ -203,6 +203,12 @@ public class Globals
     }
 
 
+    public static void RefreshLamp()
+    {
+        ConnectionLamp.setImageDrawable((Connected) ? green : red);
+    }
+
+
     /** Open up a connection to the device **/
     public static void Connect()
     {

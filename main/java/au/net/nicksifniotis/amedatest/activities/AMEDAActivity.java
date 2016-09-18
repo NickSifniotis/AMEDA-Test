@@ -78,6 +78,8 @@ public abstract class AMEDAActivity extends AppCompatActivity
                 Globals.onLampClick();
             }
         });
+
+        Globals.RefreshLamp();
     }
 
 

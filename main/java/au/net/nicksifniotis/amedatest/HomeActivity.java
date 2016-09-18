@@ -51,12 +51,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-//    @Override
-//    protected void onStart()
-//    {
-//        super.onStart();
-//        Globals.InitialiseServices(this);
-//    }
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        Globals.RefreshLamp();
+    }
 
 
     @Override
