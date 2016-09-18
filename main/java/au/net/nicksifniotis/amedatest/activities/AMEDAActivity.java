@@ -37,7 +37,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     private boolean _connecting;
     private ProgressDialog _connect_progress;
     private AMEDAInstructionQueue _instruction_buffer;
-    private Messenger _data_received;
+
     private Messenger _data_sent;
 
 
@@ -52,45 +52,42 @@ public abstract class AMEDAActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         _instruction_buffer = new AMEDAInstructionQueue();
-        _data_received = new Messenger (new Handler(new Handler.Callback()
-        {
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
-
-                int msg_type = msg.what;
-
-                if (msg_type == ConnectionMessage.CONNECTED.ordinal())
-                    _handle_connected();
-                else if (msg_type == ConnectionMessage.MESSENGER_READY.ordinal())
-                {
-                    _data_sent = _device.get_connection();
-
-                    Message m = new Message();
-                    m.what = ConnectionMessage.CONNECT.ordinal();
-                    send_connection(m);
-                }
-                else if (msg_type == ConnectionMessage.RCVD.ordinal())
-                {
-                    AMEDAResponse response = (AMEDAResponse) msg.obj;
-                    Globals.DebugToast.Send("Received " + response.toString() + " from connection");
-
-                    ProcessAMEDAResponse(_instruction_buffer.Current(), response);
-                }
-
-                return true;
-            }
-        }));
-
         _connecting = false;
     }
 
 
-    /**
-     * Connectivity is automatically taken care of when the activity starts.
-     */
-    @Override
+    public class ActivityCallback implements Handler.Callback
+    {
+        @Override
+        public boolean handleMessage(Message msg)
+        {
+            Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
+
+            int msg_type = msg.what;
+
+            if (msg_type == ConnectionMessage.CONNECTED.ordinal())
+                _handle_connected();
+            else if (msg_type == ConnectionMessage.MESSENGER_READY.ordinal())
+            {
+                _data_sent = _device.get_connection();
+
+                Message m = new Message();
+                m.what = ConnectionMessage.CONNECT.ordinal();
+                send_connection(m);
+            }
+            else if (msg_type == ConnectionMessage.RCVD.ordinal())
+            {
+                AMEDAResponse response = (AMEDAResponse) msg.obj;
+                Globals.DebugToast.Send("Received " + response.toString() + " from connection");
+
+                ProcessAMEDAResponse(_instruction_buffer.Current(), response);
+            }
+
+            return true;
+        }
+    }
+
+
     protected void onStart()
     {
         super.onStart();
@@ -108,18 +105,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
         super.onStop();
 
         Disconnect();
-    }
-
-
-    /**
-     * Empty out the message handler on destruction.
-     */
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-
-        _data_received = null;
     }
 
 
@@ -145,12 +130,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _connect_progress.setCancelable(false);
         _connect_progress.show();
 
-        // try to connect to the thing.
-        _device = (Globals.AMEDA_FREE) ?
-                new VirtualConnection(_data_received) :
-                new AMEDAConnection(this, _data_received);
-
-        new Thread(_device).start();
     }
 
 

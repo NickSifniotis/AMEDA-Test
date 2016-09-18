@@ -18,9 +18,9 @@ public abstract class Connection implements Runnable
     protected volatile boolean _alive;
 
 
-    public Connection (Messenger connection_out)
+    public void UpdateCallback (Messenger c)
     {
-        _connection_out = connection_out;
+        _connection_out = c;
     }
 
 
@@ -30,6 +30,7 @@ public abstract class Connection implements Runnable
         return _connection_in;
     }
 
+    public abstract void Shutdown();
 
     public abstract void run();
 

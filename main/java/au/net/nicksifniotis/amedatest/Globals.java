@@ -2,12 +2,20 @@ package au.net.nicksifniotis.amedatest;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
+import au.net.nicksifniotis.amedatest.Connection.Connection;
+import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
+import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 
 
 /**
@@ -30,10 +38,26 @@ public class Globals
 
     /* Services! */
     public static DebugToastService DebugToast;
+    public static Connection DeviceConnection;
+    private static Messenger _data_sent;
+    public static boolean Connected;
+    public static ImageView ConnectionLamp;
 
 
-    public static void InitialiseServices (final Activity base_activity)
+    public static Drawable green;
+    public static Drawable yellow;
+    public static Drawable red;
+
+
+    public static void InitialiseServices (final HomeActivity base_activity)
     {
+        green  = base_activity.getResources().getDrawable
+                (R.drawable.liveness_green , base_activity.getTheme());
+        yellow = base_activity.getResources().getDrawable
+                (R.drawable.liveness_yellow, base_activity.getTheme());
+        red    = base_activity.getResources().getDrawable
+                (R.drawable.liveness_red   , base_activity.getTheme());
+
         Messenger debug_messenger = new Messenger(new Handler(new Handler.Callback()
         {
             @Override
@@ -55,12 +79,129 @@ public class Globals
         DebugToast = new DebugToastService(debug_messenger);
 
         new Thread(DebugToast).start();
+
+
+        // Fire up the connection.
+        DeviceConnection = (Globals.AMEDA_FREE) ?
+                new VirtualConnection(base_activity) :
+                new AMEDAConnection(base_activity);
+        SetDeviceCallback(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                ManagerCallback(msg);
+                return true;
+            }
+        });
+        new Thread(DeviceConnection).start();
     }
 
+
+    /**
+     * The master callback, that filters out heartbeat and connection related messages.
+     * Passes through other messages to whichever activity is the registered callback receiver.
+     *
+     * @param m The message received.
+     */
+    public static void ManagerCallback (Message m)
+    {
+        ConnectionMessage msg = ConnectionMessage.values()[m.what];
+
+        switch (msg)
+        {
+            case XMIT:
+                break;
+            case RCVD:
+                break;
+            case MESSENGER_READY:
+                _data_sent = DeviceConnection.get_connection();
+                break;
+            case CONNECTED:
+                Connected();
+                break;
+            case DISCONNECTED:
+                Disconnected();
+                break;
+            case CONNECT:
+            case SHUTDOWN:
+                DebugToast.Send("Erroneous message received in master callback function: " + msg.toString());
+                break;
+        }
+    }
 
     public static void TerminateServices()
     {
         DebugToast.Shutdown();
+        DeviceConnection.Shutdown();
+    }
+
+
+    public static void Connected()
+    {
+        Connected = true;
+        ConnectionLamp.setImageDrawable(green);
+    }
+
+
+    public static void Disconnected()
+    {
+        Connected = false;
+        ConnectionLamp.setImageDrawable(red);
+    }
+
+
+    /** Open up a connection to the device **/
+    public static void Connect()
+    {
+        if (Connected)
+            return;
+
+        if (_data_sent == null)     // the connection has not signalled that it is ready yet.
+            return;
+
+        Message msg = new Message();
+        msg.what = ConnectionMessage.CONNECT.ordinal();
+        send_connection(msg);
+    }
+
+
+    /**
+     * Ask the device to disconnect!
+     */
+    public static void Disconnect()
+    {
+        if (!Connected)
+            return;
+
+        if (_data_sent == null)
+            return;
+
+        Message msg = new Message();
+        msg.what = ConnectionMessage.SHUTDOWN.ordinal();
+        send_connection(msg);
+    }
+
+
+    private static void send_connection (Message m)
+    {
+        try
+        {
+            _data_sent.send(m);
+        }
+        catch (RemoteException e)
+        {
+            ///lkdfhgdkjh
+        }
+    }
+
+
+    public static void SetDeviceCallback (Handler.Callback callback)
+    {
+        if (DeviceConnection != null)
+        {
+            Messenger new_messenger = new Messenger(new Handler(callback));
+            DeviceConnection.UpdateCallback(new_messenger);
+        }
     }
 
 

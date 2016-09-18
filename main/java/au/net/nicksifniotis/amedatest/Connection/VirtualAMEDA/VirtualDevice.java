@@ -1,5 +1,7 @@
 package au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA;
 
+import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -7,6 +9,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.R;
 
 
 /**
@@ -21,10 +24,10 @@ import au.net.nicksifniotis.amedatest.Globals;
  */
 public class VirtualDevice implements Runnable, Handler.Callback
 {
-    private volatile boolean _alive;                   // The mechanism used to shut down.
     private int              _virtual_position;        // The make-believe position of the device.
     private Messenger        _inbound_message_buffer;  // Inbound commands are queued here.
     private Messenger        _outbound_message_buffer; // The virtual device's responses
+    private Context          _context;                 // The context to beep at
 
 
     /**
@@ -32,9 +35,9 @@ public class VirtualDevice implements Runnable, Handler.Callback
      *
      * Connect the two Messenger objects to the parent thread as well.
      */
-    public VirtualDevice(Messenger outbound)
+    public VirtualDevice(Context c, Messenger outbound)
     {
-        _alive = true;
+        _context = c;
         _virtual_position = 1;
         _outbound_message_buffer = outbound;
 
@@ -70,7 +73,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
         if (message_type == VirtualAMEDAMessage.SHUTDOWN)
         {
             // A shutdown signal!
-            _alive = false;
+            Shutdown();
             return true;
         }
 
@@ -169,9 +172,21 @@ public class VirtualDevice implements Runnable, Handler.Callback
         else if (instruction_code.equals("CALHZ"))
             res = "READY";
         else if (instruction_code.substring (0, 4).equals ("BZSH"))
+        {
+            int num_beeps = Integer.parseInt(instruction_code.substring(4, 5));
+            for (int i = 0; i < num_beeps; i ++)
+                beep();
+
             res = "";
+        }
         else if (instruction_code.substring (0, 4).equals ("BZLG"))
+        {
+            int num_beeps = Integer.parseInt(instruction_code.substring(4, 5));
+            for (int i = 0; i < num_beeps; i ++)
+                beep();
+
             res = "";
+        }
         else if (instruction_code.substring (0, 4).equals ("GOPN"))
         {
             _virtual_position = Integer.parseInt(instruction_code.substring(4, 5));
@@ -240,5 +255,15 @@ public class VirtualDevice implements Runnable, Handler.Callback
         {
             // ghdfglkjd
         }
+    }
+
+
+    /**
+     * Beeps.
+     */
+    private void beep()
+    {
+        MediaPlayer mp = MediaPlayer.create(_context, R.raw.virtual_ameda);
+        mp.start();
     }
 }

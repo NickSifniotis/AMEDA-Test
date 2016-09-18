@@ -28,7 +28,7 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
  * Displays the navigation drawer pane and the three big buttons that launch activities.
  *
  */
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends AppCompatActivity implements Handler.Callback
 {
     private TextView _ameda_toggle;
     private TextView _debug_toggle;
@@ -38,11 +38,15 @@ public class HomeActivity extends AppCompatActivity
 
 
     /**
-     * Set up the toolbar and navigation drawer components.
-     *
-     * @param savedInstanceState Not really used.
+     * Todo - make this do more than nothing.
      */
     @Override
+    public boolean handleMessage(Message msg)
+    {
+        return true;
+    }
+
+
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

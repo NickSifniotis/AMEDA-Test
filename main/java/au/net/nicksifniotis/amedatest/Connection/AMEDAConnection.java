@@ -1,5 +1,6 @@
 package au.net.nicksifniotis.amedatest.Connection;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -41,8 +42,8 @@ public class AMEDAConnection extends Connection
     private BluetoothSocket _bt_sockets = null;
 
     final private Handler _read_handler;
-    final private Messenger _response_handler;
-    final private AMEDAActivity _parent;
+    private Messenger _response_handler;
+    final private Activity _parent;
 
     private ConnectedThread _read_thread;
 
@@ -50,15 +51,11 @@ public class AMEDAConnection extends Connection
     /**
      * Constructor for the AMEDA connection object.
      *
-     * @param context The activity to send UI requests to todo this will not work, revisit this
-     * @param responses The messenger to use to send messages back to the connection manager.
+     * @param context The activity to send UI requests to.
      */
-    public AMEDAConnection(AMEDAActivity context, Messenger responses)
+    public AMEDAConnection(Activity context)
     {
-        super (responses);
-
         _connected = false;
-        _response_handler = responses;
         _parent = context;
         _data_received_buffer = "";
 
@@ -80,6 +77,13 @@ public class AMEDAConnection extends Connection
                 return true;
             }
         });
+    }
+
+
+    @Override
+    public void Shutdown()
+    {
+
     }
 
 

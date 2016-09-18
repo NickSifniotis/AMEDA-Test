@@ -1,5 +1,6 @@
 package au.net.nicksifniotis.amedatest.Connection;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -24,6 +25,7 @@ public class VirtualConnection extends Connection
 {
     // Members that deal with the connection to the device.
     private boolean _connected;
+    private Context _context;
     private VirtualDevice _device;
     private Messenger _device_data_received;
     private Messenger _device_data_sent;
@@ -35,15 +37,15 @@ public class VirtualConnection extends Connection
     /**
      * Create a connection to the virtual AMEDA device..
      *
-     * @param outbound_messages The messenger that allows this connection to send messages
-     *                          to the connection manager.
+     * @param c The context to send UI requests to.
      */
-    public VirtualConnection(Messenger outbound_messages)
+    public VirtualConnection(Context c)
     {
-        super(outbound_messages);
+        _context = c;
     }
 
 
+    @Override
     public void Shutdown()
     {
         if (Looper.myLooper() != null)
@@ -88,7 +90,7 @@ public class VirtualConnection extends Connection
     private boolean create_device()
     {
         _device_data_received = new Messenger(new Handler(new AMEDA_Handler()));
-        _device = new VirtualDevice(_device_data_received);
+        _device = new VirtualDevice(_context, _device_data_received);
 
         _connected = false;
         new Thread(_device).start();
