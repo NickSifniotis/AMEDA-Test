@@ -78,7 +78,7 @@ public class TestActivity extends AMEDAActivity
         int user_id = intent.getIntExtra("id", -1);
         if (user_id == -1)
         {
-            DebugToast("Unable to launch test. No user_id received.");
+            Globals.DebugToast.Send("Unable to launch test. No user_id received.");
             FailAndDieDialog(getString(R.string.t_error_no_uid));
             return;
         }
@@ -383,7 +383,7 @@ public class TestActivity extends AMEDAActivity
 
         if (!instruction_code.IsValidResponse(response))
         {
-            DebugToast("Unknown response " + response.toString() + " received for instruction " + instruction_code.toString());
+            Globals.DebugToast.Send("Unknown response " + response.toString() + " received for instruction " + instruction_code.toString());
             FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
         }
 
@@ -427,7 +427,7 @@ public class TestActivity extends AMEDAActivity
     private void _move_to_next_pos()
     {
         updateState(TestState.SETTING);
-        DebugToast("Setting device to position " + _test_questions[_current_question]);
+        Globals.DebugToast.Send("Setting device to position " + _test_questions[_current_question]);
 
         GoToPosition(randomiser.nextInt(5) + 1);
         GoToPosition(_test_questions[_current_question]);
@@ -522,7 +522,7 @@ public class TestActivity extends AMEDAActivity
         if (current_state != TestState.ANSWERING)
         {
             // this is impossible. The response buttons are invisible in every state except ANSWERING.
-            DebugToast("Impossible state - record_user_response where state is " + current_state.toString());
+            Globals.DebugToast.Send("Impossible state - record_user_response where state is " + current_state.toString());
             return;
         }
 
@@ -530,7 +530,7 @@ public class TestActivity extends AMEDAActivity
         {
             // another impossible state. This function cannot be called with values outside this range.
             // Buttons to do that simply don't exist.
-            DebugToast("Impossible state - response passed to record_user_response is " + response);
+            Globals.DebugToast.Send("Impossible state - response passed to record_user_response is " + response);
             return;
         }
 
@@ -547,7 +547,7 @@ public class TestActivity extends AMEDAActivity
         {
             // something's gone wrong saving to the database.
             // this is the sort of error that can't be explained and needs to reset the system.
-            DebugToast("Error on database response save.");
+            Globals.DebugToast.Send("Error on database response save.");
             _database_helper.databaseError(getString(R.string.t_error_database_on_response));
             finish();
             return;

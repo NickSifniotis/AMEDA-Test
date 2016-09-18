@@ -62,7 +62,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
                 if (msg_type == AMEDA.RESPONSE)
                 {
                     AMEDAResponse response = (AMEDAResponse) msg.obj;
-                    DebugToast("Handling message " + response.toString());
+                    Globals.DebugToast.Send("Handling message " + response.toString());
 
                     ProcessAMEDAResponse(_instruction_buffer.Current(), response);
                 }
@@ -185,7 +185,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     private void _handle_connected()
     {
-        DebugToast("Received connection confirmation.");
+        Globals.DebugToast.Send("Received connection confirmation.");
         if (_connecting)
         {
             if (_connect_progress != null)
@@ -302,7 +302,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void RepeatInstruction()
     {
-        DebugToast("Executing " + _instruction_buffer.Current().Build());
+        Globals.DebugToast.Send("Executing " + _instruction_buffer.Current().Build());
 //        _device.SendInstruction(_instruction_buffer.Current());
     }
 
@@ -334,37 +334,8 @@ public abstract class AMEDAActivity extends AppCompatActivity
     protected abstract void ProcessAMEDAResponse (AMEDAInstruction instruction, AMEDAResponse response);
 
 
-    /**
-     * Sends a toasty message to the screen. The call to Toast.makeText is run through the UI thread
-     * since there is no guarantee that the caller of this method is working in that thread.
-     *
-     * [Toast needs to run through the UI thread because just because.]
-     *
-     * Messages are only displayed if debug mode is on - if not, they are suppressed.
-     *
-     * This method is designed to be used for debugging only - do not send messages through this
-     * method that you want the user to see.
-     *
-     * @param message The message to display.
-     */
-    public void DebugToast (String message)
-    {
-        if (Globals.DEBUG_MODE)
-        {
-            final String msg = message;
-            final Context parent = this;
 
-            runOnUiThread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Toast t = Toast.makeText(parent, msg, Toast.LENGTH_SHORT);
-                    t.show();
-                }
-            });
-        }
-    }
+
 
 
     /**

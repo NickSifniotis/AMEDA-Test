@@ -45,13 +45,30 @@ public class DebugToastService implements Runnable
     }
 
 
+    /**
+     * Sends a toasty message to the screen. The call to Toast.makeText is run through the UI thread
+     * since there is no guarantee that the caller of this method is working in that thread.
+     *
+     * [Toast needs to run through the UI thread because just because.]
+     *
+     * Messages are only displayed if debug mode is on - if not, they are suppressed.
+     *
+     * This method is designed to be used for debugging only - do not send messages through this
+     * method that you want the user to see.
+     *
+     * @param msg The message to display.
+     */
     public void Send (final String msg)
     {
+        if (!Globals.DEBUG_MODE)
+            return;
+
         Message m = new Message();
         m.what = 1;
         m.obj = msg;
 
-        try {
+        try
+        {
             _messenger.send(m);
         }
         catch (Exception e)

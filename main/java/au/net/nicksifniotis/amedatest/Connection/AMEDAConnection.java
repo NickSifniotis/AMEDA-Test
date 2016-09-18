@@ -90,7 +90,7 @@ public class AMEDAConnection extends Connection
      */
     private void addMessage(String msg)
     {
-        _parent.DebugToast("Reading " + msg);
+        Globals.DebugToast.Send("Reading " + msg);
         _data_received_buffer += msg;
 
         if (_data_received_buffer.length() >= 8)
@@ -102,11 +102,11 @@ public class AMEDAConnection extends Connection
 
             if (response.GetCode() == null)
             {
-                _parent.DebugToast("Unable to parse message received: " + result);
+                Globals.DebugToast.Send("Unable to parse message received: " + result);
             }
             else
             {
-                _parent.DebugToast("Sending message: " + response.toString());
+                Globals.DebugToast.Send("Sending message: " + response.toString());
 
                 Message message = new Message();
                 message.what = 1;
@@ -164,7 +164,7 @@ public class AMEDAConnection extends Connection
             }
             catch (Exception e)
             {
-                _parent.DebugToast("Error: " + e.getMessage());
+                Globals.DebugToast.Send("Error: " + e.getMessage());
             }
         }
 
@@ -194,7 +194,7 @@ public class AMEDAConnection extends Connection
             }
             catch (Exception e)
             {
-                _parent.DebugToast("Error connecting to i/o streams. " + e.getMessage());
+                Globals.DebugToast.Send("Error connecting to i/o streams. " + e.getMessage());
                 Globals.Error(_parent, _parent.getString(R.string.error_ameda_cannot_connect));
             }
 
@@ -222,7 +222,7 @@ public class AMEDAConnection extends Connection
                 }
                 catch (Exception e)
                 {
-                    _parent.DebugToast("Error reading from AMEDA device. " + e.getMessage());
+                    Globals.DebugToast.Send("Error reading from AMEDA device. " + e.getMessage());
                     return;
                 }
             }
@@ -239,7 +239,7 @@ public class AMEDAConnection extends Connection
             if (!_connected)
                 return;
 
-            _parent.DebugToast("Write called: " + message);
+            Globals.DebugToast.Send("Write called: " + message);
 
             byte[] msgBuffer = message.getBytes();
             try
@@ -248,7 +248,7 @@ public class AMEDAConnection extends Connection
             }
             catch (Exception e)
             {
-                _parent.DebugToast("Error writing to device. " + e.getMessage());
+                Globals.DebugToast.Send("Error writing to device. " + e.getMessage());
             }
         }
     }
@@ -273,7 +273,7 @@ public class AMEDAConnection extends Connection
 
         if (device == null)
         {
-            _parent.DebugToast("Unable to find AMEDA. Has it been paired to this device?");
+            Globals.DebugToast.Send("Unable to find AMEDA. Has it been paired to this device?");
             return false;
         }
 
@@ -283,13 +283,13 @@ public class AMEDAConnection extends Connection
         }
         catch (Exception e)
         {
-            _parent.DebugToast("Socket create failed: " + e.getMessage());
+            Globals.DebugToast.Send("Socket create failed: " + e.getMessage());
             return false;
         }
 
         if (_bt_sockets == null)
         {
-            _parent.DebugToast("Socket created was null.");
+            Globals.DebugToast.Send("Socket created was null.");
             return false;
         }
 
@@ -301,7 +301,7 @@ public class AMEDAConnection extends Connection
         }
         catch (Exception e)
         {
-            _parent.DebugToast("Socket connection failure: " + e.getMessage());
+            Globals.DebugToast.Send("Socket connection failure: " + e.getMessage());
             return false;
         }
 
@@ -357,7 +357,7 @@ public class AMEDAConnection extends Connection
         }
         catch (Exception e)
         {
-            _parent.DebugToast("Error closing AMEDA connection. " + e.getMessage());
+            Globals.DebugToast.Send("Error closing AMEDA connection. " + e.getMessage());
         }
     }
 

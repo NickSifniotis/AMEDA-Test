@@ -1,6 +1,7 @@
 package au.net.nicksifniotis.amedatest.Connection;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -38,6 +39,13 @@ public class VirtualConnection extends Connection
     public VirtualConnection(Messenger outbound_messages)
     {
         super(outbound_messages);
+    }
+
+
+    public void Shutdown()
+    {
+        if (Looper.myLooper() != null)
+            Looper.myLooper().quitSafely();
     }
 
 
@@ -180,20 +188,10 @@ public class VirtualConnection extends Connection
     @Override
     public void run()
     {
+        Looper.prepare();
         create_device();
-        _alive = true;
 
-        while (_alive)
-        {
-            try
-            {
-                Thread.sleep(500);
-            }
-            catch (InterruptedException e)
-            {
-                _alive = false;
-            }
-        }
+        Looper.loop();
 
         destroy_device();
     }

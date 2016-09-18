@@ -12,6 +12,7 @@ import java.util.Random;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
 
 
@@ -162,10 +163,10 @@ public class FamiliarisationActivity extends AMEDAActivity
                 }
             }
             else
-                DebugToast (getString(R.string.f_sorry_five));
+                Globals.DebugToast.Send (getString(R.string.f_sorry_five));
         }
         else
-            DebugToast ("Strange error in that execute has been invoked with num=" + num);
+            Globals.DebugToast.Send ("Strange error in that execute has been invoked with num=" + num);
     }
 
 
@@ -189,14 +190,14 @@ public class FamiliarisationActivity extends AMEDAActivity
                     CannotMoveDialog();
                     break;
                 default:
-                    DebugToast("Received unknown response code for current command.");
+                    Globals.DebugToast.Send("Received unknown response code for current command.");
                     FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
                     break;
             }
         }
         else
         {
-            DebugToast ("Received response " + response.toString() + " to command " + instruction.Build());
+            Globals.DebugToast.Send ("Received response " + response.toString() + " to command " + instruction.Build());
             FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
         }
     }
