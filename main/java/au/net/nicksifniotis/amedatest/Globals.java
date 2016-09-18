@@ -236,6 +236,13 @@ public class Globals
 
                 Disconnected();
                 break;
+
+            case CONNECT_FAILED:
+                _connect_progress.dismiss();
+                DebugToast.Send ("Connection attempt failed. Please try again.");
+                Disconnected();
+                break;
+
             case CONNECT:
             case SHUTDOWN:
             case XMIT:

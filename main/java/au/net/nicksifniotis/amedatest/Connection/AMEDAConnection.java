@@ -270,12 +270,14 @@ public class AMEDAConnection extends Connection
         catch (Exception e)
         {
             Globals.DebugToast.Send("Socket create failed: " + e.getMessage());
+            connect_failed();
             return;
         }
 
         if (_bt_sockets == null)
         {
             Globals.DebugToast.Send("Socket created was null.");
+            connect_failed();
             return;
         }
 
@@ -288,6 +290,7 @@ public class AMEDAConnection extends Connection
         catch (Exception e)
         {
             Globals.DebugToast.Send("Socket connection failure: " + e.getMessage());
+            connect_failed();
             return;
         }
 
@@ -427,5 +430,13 @@ public class AMEDAConnection extends Connection
                 // jkdfkjdf
             }
         }
+    }
+
+
+    private void connect_failed()
+    {
+        Message m = new Message();
+        m.what = ConnectionMessage.CONNECT_FAILED.ordinal();
+        send_manager (m);
     }
 }
