@@ -9,8 +9,6 @@ public enum TestState
 {
     STARTING(R.id.t_layout_starting),
     MIDDLE(R.id.t_layout_middle),
-    SETTING(R.id.t_layout_setting),
-    STEPPING(R.id.t_layout_stepping),
     ANSWERING(R.id.t_layout_answering),
     FINISHING(R.id.t_layout_finishing);
 

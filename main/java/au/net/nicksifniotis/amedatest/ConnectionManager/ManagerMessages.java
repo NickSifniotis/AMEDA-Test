@@ -13,5 +13,5 @@ package au.net.nicksifniotis.amedatest.ConnectionManager;
  */
 public enum ManagerMessages
 {
-    SEND, RECEIVE, CONNECTION_DROPPED, CONNECTION_RESTORED;
+    SEND, RECEIVE, CONNECTION_DROPPED, CONNECTION_RESTORED
 }

@@ -388,11 +388,11 @@ public class TestActivity extends AMEDAActivity
         if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION)
             if (response.GetCode() == AMEDAResponse.Code.CANNOT_MOVE)
                 CannotMoveDialog();
-            else
+            else if (response.GetCode() == AMEDAResponse.Code.READY)
                 if (HasMoreInstructions())
                     ExecuteNextInstruction();
                 else
-                    updateState(TestState.STEPPING);
+                    updateState(TestState.ANSWERING);
     }
 
 
@@ -411,6 +411,8 @@ public class TestActivity extends AMEDAActivity
             _questions_progress.setText (getString(
                     R.string.t_progress_counter, (_current_question + 1), _num_questions));
             updateState(TestState.MIDDLE);
+
+            _move_to_next_pos();
         }
     }
 
@@ -424,7 +426,6 @@ public class TestActivity extends AMEDAActivity
      */
     private void _move_to_next_pos()
     {
-        updateState(TestState.SETTING);
         Globals.DebugToast.Send("Setting device to position " + _test_questions[_current_question]);
 
         GoToPosition(randomiser.nextInt(5) + 1);
@@ -441,6 +442,7 @@ public class TestActivity extends AMEDAActivity
      */
     private void updateState(TestState new_state)
     {
+        Globals.DebugToast.Send("Setting new state to " + new_state.toString());
         current_state = new_state;
 
         for (TestState t: TestState.values())
@@ -449,11 +451,6 @@ public class TestActivity extends AMEDAActivity
             if (layout != null)
                 layout.setVisibility ((current_state == t) ? View.VISIBLE : View.GONE);
         }
-
-        if (current_state == TestState.SETTING)
-            _setting_progress.show();
-        else
-            _setting_progress.dismiss();
     }
 
 
@@ -462,16 +459,6 @@ public class TestActivity extends AMEDAActivity
      *
      * @param view Not used.
      */
-    public void t_btn_step(View view)
-    {
-        updateState(TestState.ANSWERING);
-    }
-
-    public void t_btn_middle(View view)
-    {
-        _move_to_next_pos();
-    }
-
     public void t_btn_excursion_1(View view)
     {
         record_user_response(1);
