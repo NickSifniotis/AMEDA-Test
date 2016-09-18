@@ -6,15 +6,24 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Device"/>
+        android:padding="10dp"
+        android:text="Not Connected"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Select device to connect to."/>
 
     <ListView
         android:id="@id/bt_sel_list"
         android:layout_margin="10dp"
         android:padding="15dp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="fill_parent" />
 
 </LinearLayout>

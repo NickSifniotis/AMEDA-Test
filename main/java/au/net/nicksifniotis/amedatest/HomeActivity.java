@@ -1,6 +1,7 @@
 package au.net.nicksifniotis.amedatest;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -48,7 +49,27 @@ public class HomeActivity extends AppCompatActivity
 
         _update_drawer_toggles();
 
+        checkBTState();
+
         Globals.InitialiseServices(this);
+    }
+
+
+    /**
+     * Fire up the Bluetooth adapter if not already active.
+     */
+    private void checkBTState()
+    {
+        BluetoothAdapter _bt_adaptor = BluetoothAdapter.getDefaultAdapter();
+
+        if (_bt_adaptor == null)
+            Globals.Error(this, getString(R.string.error_ameda_no_bluetooth));
+        else if (!_bt_adaptor.isEnabled())
+        {
+            Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
+            startActivityForResult(enableBtIntent, 1);
+//            Globals.DebugToast.Send("Bluetooth is not enabled!");
+        }
     }
 
 

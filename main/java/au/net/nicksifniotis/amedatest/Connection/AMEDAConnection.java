@@ -129,21 +129,6 @@ public class AMEDAConnection extends Connection
 
 
     /**
-     * Fire up the Bluetooth adapter if not already active.
-     */
-    private void checkBTState()
-    {
-        if (_bt_adaptor == null)
-            Globals.Error(_parent, _parent.getString(R.string.error_ameda_no_bluetooth));
-        else if (!_bt_adaptor.isEnabled())
-        {
-            Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
-            _parent.startActivityForResult(enableBtIntent, 1);
-        }
-    }
-
-
-    /**
      * Create the connection to the device.
      *
      * @param device The device to connect to.
