@@ -97,6 +97,14 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
             ProcessAMEDAResponse(_instruction_buffer.Current(), response);
         }
+        else if (msg_type == ManagerMessages.CONNECTION_DROPPED.ordinal())
+        {
+            FailButDontDie("Connection dropped. Please reconnect to continue.");
+        }
+        else if (msg_type == ManagerMessages.CONNECTION_RESTORED.ordinal())
+        {
+            FailButDontDie("Connection restored. You may now resume this activity.");
+        }
 
         return true;
     }
@@ -125,18 +133,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
 //        _connect_progress.show();
 //
 //    }
-
-
-    /**
-     * Send a message to the connection asking it to disconnect. todo convert this to midtier msg
-     */
-    protected void Disconnect ()
-    {
-        Message msg = new Message();
-        msg.what = ConnectionMessage.SHUTDOWN.ordinal();
-
-        send_connection(msg);
-    }
 
 
     /**
@@ -344,6 +340,22 @@ public abstract class AMEDAActivity extends AppCompatActivity
         builder.create().show();
     }
 
+
+    /**
+     * Not-so-serious error failure routine. Displays a dialog box, but doesn't terminate.
+     *
+     * @param message The message to display to the user.
+     */
+    void FailButDontDie(String message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.error_title))
+                .setMessage(message)
+                .setCancelable(false)
+                .setNegativeButton(getString(R.string.btn_done), null);
+
+        builder.create().show();
+    }
 
     private void send_connection (Message m)
     {

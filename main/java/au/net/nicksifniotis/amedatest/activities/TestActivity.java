@@ -323,8 +323,6 @@ public class TestActivity extends AMEDAActivity
         switch (item.getItemId())
         {
             case R.id.t_mnu_pause:
-                Disconnect();
-
                 builder = new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.t_paused_title))
                         .setMessage(getString(R.string.t_paused_desc))

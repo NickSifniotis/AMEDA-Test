@@ -176,6 +176,7 @@ public class Globals
 
         ConnectionMessage msg = ConnectionMessage.values()[m.what];
 
+        Message new_message;
         switch (msg)
         {
             case RCVD:
@@ -188,31 +189,34 @@ public class Globals
 //                }
                 else
                 {
-                    Message new_message = new Message();
+                    new_message = new Message();
                     new_message.what = ManagerMessages.RECEIVE.ordinal();
                     new_message.obj = m.obj;
-                    try
-                    {
-                        activity_sent.send(new_message);
-                    }
-                    catch (RemoteException e)
-                    {
-                        // fhlkjh
-                    }
+                    send_activity(new_message);
                 }
                 break;
             case MESSENGER_READY:
                 _data_sent = DeviceConnection.get_connection();
 
-                Message new_message = new Message();
+                new_message = new Message();
                 new_message.what = ConnectionMessage.CONNECT.ordinal();
                 send_connection(new_message);
 
                 break;
             case CONNECTED:
+                new_message = new Message();
+                new_message.what = ManagerMessages.CONNECTION_RESTORED.ordinal();
+                new_message.obj = m.obj;
+                send_activity(new_message);
+
                 Connected();
                 break;
             case DISCONNECTED:
+                new_message = new Message();
+                new_message.what = ManagerMessages.CONNECTION_DROPPED.ordinal();
+                new_message.obj = m.obj;
+                send_activity(new_message);
+
                 Disconnected();
                 break;
             case CONNECT:
@@ -290,6 +294,18 @@ public class Globals
         }
     }
 
+
+    private static void send_activity (Message m)
+    {
+        try
+        {
+            activity_sent.send(m);
+        }
+        catch (RemoteException e)
+        {
+            ///lkdfhgdkjh
+        }
+    }
 
     public static void SetCallback(Handler.Callback callback)
     {
