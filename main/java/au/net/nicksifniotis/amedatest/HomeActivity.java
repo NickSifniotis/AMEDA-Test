@@ -1,6 +1,10 @@
 package au.net.nicksifniotis.amedatest;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -10,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.activities.CalibrationActivity;
 import au.net.nicksifniotis.amedatest.activities.FamiliarisationActivity;
@@ -32,7 +37,6 @@ public class HomeActivity extends AppCompatActivity
     private DrawerLayout _drawer;
 
 
-
     /**
      * Set up the toolbar and navigation drawer components.
      *
@@ -47,6 +51,22 @@ public class HomeActivity extends AppCompatActivity
         _connect_gui();
 
         _update_drawer_toggles();
+    }
+
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        Globals.InitialiseServices(this);
+    }
+
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        Globals.TerminateServices();
     }
 
 

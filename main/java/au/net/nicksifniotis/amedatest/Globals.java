@@ -2,7 +2,12 @@ package au.net.nicksifniotis.amedatest;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.os.Debug;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 
 /**
@@ -21,6 +26,42 @@ public class Globals
 
     /* TRUE if we are testing the app and want to cap test size to 10 questions */
     public static boolean SHORT_TESTS = false;
+
+
+    /* Services! */
+    public static DebugToastService DebugToast;
+
+
+    public static void InitialiseServices (final Activity base_activity)
+    {
+        Messenger debug_messenger = new Messenger(new Handler(new Handler.Callback()
+        {
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                final String m = (String) msg.obj;
+                base_activity.runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Toast t = Toast.makeText(base_activity, m, Toast.LENGTH_SHORT);
+                        t.show();
+                    }
+                });
+                return true;
+            }
+        }));
+        DebugToast = new DebugToastService(debug_messenger);
+
+        new Thread(DebugToast).start();
+    }
+
+
+    public static void TerminateServices()
+    {
+        DebugToast.Shutdown();
+    }
 
 
     /**

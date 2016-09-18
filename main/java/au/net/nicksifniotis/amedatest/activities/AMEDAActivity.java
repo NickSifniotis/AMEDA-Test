@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
+import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
@@ -75,6 +77,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _device = (Globals.AMEDA_FREE)
                 ? new VirtualConnection(_data_received)
                 : new AMEDAConnection(this, _data_received);
+        _data_sent = _device.get_connection();
     }
 
 
@@ -98,7 +101,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     {
         super.onStop();
 
-        _device.Disconnect();
+        Disconnect();
     }
 
 
@@ -121,6 +124,10 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     private void _reconnect()
     {
+        if (_device != null)
+            Disconnect();
+
+        // Display the 'connecting' dialog box.
         if (_connect_progress != null)
             _connect_progress.dismiss();
 
@@ -130,23 +137,34 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _connect_progress.setTitle(getString(R.string.connecting_title));
         _connect_progress.setMessage(getString(R.string.connecting_desc));
         _connect_progress.setCancelable(false);
-        _connect_progress.setOnShowListener(new DialogInterface.OnShowListener()
-        {
-            /**
-             * Cleverly, do not attempt to connect to the device until the dialog box has been
-             * presented to the user. This is to prevent the UI thread from hanging on the call
-             * to Connect. todo its not that clever, its not working
-             *
-             * @param dialog Not used.
-             */
-            @Override
-            public void onShow(DialogInterface dialog)
-            {
-                if (!_device.Connect())
-                    _connection_failure();
-            }
-        });
         _connect_progress.show();
+
+        // try to connect to the thing.
+        _device = (Globals.AMEDA_FREE) ?
+                new VirtualConnection(_data_received) :
+                new AMEDAConnection(this, _data_received);
+        _data_sent = _device.get_connection();
+
+        new Thread(_device).start();
+    }
+
+
+    /**
+     * Send a message to the connection asking it to disconnect. todo convert this to midtier msg
+     */
+    protected void Disconnect ()
+    {
+        Message msg = new Message();
+        msg.what = ConnectionMessage.SHUTDOWN.ordinal();
+
+        try
+        {
+            _data_sent.send(msg);
+        }
+        catch (RemoteException e)
+        {
+            // dsgkelrglkfhytgiuc
+        }
     }
 
 
@@ -191,18 +209,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
     void Connect()
     {
         _reconnect();
-    }
-
-
-    /**
-     * Disconnects from the AMEDA. Gives the child activity the ability to interrupt the
-     * connection to the AMEDA device.
-     */
-    void Disconnect()
-    {
-        Message msg = new Message();
-
-        _device.Disconnect();
     }
 
 
@@ -297,7 +303,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
     void RepeatInstruction()
     {
         DebugToast("Executing " + _instruction_buffer.Current().Build());
-        _device.SendInstruction(_instruction_buffer.Current());
+//        _device.SendInstruction(_instruction_buffer.Current());
     }
 
 
