@@ -114,31 +114,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
 
     /**
-     * Attempts to establish a connection to the AMEDA device.
-     *
-     * Displays a funky dialog to the user to keep them occupied.
-     */
-//    private void _reconnect()
-//    {
-//        if (_device != null)
-//            _handle_disconnect();
-//
-//        // Display the 'connecting' dialog box.
-//        if (_connect_progress != null)
-//            _connect_progress.dismiss();
-//
-//        _connecting = true;
-//
-//        _connect_progress = new ProgressDialog(this);
-//        _connect_progress.setTitle(getString(R.string.connecting_title));
-//        _connect_progress.setMessage(getString(R.string.connecting_desc));
-//        _connect_progress.setCancelable(false);
-//        _connect_progress.show();
-//
-//    }
-
-
-    /**
      * Enqueues an instruction directing the AMEDA to move to a position.
      *
      * @param position The position to set the AMEDA to. Must be an integer between 1 and 5 inclusive.

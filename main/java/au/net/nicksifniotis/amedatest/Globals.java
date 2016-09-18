@@ -2,6 +2,7 @@ package au.net.nicksifniotis.amedatest;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class Globals
     public static Messenger activity_sent;
     public static Messenger activity_received;
     public static Activity too_many_variables;
-
+    public static ProgressDialog _connect_progress;
     public static Drawable green;
     public static Drawable yellow;
     public static Drawable red;
@@ -160,9 +162,24 @@ public class Globals
             }
         })));
         new Thread(DeviceConnection).start();
-
+        show_progress_dialog();
         Disconnected();
     }
+
+
+    private static void show_progress_dialog()
+    {
+        // Display the 'connecting' dialog box.
+        if (_connect_progress != null)
+            _connect_progress.dismiss();
+
+        _connect_progress = new ProgressDialog(too_many_variables);
+        _connect_progress.setTitle(too_many_variables.getString(R.string.connecting_title));
+        _connect_progress.setMessage(too_many_variables.getString(R.string.connecting_desc));
+        _connect_progress.setCancelable(false);
+        _connect_progress.show();
+    }
+
 
     /**
      * The master callback, that filters out heartbeat and connection related messages.
@@ -247,6 +264,9 @@ public class Globals
 
     public static void Connected()
     {
+        if (_connect_progress != null)
+            _connect_progress.dismiss();
+
         Connected = true;
         ConnectionLamp.setImageDrawable(green);
     }

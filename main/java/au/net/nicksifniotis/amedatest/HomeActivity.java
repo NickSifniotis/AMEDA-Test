@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity
     private TextView _short_test_toggle;
     private TextView _address_toggle;
     private DrawerLayout _drawer;
+    private Messenger _data_sent;
 
 
     protected void onCreate(Bundle savedInstanceState)
@@ -58,6 +59,21 @@ public class HomeActivity extends AppCompatActivity
 
         Globals.too_many_variables = this;
         Globals.RefreshLamp();
+
+        _data_sent = Globals.activity_received;         // the outbound communication channel
+        Globals.SetCallback(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                handleManagerMessage(msg);
+                return true;
+            }
+        });
+    }
+
+
+    public boolean handleManagerMessage(Message msg)
+    {
+        return true;
     }
 
 
