@@ -1,9 +1,12 @@
 package au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+
+import au.net.nicksifniotis.amedatest.Globals;
 
 
 /**
@@ -35,8 +38,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
         _virtual_position = 1;
         _outbound_message_buffer = outbound;
 
-        Handler _my_handler = new Handler(this);
-        _inbound_message_buffer = new Messenger(_my_handler);
+        Globals.DebugToast.Send("Virtual AMEDA constructed");
     }
 
 
@@ -47,6 +49,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
      */
     public Messenger GetMessenger()
     {
+        Globals.DebugToast.Send("Virtual device surrendering messenger");
         return _inbound_message_buffer;
     }
 
@@ -60,6 +63,8 @@ public class VirtualDevice implements Runnable, Handler.Callback
     @Override
     public boolean handleMessage(Message msg)
     {
+        Globals.DebugToast.Send ("Virtual AMEDA Handling message");
+
         VirtualAMEDAMessage message_type = VirtualAMEDAMessage.index(msg.what);
 
         if (message_type == VirtualAMEDAMessage.SHUTDOWN)
@@ -107,19 +112,28 @@ public class VirtualDevice implements Runnable, Handler.Callback
     @Override
     public void run()
     {
-        while (_alive)
-        {
-            try
-            {
-                Thread.sleep (500);
-            }
-            catch (InterruptedException e)
-            {
-                _alive = false;
-            }
-        }
+        Globals.DebugToast.Send("Virtual AMEDA entering run method.");
 
+        Looper.prepare();
+        Handler _my_handler = new Handler(this);
+        _inbound_message_buffer = new Messenger(_my_handler);
+
+
+        Message msg = new Message();
+        msg.what = VirtualAMEDAMessage.MESSENGER_READY.ordinal();
+        send(msg);
+
+        Looper.loop();
+
+        Globals.DebugToast.Send("Virtual AMEDA exiting run method.");
         shutdown();
+    }
+
+
+    public void Shutdown()
+    {
+        if (Looper.myLooper() != null)
+            Looper.myLooper().quitSafely();
     }
 
 
@@ -213,5 +227,18 @@ public class VirtualDevice implements Runnable, Handler.Callback
     {
         _inbound_message_buffer = null;
         _outbound_message_buffer = null;
+    }
+
+
+    private void send(Message msg)
+    {
+        try
+        {
+            _outbound_message_buffer.send (msg);
+        }
+        catch (RemoteException e)
+        {
+            // ghdfglkjd
+        }
     }
 }

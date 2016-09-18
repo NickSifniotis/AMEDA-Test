@@ -11,6 +11,7 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualAMEDAMessage;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualDevice;
+import au.net.nicksifniotis.amedatest.Globals;
 
 
 /**
@@ -22,6 +23,7 @@ import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualDevice;
 public class VirtualConnection extends Connection
 {
     // Members that deal with the connection to the device.
+    private boolean _connected;
     private VirtualDevice _device;
     private Messenger _device_data_received;
     private Messenger _device_data_sent;
@@ -87,21 +89,10 @@ public class VirtualConnection extends Connection
     {
         _device_data_received = new Messenger(new Handler(new AMEDA_Handler()));
         _device = new VirtualDevice(_device_data_received);
-        _device_data_sent = _device.GetMessenger();
 
+        _connected = false;
         new Thread(_device).start();
 
-        Message msg = new Message();
-        msg.what = AMEDA.CONNECTED;
-
-        try
-        {
-            _connection_out.send(msg);
-        }
-        catch (RemoteException e)
-        {
-            // do nothing.
-        }
         return true;
     }
 
@@ -126,14 +117,7 @@ public class VirtualConnection extends Connection
         msg.what = VirtualAMEDAMessage.INSTRUCTION.ordinal();
         msg.obj = instruction.Build();
 
-        try
-        {
-            _device_data_sent.send(msg);
-        }
-        catch (RemoteException e)
-        {
-            // haha, nothing
-        }
+        send_device(msg);
     }
 
 
@@ -153,6 +137,20 @@ public class VirtualConnection extends Connection
         @Override
         public boolean handleMessage(Message msg)
         {
+            Globals.DebugToast.Send("Virtual connection handling message " + msg.what + " from device");
+
+            if (msg.what == VirtualAMEDAMessage.MESSENGER_READY.ordinal())
+            {
+                _device_data_sent = _device.GetMessenger();
+                _connected = true;
+
+                Message m = new Message();
+                m.what = ConnectionMessage.CONNECTED.ordinal();
+                send_manager(m);
+
+                return true;
+            }
+
             if (msg.what != VirtualAMEDAMessage.INSTRUCTION.ordinal())
             {
                 // what is going on? There's literally no code in the virtual device
@@ -167,14 +165,7 @@ public class VirtualConnection extends Connection
             msg.what = ConnectionMessage.RCVD.ordinal();
             msg.obj = response;
 
-            try
-            {
-                _connection_out.send(msg);
-            }
-            catch (RemoteException e)
-            {
-                // do nothing
-            }
+            send_manager(msg);
 
             return true;
         }
@@ -189,7 +180,18 @@ public class VirtualConnection extends Connection
     public void run()
     {
         Looper.prepare();
-        create_device();
+
+        _connection_in = new Messenger(new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                handle_manager_message(msg);
+                return true;
+            }
+        }));
+
+        Message m = new Message();
+        m.what = ConnectionMessage.MESSENGER_READY.ordinal();
+        send_manager(m);
 
         Looper.loop();
 
@@ -208,6 +210,9 @@ public class VirtualConnection extends Connection
     {
         switch (ConnectionMessage.index(msg.what))
         {
+            case CONNECT:
+                create_device();
+                break;
             case XMIT:
                 // This instruction needs to be transmitted to the virtua AMEDA asap.
                 AMEDAInstruction instruction = (AMEDAInstruction) msg.obj;
@@ -222,5 +227,37 @@ public class VirtualConnection extends Connection
                 return false;
         }
         return true;
+    }
+
+
+    private void send_manager(Message msg)
+    {
+        Globals.DebugToast.Send("Virtual connection sending " + msg.what + " to manager");
+        try
+        {
+            _connection_out.send (msg);
+        }
+        catch (RemoteException e)
+        {
+            // gkjh
+        }
+    }
+
+
+    private void send_device(Message msg) {
+        if (!_connected)
+            Globals.DebugToast.Send("Virtual connection attempting to send msg to unconnected device");
+        else
+        {
+            Globals.DebugToast.Send("Virtual connection sending " + msg.what + " to device.");
+            try
+            {
+                _device_data_sent.send(msg);
+            }
+            catch (RemoteException e)
+            {
+                // gkjh
+            }
+        }
     }
 }

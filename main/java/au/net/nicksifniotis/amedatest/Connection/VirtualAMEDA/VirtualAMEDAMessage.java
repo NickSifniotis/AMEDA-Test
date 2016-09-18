@@ -7,7 +7,7 @@ package au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA;
  */
 public enum VirtualAMEDAMessage
 {
-    INSTRUCTION, SHUTDOWN;
+    INSTRUCTION, SHUTDOWN, MESSENGER_READY;
 
 
     /**

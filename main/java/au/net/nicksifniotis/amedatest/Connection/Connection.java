@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 
+import au.net.nicksifniotis.amedatest.Globals;
+
 /**
  * Created by Nick Sifniotis on 13/09/16.
  *
@@ -18,20 +20,13 @@ public abstract class Connection implements Runnable
 
     public Connection (Messenger connection_out)
     {
-        _connection_in = new Messenger(new Handler(new Handler.Callback()
-        {
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                return handle_manager_message(msg);
-            }
-        }));
         _connection_out = connection_out;
     }
 
 
     public Messenger get_connection ()
     {
+        Globals.DebugToast.Send("Connection surrendering connection_in");
         return _connection_in;
     }
 

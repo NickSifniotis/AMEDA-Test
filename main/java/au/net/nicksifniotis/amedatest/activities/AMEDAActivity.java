@@ -57,27 +57,33 @@ public abstract class AMEDAActivity extends AppCompatActivity
             @Override
             public boolean handleMessage(Message msg)
             {
+                Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
+
                 int msg_type = msg.what;
 
-                if (msg_type == AMEDA.RESPONSE)
+                if (msg_type == ConnectionMessage.CONNECTED.ordinal())
+                    _handle_connected();
+                else if (msg_type == ConnectionMessage.MESSENGER_READY.ordinal())
+                {
+                    _data_sent = _device.get_connection();
+
+                    Message m = new Message();
+                    m.what = ConnectionMessage.CONNECT.ordinal();
+                    send_connection(m);
+                }
+                else if (msg_type == ConnectionMessage.RCVD.ordinal())
                 {
                     AMEDAResponse response = (AMEDAResponse) msg.obj;
-                    Globals.DebugToast.Send("Handling message " + response.toString());
+                    Globals.DebugToast.Send("Received " + response.toString() + " from connection");
 
                     ProcessAMEDAResponse(_instruction_buffer.Current(), response);
                 }
-                else if (msg_type == AMEDA.CONNECTED)
-                    _handle_connected();
 
                 return true;
             }
         }));
 
         _connecting = false;
-        _device = (Globals.AMEDA_FREE)
-                ? new VirtualConnection(_data_received)
-                : new AMEDAConnection(this, _data_received);
-        _data_sent = _device.get_connection();
     }
 
 
@@ -143,7 +149,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _device = (Globals.AMEDA_FREE) ?
                 new VirtualConnection(_data_received) :
                 new AMEDAConnection(this, _data_received);
-        _data_sent = _device.get_connection();
 
         new Thread(_device).start();
     }
@@ -157,14 +162,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
         Message msg = new Message();
         msg.what = ConnectionMessage.SHUTDOWN.ordinal();
 
-        try
-        {
-            _data_sent.send(msg);
-        }
-        catch (RemoteException e)
-        {
-            // dsgkelrglkfhytgiuc
-        }
+        send_connection(msg);
     }
 
 
@@ -303,7 +301,12 @@ public abstract class AMEDAActivity extends AppCompatActivity
     void RepeatInstruction()
     {
         Globals.DebugToast.Send("Executing " + _instruction_buffer.Current().Build());
-//        _device.SendInstruction(_instruction_buffer.Current());
+
+        Message m = new Message();
+        m.what = ConnectionMessage.XMIT.ordinal();
+        m.obj = _instruction_buffer.Current();
+
+        send_connection(m);
     }
 
 
@@ -332,10 +335,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
      * @param response The AMEDA's response to that instruction.
      */
     protected abstract void ProcessAMEDAResponse (AMEDAInstruction instruction, AMEDAResponse response);
-
-
-
-
 
 
     /**
@@ -414,5 +413,18 @@ public abstract class AMEDAActivity extends AppCompatActivity
                 });
 
         builder.create().show();
+    }
+
+
+    private void send_connection (Message m)
+    {
+        try
+        {
+            _data_sent.send(m);
+        }
+        catch (RemoteException e)
+        {
+            ///lkdfhgdkjh
+        }
     }
 }
