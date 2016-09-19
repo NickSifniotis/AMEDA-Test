@@ -20,7 +20,7 @@
             android:layout_weight="8"
             android:background="@color/mainBackground"
             android:orientation="vertical"
-            tools:context="au.net.nicksifniotis.amedatest.HomeActivity">
+            tools:context=".activities.HomeActivity">
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -1,37 +1,15 @@
 package au.net.nicksifniotis.amedatest;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
-import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
-import au.net.nicksifniotis.amedatest.Connection.Connection;
-import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
-import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.ConnectionManager.ConnectionManager;
-import au.net.nicksifniotis.amedatest.ConnectionManager.ManagerMessages;
+import au.net.nicksifniotis.amedatest.activities.HomeActivity;
 
 
 /**

@@ -1,27 +1,23 @@
-package au.net.nicksifniotis.amedatest;
+package au.net.nicksifniotis.amedatest.activities;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Messenger;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import au.net.nicksifniotis.amedatest.activities.CalibrationActivity;
-import au.net.nicksifniotis.amedatest.activities.FamiliarisationActivity;
-import au.net.nicksifniotis.amedatest.activities.ManageRecordsActivity;
-import au.net.nicksifniotis.amedatest.activities.Tutorial;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.ManageRecordsEnum;
+import au.net.nicksifniotis.amedatest.R;
 
 
 /**
@@ -30,14 +26,12 @@ import au.net.nicksifniotis.amedatest.activities.Tutorial;
  * Displays the navigation drawer pane and the three big buttons that launch activities.
  *
  */
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends AMEDAActivity
 {
-    private TextView _ameda_toggle;
     private TextView _debug_toggle;
     private TextView _short_test_toggle;
     private TextView _address_toggle;
     private DrawerLayout _drawer;
-    private Messenger _data_sent;
 
 
     protected void onCreate(Bundle savedInstanceState)
@@ -75,6 +69,9 @@ public class HomeActivity extends AppCompatActivity
     /**
      * The most important thing that this method looks after is setting up the communication
      * channels between this activity and the global ConnectionManager object.
+     *
+     * The Home activity does not need to communicate with the AMEDA at all, so it doesn't
+     * bother obtaining the ConnectionManager's inbound messenger.
      */
     @Override
     protected void onStart()
@@ -96,7 +93,6 @@ public class HomeActivity extends AppCompatActivity
                 return true;
             }
         });
-        _data_sent = Globals.ConnectionManager.activity_received;
     }
 
 
@@ -146,7 +142,6 @@ public class HomeActivity extends AppCompatActivity
             _drawer.addDrawerListener(mDrawerToggle);
 
         // Link to the textbox accessor variables.
-        _ameda_toggle = (TextView)findViewById(R.id.h_d_t_ameda);
         _debug_toggle = (TextView)findViewById(R.id.h_d_t_debug);
         _short_test_toggle = (TextView)findViewById(R.id.h_d_t_shorttest);
         _address_toggle = (TextView)findViewById(R.id.h_d_t_address);
@@ -270,5 +265,18 @@ public class HomeActivity extends AppCompatActivity
         if (extra_intent != null)
                 intent.putExtra("activity", extra_intent.ordinal());
         startActivity(intent);
+    }
+
+
+    /**
+     * Null method, since the home screen doesn't have anything to do with the AMEDA.
+     *
+     * @param instruction The instruction that was sent to the AMEDA.
+     * @param response The AMEDA's response to that instruction.
+     */
+    @Override
+    protected void ProcessAMEDAResponse(AMEDAInstruction instruction, AMEDAResponse response)
+    {
+        // no need to do anything here.
     }
 }

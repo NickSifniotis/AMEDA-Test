@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeActivity">
+        <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -19,13 +19,25 @@
         </activity>
         <activity
             android:name=".activities.EditUserActivity"
-            android:parentActivityName=".HomeActivity" />
-        <activity android:name=".activities.ManageRecordsActivity" />
-        <activity android:name=".activities.TestActivity" />
-        <activity android:name=".activities.FamiliarisationActivity" />
-        <activity android:name=".activities.Tutorial" />
-        <activity android:name=".activities.CalibrationActivity" />
-        <activity android:name=".activities.ViewUserActivity" />
+            android:parentActivityName=".activities.ManageRecordsActivity" />
+        <activity
+            android:name=".activities.ManageRecordsActivity"
+            android:parentActivityName=".activities.HomeActivity" />
+        <activity
+            android:name=".activities.TestActivity"
+            android:parentActivityName=".activities.ManageRecordsActivity" />
+        <activity
+            android:name=".activities.FamiliarisationActivity"
+            android:parentActivityName=".activities.HomeActivity" />
+        <activity
+            android:name=".activities.Tutorial"
+            android:parentActivityName=".activities.HomeActivity" />
+        <activity
+            android:name=".activities.CalibrationActivity"
+            android:parentActivityName=".activities.HomeActivity" />
+        <activity
+            android:name=".activities.ViewUserActivity"
+            android:parentActivityName=".activities.ManageRecordsActivity"/>
     </application>
 
 </manifest>
