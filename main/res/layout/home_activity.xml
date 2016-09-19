@@ -256,17 +256,6 @@
                     android:text="@string/h_d_t_desc" />
 
                 <TextView
-                    android:id="@id/h_d_t_ameda"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
-                    android:onClick="h_d_t_ameda" />
-
-                <TextView
                     android:id="@id/h_d_t_address"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:paddingStart="20dp"
