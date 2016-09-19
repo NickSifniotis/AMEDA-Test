@@ -30,6 +30,7 @@ import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
 import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
+import au.net.nicksifniotis.amedatest.ConnectionManager.ConnectionManager;
 import au.net.nicksifniotis.amedatest.ConnectionManager.ManagerMessages;
 
 
@@ -38,9 +39,6 @@ import au.net.nicksifniotis.amedatest.ConnectionManager.ManagerMessages;
  */
 public class Globals
 {
-    /* TRUE if the app is being developed without access to the AMEDA device. */
-    public static boolean AMEDA_FREE = true;
-
     /* TRUE if you want to dump a bunch of debug toasts to the device during execution. */
     public static volatile boolean DEBUG_MODE = true;
 
@@ -53,28 +51,19 @@ public class Globals
 
     /* Services! */
     public static DebugToastService DebugToast;
-    public static Connection DeviceConnection;
-    private static Messenger _data_sent;
-    public static boolean Connected;
-    public static ImageView ConnectionLamp;
-    public static Messenger activity_sent;
-    public static Messenger activity_received;
-    public static Activity too_many_variables;
-    public static ProgressDialog _connect_progress;
-    public static Drawable green;
-    public static Drawable yellow;
-    public static Drawable red;
+    public static ConnectionManager ConnectionManager;
 
 
+    /**
+     * Start up the life-of-app services.
+     *
+     * - DebugToast service :  For debugging by printf ;)
+     * - ConnectionManager  :  Service that manages the bluetooth connection to the device.
+     *
+     * @param base_activity The 'home' activity of the application.
+     */
     public static void InitialiseServices (final HomeActivity base_activity)
     {
-        green  = base_activity.getResources().getDrawable
-                (R.drawable.liveness_green , base_activity.getTheme());
-        yellow = base_activity.getResources().getDrawable
-                (R.drawable.liveness_yellow, base_activity.getTheme());
-        red    = base_activity.getResources().getDrawable
-                (R.drawable.liveness_red   , base_activity.getTheme());
-
         Messenger debug_messenger = new Messenger(new Handler(new Handler.Callback()
         {
             @Override
@@ -94,292 +83,16 @@ public class Globals
             }
         }));
         DebugToast = new DebugToastService(debug_messenger);
-
         new Thread(DebugToast).start();
 
-        activity_received = new Messenger(new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (Connected) {
-                    Message new_msg = new Message();
-                    new_msg.what = ConnectionMessage.XMIT.ordinal();
-                    new_msg.obj = msg.obj;
-
-                    send_connection(new_msg);
-                }
-                else
-                    DebugToast.Send ("Cannot transmit packet at this time. Please try reconnecting.");
-                return true;
-            }
-        }));
-    }
-
-
-    private static void open_virtual ()
-    {
-        if (DeviceConnection != null)
-        {
-            // shut down the old one first hey.
-            Message msg = new Message();
-            msg.what = ConnectionMessage.SHUTDOWN.ordinal();
-            send_connection(msg);
-        }
-
-        // Fire up the connection.
-        DeviceConnection = new VirtualConnection(too_many_variables);
-        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                ManagerCallback(msg);
-                return true;
-            }
-        })));
-        new Thread(DeviceConnection).start();
-
-        Disconnected();
-    }
-
-
-    public static void open_bluetooth (String device_name)
-    {
-        if (DeviceConnection != null)
-        {
-            // shut down the old one first hey.
-            Message msg = new Message();
-            msg.what = ConnectionMessage.SHUTDOWN.ordinal();
-            send_connection(msg);
-        }
-
-        // Fire up the connection.
-        DeviceConnection = new AMEDAConnection(too_many_variables, device_name);
-        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                ManagerCallback(msg);
-                return true;
-            }
-        })));
-        new Thread(DeviceConnection).start();
-        show_progress_dialog();
-        Disconnected();
-    }
-
-
-    private static void show_progress_dialog()
-    {
-        // Display the 'connecting' dialog box.
-        if (_connect_progress != null)
-            _connect_progress.dismiss();
-
-        _connect_progress = new ProgressDialog(too_many_variables);
-        _connect_progress.setTitle(too_many_variables.getString(R.string.connecting_title));
-        _connect_progress.setMessage(too_many_variables.getString(R.string.connecting_desc));
-        _connect_progress.setCancelable(false);
-        _connect_progress.show();
-    }
-
-
-    /**
-     * The master callback, that filters out heartbeat and connection related messages.
-     * Passes through other messages to whichever activity is the registered callback receiver.
-     *
-     * @param m The message received.
-     */
-    public static void ManagerCallback (Message m)
-    {
-        DebugToast.Send("Manager received message " + m.what + " from device.");
-
-        ConnectionMessage msg = ConnectionMessage.values()[m.what];
-
-        Message new_message;
-        switch (msg)
-        {
-            case RCVD:
-                AMEDAResponse response = (AMEDAResponse) m.obj;
-                if (response.GetCode() == AMEDAResponse.Code.UNKNOWN_COMMAND)
-                    DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
-//                else if (response.GetCode() == AMEDAResponse.Code.READY)
-//                {
-//                  todo implement EHLLO
-//                }
-                else
-                {
-                    new_message = new Message();
-                    new_message.what = ManagerMessages.RECEIVE.ordinal();
-                    new_message.obj = m.obj;
-                    send_activity(new_message);
-                }
-                break;
-            case MESSENGER_READY:
-                _data_sent = DeviceConnection.get_connection();
-
-                new_message = new Message();
-                new_message.what = ConnectionMessage.CONNECT.ordinal();
-                send_connection(new_message);
-
-                break;
-            case CONNECTED:
-                new_message = new Message();
-                new_message.what = ManagerMessages.CONNECTION_RESTORED.ordinal();
-                new_message.obj = m.obj;
-                send_activity(new_message);
-
-                Connected();
-                break;
-            case DISCONNECTED:
-                new_message = new Message();
-                new_message.what = ManagerMessages.CONNECTION_DROPPED.ordinal();
-                new_message.obj = m.obj;
-                send_activity(new_message);
-
-                Disconnected();
-                break;
-
-            case CONNECT_FAILED:
-                _connect_progress.dismiss();
-                DebugToast.Send ("Connection attempt failed. Please try again.");
-                Disconnected();
-                break;
-
-            case CONNECT:
-            case SHUTDOWN:
-            case XMIT:
-                DebugToast.Send("Erroneous message received in master callback function: " + msg.toString());
-                break;
-        }
-    }
-
-
-    public static void onLampClick ()
-    {
-        DebugToast.Send("Lamp onclick triggered! connection status is " + Connected);
-        if (Connected)
-            Disconnect();
-        else
-            SelectDeviceToConnect(too_many_variables);
+        ConnectionManager = new ConnectionManager(base_activity);
     }
 
 
     public static void TerminateServices()
     {
         DebugToast.Shutdown();
-        DeviceConnection.Shutdown();
-    }
-
-
-    public static void Connected()
-    {
-        if (_connect_progress != null)
-            _connect_progress.dismiss();
-
-        Connected = true;
-        ConnectionLamp.setImageDrawable(green);
-    }
-
-
-    public static void Disconnected()
-    {
-        Connected = false;
-        ConnectionLamp.setImageDrawable(red);
-    }
-
-
-    public static void RefreshLamp()
-    {
-        ConnectionLamp.setImageDrawable((Connected) ? green : red);
-    }
-
-
-    /**
-     * Ask the device to disconnect!
-     */
-    public static void Disconnect()
-    {
-        if (!Connected)
-            return;
-
-        if (_data_sent == null)
-            return;
-
-        Message msg = new Message();
-        msg.what = ConnectionMessage.DISCONNECT.ordinal();
-        send_connection(msg);
-    }
-
-
-    private static void send_connection (Message m)
-    {
-        try
-        {
-            _data_sent.send(m);
-        }
-        catch (RemoteException e)
-        {
-            ///lkdfhgdkjh
-        }
-    }
-
-
-    private static void send_activity (Message m)
-    {
-        try
-        {
-            activity_sent.send(m);
-        }
-        catch (RemoteException e)
-        {
-            ///lkdfhgdkjh
-        }
-    }
-
-    public static void SetCallback(Handler.Callback callback)
-    {
-        activity_sent = new Messenger(new Handler(callback));
-    }
-
-
-    public static void SelectDeviceToConnect (final Activity activity)
-    {
-        List<BluetoothDevice> pairedDevices = new ArrayList<> (BluetoothAdapter
-                .getDefaultAdapter().getBondedDevices());
-        List<String> list_names = new LinkedList<>();
-        list_names.add("Virtual Device");
-
-        for (BluetoothDevice d: pairedDevices)
-            list_names.add (d.getName().trim());
-
-        final Dialog dialog = new Dialog(activity);
-        dialog.setContentView(R.layout.bluetooth_selector);
-
-        final ListView lv = (ListView) dialog.findViewById(R.id.bt_sel_list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
-                android.R.layout.simple_list_item_1, list_names);
-        lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0)
-                {
-                    // open up a new virtual connection.
-                    open_virtual();
-                }
-                else
-                {
-                    // go for the real thing!
-                    String device_selected = parent.getAdapter().getItem(position).toString();
-                    open_bluetooth(device_selected);
-                }
-
-                dialog.dismiss();
-            }
-        });
-
-        dialog.setCancelable(true);
-        dialog.setTitle("Select Device");
-
-        dialog.show();
+//        DeviceConnection.Shutdown();
     }
 
 

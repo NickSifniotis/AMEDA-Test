@@ -68,37 +68,47 @@ public class HomeActivity extends AppCompatActivity
         {
             Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
             startActivityForResult(enableBtIntent, 1);
-//            Globals.DebugToast.Send("Bluetooth is not enabled!");
         }
     }
 
 
+    /**
+     * The most important thing that this method looks after is setting up the communication
+     * channels between this activity and the global ConnectionManager object.
+     */
     @Override
     protected void onStart()
     {
         super.onStart();
 
-        Globals.too_many_variables = this;
-        Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
-        Globals.ConnectionLamp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                Globals.onLampClick();
-            }
-        });
-        Globals.RefreshLamp();
-
-        _data_sent = Globals.activity_received;         // the outbound communication channel
-        Globals.SetCallback(new Handler.Callback() {
+        Globals.ConnectionManager.UpdateActivity(this, new Handler.Callback()
+        {
+            /**
+             * Simple event handler.
+             *
+             * @param msg The message received from the connection managger.
+             * @return True, always.
+             */
             @Override
-            public boolean handleMessage(Message msg) {
+            public boolean handleMessage(Message msg)
+            {
                 handleManagerMessage(msg);
                 return true;
             }
         });
+        _data_sent = Globals.ConnectionManager.activity_received;
     }
 
 
+    /**
+     * A null message handler!
+     *
+     * The Home activity is one of those activities that does not interact with the
+     * AMEDA device at all, so messages received from the device are ignored.
+     *
+     * @param msg I don't care what's in this thing.
+     * @return True, always.
+     */
     public boolean handleManagerMessage(Message msg)
     {
         return true;
@@ -140,15 +150,6 @@ public class HomeActivity extends AppCompatActivity
         _debug_toggle = (TextView)findViewById(R.id.h_d_t_debug);
         _short_test_toggle = (TextView)findViewById(R.id.h_d_t_shorttest);
         _address_toggle = (TextView)findViewById(R.id.h_d_t_address);
-
-        // Add the connection lamp icon to the globals.
-        Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
-        Globals.ConnectionLamp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                Globals.onLampClick();
-            }
-        });
     }
 
 
@@ -197,12 +198,6 @@ public class HomeActivity extends AppCompatActivity
         finish();
     }
 
-    public void h_d_t_ameda(View view)
-    {
-        Globals.AMEDA_FREE = !Globals.AMEDA_FREE;
-        _update_drawer_toggles();
-    }
-
     public void h_d_t_debug(View view)
     {
         Globals.DEBUG_MODE = !Globals.DEBUG_MODE;
@@ -229,7 +224,6 @@ public class HomeActivity extends AppCompatActivity
     private void _update_drawer_toggles()
     {
         _address_toggle.setText(getString(R.string.h_d_t_address, String.valueOf(Globals.USING_ADDRESSES)));
-        _ameda_toggle.setText(getString(R.string.h_d_t_ameda, String.valueOf(Globals.AMEDA_FREE)));
         _debug_toggle.setText(getString(R.string.h_d_t_debug, String.valueOf(Globals.DEBUG_MODE)));
         _short_test_toggle.setText(getString(R.string.h_d_t_shorttest, String.valueOf(Globals.SHORT_TESTS)));
     }

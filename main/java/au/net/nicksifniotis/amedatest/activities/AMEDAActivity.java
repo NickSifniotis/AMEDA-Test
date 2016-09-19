@@ -1,7 +1,5 @@
 package au.net.nicksifniotis.amedatest.activities;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,8 +8,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.ImageView;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
@@ -47,40 +43,45 @@ public abstract class AMEDAActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         _instruction_buffer = new AMEDAInstructionQueue();
-
-        _data_sent = Globals.activity_received;         // the outbound communication channel
-        Globals.SetCallback(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                handleManagerMessage(msg);
-                return true;
-            }
-        });
     }
 
 
+    /**
+     * Boilerplace stuff for connecting this activity to the global ConnectionManager object.
+     */
     @Override
     protected void onStart()
     {
         super.onStart();
 
-        Globals.too_many_variables = this;
-        // Add the connection lamp icon to the globals.
-        Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
-        Globals.ConnectionLamp.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                Globals.onLampClick();
+        Globals.ConnectionManager.UpdateActivity(this, new Handler.Callback()
+        {
+            /**
+             * Simple event handler.
+             *
+             * @param msg The message received from the connection managger.
+             * @return True, always.
+             */
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                handleManagerMessage(msg);
+                return true;
             }
         });
+        _data_sent = Globals.ConnectionManager.activity_received;
 
-        Globals.RefreshLamp();
-
-        if (!Globals.Connected)
+        if (!Globals.ConnectionManager.Connected)
             FailButDontDie("No connection detected. Please connect before attempting to begin this activity.");
     }
 
 
+    /**
+     * The callback function for handling messages received from the connection manager.
+     *
+     * @param msg The message received.
+     * @return True, always.
+     */
     public boolean handleManagerMessage(Message msg)
     {
         Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
@@ -114,7 +115,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void GoToPosition (int position)
     {
-        if (!Globals.Connected)
+        if (!Globals.ConnectionManager.Connected)
             return;
 
         if (position >= 1 && position <= 5)
@@ -133,7 +134,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void Calibrate ()
     {
-        if (!Globals.Connected)
+        if (!Globals.ConnectionManager.Connected)
             return;
 
         _instruction_buffer.Enqueue(
@@ -148,7 +149,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     protected void Ping ()
     {
-        if (!Globals.Connected)
+        if (!Globals.ConnectionManager.Connected)
             return;
 
         _instruction_buffer.Enqueue(
@@ -178,7 +179,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void Beep (int num_times)
     {
-        if (!Globals.Connected)
+        if (!Globals.ConnectionManager.Connected)
             return;
 
         if (num_times > 9)
@@ -199,7 +200,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void ExecuteNextInstruction()
     {
-        if (!Globals.Connected)
+        if (!Globals.ConnectionManager.Connected)
             return;
 
         _instruction_buffer.Advance();
@@ -212,7 +213,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void RepeatInstruction()
     {
-        if (!Globals.Connected)
+        if (!Globals.ConnectionManager.Connected)
             return;
 
         Globals.DebugToast.Send("Executing " + _instruction_buffer.Current().Build());
@@ -259,7 +260,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      * Clears the instruction queue if the user selects cancel,
      * re-executes the last instruction if they select try again.
      */
-    void CannotMoveDialog()
+    protected void CannotMoveDialog()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.error_title))
@@ -306,7 +307,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * @param message The message to display to the user before dying.
      */
-    void FailAndDieDialog(String message)
+    protected void FailAndDieDialog(String message)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.error_title))
@@ -336,7 +337,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * @param message The message to display to the user.
      */
-    void FailButDontDie(String message)
+    protected void FailButDontDie(String message)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Alert")

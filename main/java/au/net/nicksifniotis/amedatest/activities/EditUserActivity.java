@@ -185,7 +185,7 @@ public class EditUserActivity extends AppCompatActivity
                     (Globals.USING_ADDRESSES) ? View.VISIBLE : View.GONE);
 
         // hide the connection status, on this screen only.
-        ImageView i = Globals.ConnectionLamp = (ImageView)findViewById(R.id.heartbeat_liveness);
+        ImageView i = (ImageView)findViewById(R.id.heartbeat_liveness);
         i.setVisibility(View.GONE);
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);
