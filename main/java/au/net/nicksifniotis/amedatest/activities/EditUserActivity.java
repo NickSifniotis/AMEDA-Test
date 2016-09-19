@@ -38,7 +38,7 @@ import au.net.nicksifniotis.amedatest.R;
  *   - delete a user
  *   - launch into a new test with a user
  */
-public class EditUserActivity extends AppCompatActivity
+public class EditUserActivity extends NoConnectionActivity
 {
     private EditText _first_name;
     private EditText _surname;

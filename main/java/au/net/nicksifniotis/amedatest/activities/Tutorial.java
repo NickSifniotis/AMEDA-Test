@@ -15,7 +15,7 @@ import au.net.nicksifniotis.amedatest.R;
 /**
  * Launches the 'short tutorial_activity video' activity!
  */
-public class Tutorial extends AppCompatActivity
+public class Tutorial extends NoConnectionActivity
 {
     private static VideoView _tutorial_viewer;
     private int _tutorial_position;

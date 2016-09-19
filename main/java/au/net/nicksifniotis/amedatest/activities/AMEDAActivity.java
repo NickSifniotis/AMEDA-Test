@@ -28,7 +28,7 @@ import au.net.nicksifniotis.amedatest.R;
 public abstract class AMEDAActivity extends AppCompatActivity
 {
     private AMEDAInstructionQueue _instruction_buffer;
-
+    protected boolean uses_connection = true;
     private Messenger _data_sent;
 
 
@@ -54,24 +54,9 @@ public abstract class AMEDAActivity extends AppCompatActivity
     {
         super.onStart();
 
-        Globals.ConnectionManager.UpdateActivity(this, new Handler.Callback()
-        {
-            /**
-             * Simple event handler.
-             *
-             * @param msg The message received from the connection managger.
-             * @return True, always.
-             */
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                handleManagerMessage(msg);
-                return true;
-            }
-        });
-        _data_sent = Globals.ConnectionManager.activity_received;
+        _data_sent = Globals.ConnectionManager.UpdateActivity(this);
 
-        if (!Globals.ConnectionManager.Connected)
+        if (!Globals.ConnectionManager.Connected && uses_connection)
             FailButDontDie("No connection detected. Please connect before attempting to begin this activity.");
     }
 
@@ -80,9 +65,8 @@ public abstract class AMEDAActivity extends AppCompatActivity
      * The callback function for handling messages received from the connection manager.
      *
      * @param msg The message received.
-     * @return True, always.
      */
-    public boolean handleManagerMessage(Message msg)
+    public void handleManagerMessage(Message msg)
     {
         Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
 
@@ -103,8 +87,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
         {
             FailButDontDie("Connection restored. You may now resume this activity.");
         }
-
-        return true;
     }
 
 

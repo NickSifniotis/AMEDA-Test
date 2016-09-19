@@ -31,7 +31,7 @@ import au.net.nicksifniotis.amedatest.R;
  *   - make 'view results' DO something
  *   - the user interface really could use some work
  */
-public class ViewUserActivity extends AppCompatActivity
+public class ViewUserActivity extends NoConnectionActivity
 {
     private int _user_id;
     private DBOpenHelper _database_helper;

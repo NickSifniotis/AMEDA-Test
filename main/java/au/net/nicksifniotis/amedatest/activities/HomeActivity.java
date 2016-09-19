@@ -2,8 +2,6 @@ package au.net.nicksifniotis.amedatest.activities;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,8 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.ManageRecordsEnum;
 import au.net.nicksifniotis.amedatest.R;
@@ -26,7 +22,7 @@ import au.net.nicksifniotis.amedatest.R;
  * Displays the navigation drawer pane and the three big buttons that launch activities.
  *
  */
-public class HomeActivity extends AMEDAActivity
+public class HomeActivity extends NoConnectionActivity
 {
     private TextView _debug_toggle;
     private TextView _short_test_toggle;
@@ -63,51 +59,6 @@ public class HomeActivity extends AMEDAActivity
             Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
             startActivityForResult(enableBtIntent, 1);
         }
-    }
-
-
-    /**
-     * The most important thing that this method looks after is setting up the communication
-     * channels between this activity and the global ConnectionManager object.
-     *
-     * The Home activity does not need to communicate with the AMEDA at all, so it doesn't
-     * bother obtaining the ConnectionManager's inbound messenger.
-     */
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        Globals.ConnectionManager.UpdateActivity(this, new Handler.Callback()
-        {
-            /**
-             * Simple event handler.
-             *
-             * @param msg The message received from the connection managger.
-             * @return True, always.
-             */
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                handleManagerMessage(msg);
-                return true;
-            }
-        });
-    }
-
-
-    /**
-     * A null message handler!
-     *
-     * The Home activity is one of those activities that does not interact with the
-     * AMEDA device at all, so messages received from the device are ignored.
-     *
-     * @param msg I don't care what's in this thing.
-     * @return True, always.
-     */
-    public boolean handleManagerMessage(Message msg)
-    {
-        return true;
     }
 
 
@@ -265,18 +216,5 @@ public class HomeActivity extends AMEDAActivity
         if (extra_intent != null)
                 intent.putExtra("activity", extra_intent.ordinal());
         startActivity(intent);
-    }
-
-
-    /**
-     * Null method, since the home screen doesn't have anything to do with the AMEDA.
-     *
-     * @param instruction The instruction that was sent to the AMEDA.
-     * @param response The AMEDA's response to that instruction.
-     */
-    @Override
-    protected void ProcessAMEDAResponse(AMEDAInstruction instruction, AMEDAResponse response)
-    {
-        // no need to do anything here.
     }
 }

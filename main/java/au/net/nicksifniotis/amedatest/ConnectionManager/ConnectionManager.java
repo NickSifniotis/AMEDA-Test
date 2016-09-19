@@ -27,6 +27,7 @@ import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.R;
+import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
 
 
 /**
@@ -100,12 +101,25 @@ public class ConnectionManager implements Runnable
      * todo make all activities in this app children of AMEDAActivity, which will implement a callback
      *
      * @param activity The activity to interact with.
-     * @param callback todo get rid of this hey
      */
-    public void UpdateActivity (Activity activity, Handler.Callback callback)
+    public Messenger UpdateActivity (final AMEDAActivity activity)
     {
         too_many_variables = activity;
-        activity_sent = new Messenger(new Handler(callback));
+        activity_sent = new Messenger(new Handler(new Handler.Callback()
+        {
+            /**
+             * Simple event handler to call the callback function.
+             *
+             * @param msg The message received from this connection manager.
+             * @return True, always.
+             */
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                activity.handleManagerMessage(msg);
+                return true;
+            }
+        }));
 
         ConnectionLamp = (ImageView)activity.findViewById(R.id.heartbeat_liveness);
         ConnectionLamp.setOnClickListener(new View.OnClickListener()
@@ -121,6 +135,8 @@ public class ConnectionManager implements Runnable
             }
         });
         RefreshLamp();
+
+        return activity_received;
     }
 
 

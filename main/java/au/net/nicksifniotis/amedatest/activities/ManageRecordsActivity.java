@@ -36,7 +36,7 @@ import au.net.nicksifniotis.amedatest.LocalDB.User_RCA;
  * However selecting a record from the listview will open the activity that has been provided
  * when this very activity was intent-ed.
  */
-public class ManageRecordsActivity extends AppCompatActivity
+public class ManageRecordsActivity extends NoConnectionActivity
 {
     private DBOpenHelper _database_helper;
     private SQLiteDatabase _db;
