@@ -87,6 +87,7 @@ public class AMEDAResponse
      */
     public enum Code
     {
+        EHLLO("EHLLO"),
         READY("READY"),
         CANNOT_MOVE("ERR01"),
         NO_RESPONSE_ANGLE("ERR02"),

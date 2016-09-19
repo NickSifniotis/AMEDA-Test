@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
@@ -50,6 +52,7 @@ public class ConnectionManager implements Runnable
     public Messenger connection_sent;
     public Messenger connection_received;
 
+    private Heartbeat heart;
 
     public Drawable green;
     public Drawable yellow;
@@ -255,10 +258,8 @@ public class ConnectionManager implements Runnable
                 AMEDAResponse response = (AMEDAResponse) m.obj;
                 if (response.GetCode() == AMEDAResponse.Code.UNKNOWN_COMMAND)
                     Globals.DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
-//                else if (response.GetCode() == AMEDAResponse.Code.READY)
-//                {
-//                  todo implement EHLLO
-//                }
+                else if (response.GetCode() == AMEDAResponse.Code.EHLLO)
+                    heart_diastole();
                 else
                 {
                     new_message = new Message();
@@ -316,14 +317,38 @@ public class ConnectionManager implements Runnable
     {
         if (Connected)
         {
-            Message new_msg = new Message();
-            new_msg.what = ConnectionMessage.XMIT.ordinal();
-            new_msg.obj = msg.obj;
+            if (msg.what == ManagerMessages.SEND.ordinal())
+            {
+                if (((AMEDAInstruction) msg.obj).GetInstruction() == AMEDAInstructionEnum.HELLO)
+                    heart_systole();
 
-            send_message(connection_sent, new_msg);
+                Message new_msg = new Message();
+                new_msg.what = ConnectionMessage.XMIT.ordinal();
+                new_msg.obj = msg.obj;
+
+                send_message(connection_sent, new_msg);
+            }
         }
         else
             Globals.DebugToast.Send ("Cannot transmit packet at this time. Please try reconnecting.");
+    }
+
+
+    /**
+     * Ping sent!
+     */
+    private void heart_systole()
+    {
+        ConnectionLamp.setImageDrawable(yellow);
+    }
+
+
+    /**
+     * Ping received.
+     */
+    private void heart_diastole()
+    {
+        ConnectionLamp.setImageDrawable(green);
     }
 
 
@@ -333,6 +358,9 @@ public class ConnectionManager implements Runnable
     }
 
 
+    /**
+     * Received confirmation that we are connected to something!
+     */
     public void Connected()
     {
         if (_connect_progress != null)
@@ -340,13 +368,24 @@ public class ConnectionManager implements Runnable
 
         Connected = true;
         ConnectionLamp.setImageDrawable(green);
+
+        // fire up a heartbeat thread!
+        heart = new Heartbeat(activity_received);
+        new Thread(heart).start();
     }
 
 
+    /**
+     * Connection lost! So kill off any hearts that might be alive.
+     */
     public void Disconnected()
     {
         Connected = false;
         ConnectionLamp.setImageDrawable(red);
+
+        if (heart != null)
+            heart.die();
+        heart = null;
     }
 
 
