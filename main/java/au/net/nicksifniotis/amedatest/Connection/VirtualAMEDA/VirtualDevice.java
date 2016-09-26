@@ -90,7 +90,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
                     return true;    // Not every message received requires a response.
 
                 // Transmit the data that's been received to the connection.
-                send(Messages.Create(VirtualAMEDAMessage.INSTRUCTION, response));
+                send(Messages.Create(VirtualAMEDAMessage.RCV_PACKET, response));
                 break;
 
             default:

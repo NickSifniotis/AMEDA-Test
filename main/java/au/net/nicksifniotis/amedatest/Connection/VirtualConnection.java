@@ -113,7 +113,7 @@ public class VirtualConnection extends Connection
 
             switch (VirtualAMEDAMessage.Message(msg))
             {
-                case INSTRUCTION:
+                case RCV_PACKET:
                     // get the message from the payload, and pass it upstream to the manager.
                     AMEDAResponse response = new AMEDAResponse(Messages.GetString(msg));
 
