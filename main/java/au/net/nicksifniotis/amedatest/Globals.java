@@ -103,6 +103,23 @@ public class Globals
 
 
     /**
+     * Displays an alert / non-fatal error message to the user. Only one button is provided
+     * to the user, to dismiss the notification.
+     *
+     * @param activity The activity to display the notification in.
+     * @param alert_message The message to display to the user.
+     */
+    public static void Alert(final Activity activity, String alert_message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.error_title)
+                .setMessage(alert_message)
+                .setPositiveButton(R.string.btn_done, null);
+        builder.create().show();
+    }
+
+
+    /**
      * Scores a recorded test. The score is something called a 'mean AUC', which I have had to
      * reverse engineer from undocumented Excel spreadsheet formulae.
      *

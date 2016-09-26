@@ -45,11 +45,11 @@ import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
 public class ConnectionManager implements Runnable
 {
     // connection data
-    public boolean Connected;
-    private Connection DeviceConnection;
+    public  boolean        Connected;
+    private Connection     _device_connection;
     private ProgressDialog _connect_progress;
-    private ImageView ConnectionLamp;
-    private Activity too_many_variables;
+    private ImageView      _connection_lamp;
+    private Activity       _current_activity;
 
     private Messenger activity_sent;
     private Messenger activity_received;
@@ -58,9 +58,9 @@ public class ConnectionManager implements Runnable
 
     private Heartbeat heart;
 
-    public Drawable green;
-    public Drawable yellow;
-    public Drawable red;
+    private Drawable green;
+    private Drawable yellow;
+    private Drawable red;
 
     private volatile boolean _alive;
 
@@ -118,13 +118,11 @@ public class ConnectionManager implements Runnable
      * Otherwise, what happens is that a child activity might be active, but messages or UI
      * requests are being sent back to the parent - which may have stopped.
      *
-     * todo make all activities in this app children of AMEDAActivity, which will implement a callback
-     *
      * @param activity The activity to interact with.
      */
     public Messenger UpdateActivity (final AMEDAActivity activity)
     {
-        too_many_variables = activity;
+        _current_activity = activity;
         activity_sent = new Messenger(new Handler(new Handler.Callback()
         {
             /**
@@ -141,8 +139,8 @@ public class ConnectionManager implements Runnable
             }
         }));
 
-        ConnectionLamp = (ImageView)activity.findViewById(R.id.heartbeat_liveness);
-        ConnectionLamp.setOnClickListener(new View.OnClickListener()
+        _connection_lamp = (ImageView)activity.findViewById(R.id.heartbeat_liveness);
+        _connection_lamp.setOnClickListener(new View.OnClickListener()
         {
             /**
              * Simple method to call the onClick event handler.
@@ -170,13 +168,15 @@ public class ConnectionManager implements Runnable
     }
 
 
+    /**
+     * Callback function that handles requests to display the connection status dialog box.
+     */
     public void onLampClick()
     {
-        Globals.DebugToast.Send("Lamp onclick triggered! connection status is " + Connected);
         if (Connected)
             Disconnect();
         else
-            SelectDeviceToConnect(too_many_variables);
+            SelectDeviceToConnect(_current_activity);
     }
 
 
@@ -207,14 +207,14 @@ public class ConnectionManager implements Runnable
      */
     private void open_virtual ()
     {
-        if (DeviceConnection != null)
+        if (_device_connection != null)
             send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
 
         // Fire up the connection.
-        DeviceConnection = new VirtualConnection(too_many_variables);
-        DeviceConnection.UpdateCallback(connection_received);
+        _device_connection = new VirtualConnection(_current_activity);
+        _device_connection.UpdateCallback(connection_received);
 
-        new Thread(DeviceConnection).start();
+        new Thread(_device_connection).start();
         show_progress_dialog();
         Disconnected();
     }
@@ -227,14 +227,14 @@ public class ConnectionManager implements Runnable
      */
     public void open_bluetooth (String device_name)
     {
-        if (DeviceConnection != null)
+        if (_device_connection != null)
             send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
 
         // Fire up the connection.
-        DeviceConnection = new AMEDAConnection(too_many_variables, device_name);
-        DeviceConnection.UpdateCallback(connection_received);
+        _device_connection = new AMEDAConnection(_current_activity, device_name);
+        _device_connection.UpdateCallback(connection_received);
 
-        new Thread(DeviceConnection).start();
+        new Thread(_device_connection).start();
         show_progress_dialog();
         Disconnected();
     }
@@ -248,9 +248,9 @@ public class ConnectionManager implements Runnable
         if (_connect_progress != null)
             _connect_progress.dismiss();
 
-        _connect_progress = new ProgressDialog(too_many_variables);
-        _connect_progress.setTitle(too_many_variables.getString(R.string.connecting_title));
-        _connect_progress.setMessage(too_many_variables.getString(R.string.connecting_desc));
+        _connect_progress = new ProgressDialog(_current_activity);
+        _connect_progress.setTitle(_current_activity.getString(R.string.connecting_title));
+        _connect_progress.setMessage(_current_activity.getString(R.string.connecting_desc));
         _connect_progress.setCancelable(false);
         _connect_progress.show();
     }
@@ -285,7 +285,7 @@ public class ConnectionManager implements Runnable
             case MESSENGER_READY:
                 // Grab the connection object's communications line, and then instruct it
                 // to try and connect to its device.
-                connection_sent = DeviceConnection.get_connection();
+                connection_sent = _device_connection.get_connection();
 
                 send_connection (Messages.Create (ManagerMessage.CONNECT));
                 break;
@@ -303,8 +303,9 @@ public class ConnectionManager implements Runnable
                 break;
 
             case CONNECT_FAILED:
+                // Need to inform the user that the connection was unsuccessful.
                 _connect_progress.dismiss();
-                Globals.DebugToast.Send ("Connection attempt failed. Please try again.");
+                Globals.Alert (_current_activity, "Connection attempt failed. Please try again.");
                 Disconnected();
                 break;
 
@@ -347,7 +348,7 @@ public class ConnectionManager implements Runnable
      */
     private void heart_systole()
     {
-        ConnectionLamp.setImageDrawable(yellow);
+        _connection_lamp.setImageDrawable(yellow);
     }
 
 
@@ -356,13 +357,13 @@ public class ConnectionManager implements Runnable
      */
     private void heart_diastole()
     {
-        ConnectionLamp.setImageDrawable(green);
+        _connection_lamp.setImageDrawable(green);
     }
 
 
     public void RefreshLamp()
     {
-        ConnectionLamp.setImageDrawable((Connected) ? green : red);
+        _connection_lamp.setImageDrawable((Connected) ? green : red);
     }
 
 
@@ -375,7 +376,7 @@ public class ConnectionManager implements Runnable
             _connect_progress.dismiss();
 
         Connected = true;
-        ConnectionLamp.setImageDrawable(green);
+        _connection_lamp.setImageDrawable(green);
 
         // fire up a heartbeat thread!
         heart = new Heartbeat(activity_received);
@@ -389,7 +390,7 @@ public class ConnectionManager implements Runnable
     public void Disconnected()
     {
         Connected = false;
-        ConnectionLamp.setImageDrawable(red);
+        _connection_lamp.setImageDrawable(red);
 
         if (heart != null)
             heart.die();

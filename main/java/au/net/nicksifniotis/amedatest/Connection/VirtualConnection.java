@@ -30,9 +30,7 @@ public class VirtualConnection extends Connection
     private VirtualDevice _device;
     private Messenger _device_data_received;
     private Messenger _device_data_sent;
-
-    // Members that deal with the connection to the UI / 'main' thread are inherited from
-    // the base class.
+    private Looper _looper;
 
 
     /**
@@ -54,8 +52,8 @@ public class VirtualConnection extends Connection
         if (_device != null)
             send_device(Messages.Create(ConnectionMessage.SHUTDOWN));
 
-        if (Looper.myLooper() != null)
-            Looper.myLooper().quitSafely();
+        if (_looper != null)
+            _looper.quitSafely();
     }
 
 
@@ -80,14 +78,27 @@ public class VirtualConnection extends Connection
 
 
     /**
-     * connect to the virtual device by create an instance of the task, and swapping messagers
+     * Connect to the virtual device by creating an instance of the task, and swapping messengers
      * and handlers.
-     *
-     * Once this is done, signal a successful connection to the UI thread.
      */
     private boolean create_device()
     {
-        _device_data_received = new Messenger(new Handler(new AMEDA_Handler()));
+        _device_data_received = new Messenger(new Handler(new Handler.Callback()
+        {
+            /**
+             * Callback function to the message handling routine.
+             *
+             * @param msg The message to handle.
+             * @return True, always.
+             */
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                handle_ameda_message(msg);
+                return true;
+            }
+        }));
+
         _device = new VirtualDevice(_context, _device_data_received);
 
         _connected = false;
@@ -98,46 +109,36 @@ public class VirtualConnection extends Connection
 
 
     /**
-     * Callback class for processing receiving messages from the virtual AMEDA.
+     * Handle messages received by the AMEDA.
+     * Most of the time, messages received will be passed straight on to the connection
+     * manager.
+     *
+     * @param msg The message received from the virtual AMEDA.
      */
-    class AMEDA_Handler implements Handler.Callback
+    public void handle_ameda_message(Message msg)
     {
-        /**
-         * Handle messages received by the AMEDA.
-         * Most of the time, messages received will be passed straight on to the connection
-         * manager.
-         *
-         * @param msg The message received from the virtual AMEDA.
-         * @return True!
-         */
-        @Override
-        public boolean handleMessage(Message msg)
+        Globals.DebugToast.Send("Virtual connection receiving message "
+                + VirtualAMEDAMessage.toString(msg) + " from device");
+
+        switch (VirtualAMEDAMessage.Message(msg))
         {
-            Globals.DebugToast.Send("Virtual connection receiving message "
-                    + VirtualAMEDAMessage.toString(msg) + " from device");
+            case RCV_PACKET:
+                // get the message from the payload, and pass it upstream to the manager.
+                AMEDAResponse response = new AMEDAResponse(Messages.GetString(msg));
+                send_manager(Messages.Create(ConnectionMessage.RCVD, response));
+                break;
 
-            switch (VirtualAMEDAMessage.Message(msg))
-            {
-                case RCV_PACKET:
-                    // get the message from the payload, and pass it upstream to the manager.
-                    AMEDAResponse response = new AMEDAResponse(Messages.GetString(msg));
-                    send_manager(Messages.Create(ConnectionMessage.RCVD, response));
-                    break;
+            case MESSENGER_READY:
+                // get the device's messenger, and then
+                // let the manager know that we are now connected.
+                _device_data_sent = _device.GetMessenger();
+                _connected = true;
 
-                case MESSENGER_READY:
-                    // get the device's messenger, and then
-                    // let the manager know that we are now connected.
-                    _device_data_sent = _device.GetMessenger();
-                    _connected = true;
+                send_manager(Messages.Create(ConnectionMessage.CONNECTED));
+                break;
 
-                    send_manager(Messages.Create(ConnectionMessage.CONNECTED));
-                    break;
-
-                default:
-                    break;
-            }
-
-            return true;
+            default:
+                break;
         }
     }
 
@@ -150,10 +151,19 @@ public class VirtualConnection extends Connection
     public void run()
     {
         Looper.prepare();
+        _looper = Looper.myLooper();
 
-        _connection_in = new Messenger(new Handler(new Handler.Callback() {
+        _connection_in = new Messenger(new Handler(new Handler.Callback()
+        {
+            /**
+             * Simple callback method for message handling.
+             *
+             * @param msg The message to handle.
+             * @return True, always.
+             */
             @Override
-            public boolean handleMessage(Message msg) {
+            public boolean handleMessage(Message msg)
+            {
                 handle_manager_message(msg);
                 return true;
             }
@@ -170,10 +180,9 @@ public class VirtualConnection extends Connection
      * Handles messages received from the connection manager.
      *
      * @param msg The message received.
-     * @return True on success, false otherwise.
      */
     @Override
-    public boolean handle_manager_message(Message msg)
+    public void handle_manager_message(Message msg)
     {
         Globals.DebugToast.Send("Virtual connection receiving message "
                 + ManagerMessage.toString(msg) + " from manager");
@@ -196,10 +205,10 @@ public class VirtualConnection extends Connection
             case SHUTDOWN:
                 shutdown();
                 break;
+
             default:
-                return false;
+                break;
         }
-        return true;
     }
 
 

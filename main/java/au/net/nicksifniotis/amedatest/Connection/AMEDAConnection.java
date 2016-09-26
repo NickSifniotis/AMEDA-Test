@@ -371,10 +371,9 @@ public class AMEDAConnection extends Connection
      * Callback function for handling messages that are received from the connection manager.
      *
      * @param msg The message received.
-     * @return True, always.
      */
     @Override
-    public boolean handle_manager_message(Message msg)
+    public void handle_manager_message(Message msg)
     {
         switch (ManagerMessage.Message(msg))
         {
@@ -397,8 +396,6 @@ public class AMEDAConnection extends Connection
             default:
                 break;
         }
-
-        return true;
     }
 
 
