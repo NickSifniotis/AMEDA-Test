@@ -9,6 +9,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.Messages;
 import au.net.nicksifniotis.amedatest.Messages.VirtualAMEDAMessage;
 import au.net.nicksifniotis.amedatest.R;
 
@@ -93,7 +94,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
         // Transmit the data that's been received to the connection.
         try
         {
-            _outbound_message_buffer.send(VirtualAMEDAMessage.INSTRUCTION.Create(response));
+            _outbound_message_buffer.send(Messages.Create(VirtualAMEDAMessage.INSTRUCTION, response));
         }
         catch (RemoteException e)
         {
@@ -120,7 +121,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
         Handler _my_handler = new Handler(this);
         _inbound_message_buffer = new Messenger(_my_handler);
 
-        send(VirtualAMEDAMessage.MESSENGER_READY.Create());
+        send(Messages.Create(VirtualAMEDAMessage.MESSENGER_READY));
 
         Looper.loop();
 

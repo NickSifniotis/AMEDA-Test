@@ -12,6 +12,7 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VAMEDAMsgBak;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualDevice;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.Messages;
 import au.net.nicksifniotis.amedatest.Messages.VirtualAMEDAMessage;
 
 
@@ -143,7 +144,7 @@ public class VirtualConnection extends Connection
             {
                 case INSTRUCTION:
                     // get the message from the payload, and pass it upstream to the manager.
-                    AMEDAResponse response = new AMEDAResponse(VirtualAMEDAMessage.Payload(msg));
+                    AMEDAResponse response = new AMEDAResponse(Messages.GetString(msg));
 
                     msg = new Message();
                     msg.what = ConnectionMessage.RCVD.ordinal();

@@ -15,29 +15,6 @@ public enum VirtualAMEDAMessage
 
 
     /**
-     * Creates a new instance of a message, of whatever type I am.
-     *
-     * @return The new message.
-     */
-    public Message Create()
-    {
-        return BaseMessage.Create(this.ordinal());
-    }
-
-
-    /**
-     * Creates a new instance of a message, and attach an AMEDAResponse to it.
-     *
-     * @param response The AMEDA response to attach to the message.
-     * @return The new message.
-     */
-    public Message Create(String response)
-    {
-        return BaseMessage.Create(this.ordinal(), response);
-    }
-
-
-    /**
      * Returns the message code that corresponds to the message that has been received.
      *
      * @param msg The message recevied from the messenger.
@@ -46,18 +23,6 @@ public enum VirtualAMEDAMessage
     public static VirtualAMEDAMessage Message (Message msg)
     {
         return VirtualAMEDAMessage.values()[msg.what];
-    }
-
-
-    /**
-     * Returns the payload attached to this message, as a string.
-     *
-     * @param msg The message to interpret.
-     * @return A stringy payload.
-     */
-    public static String Payload(Message msg)
-    {
-        return (String) msg.obj;
     }
 
 
