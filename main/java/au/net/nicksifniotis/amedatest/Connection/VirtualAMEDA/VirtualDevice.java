@@ -9,6 +9,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Messages.Messages;
 import au.net.nicksifniotis.amedatest.Messages.VirtualAMEDAMessage;
 import au.net.nicksifniotis.amedatest.R;
@@ -68,43 +69,34 @@ public class VirtualDevice implements Runnable, Handler.Callback
     @Override
     public boolean handleMessage(Message msg)
     {
-        Globals.DebugToast.Send ("Virtual AMEDA Handling message");
+        Globals.DebugToast.Send ("Virtual AMEDA received " + ConnectionMessage.toString(msg));
 
-        VAMEDAMsgBak message_type = VAMEDAMsgBak.index(msg.what);
-
-        if (message_type == VAMEDAMsgBak.SHUTDOWN)
+        switch (ConnectionMessage.Message(msg))
         {
-            // A shutdown signal!
-            Shutdown();
-            return true;
+            case SHUTDOWN:
+                // Shut down the virtual device.
+                Shutdown();
+                break;
+
+            case XMIT:
+                // The message is called 'transmit' but on this end it means receive.
+                // Go figure.
+                String byte_code = validate_command(Messages.GetString(msg));
+                if (byte_code == null)
+                    return false;   // Communications failure, which should never happen!
+
+                String response = encode_response (generate_response (byte_code));
+                if (response == null)
+                    return true;    // Not every message received requires a response.
+
+                // Transmit the data that's been received to the connection.
+                send(Messages.Create(VirtualAMEDAMessage.INSTRUCTION, response));
+                break;
+
+            default:
+                // Simply pass on.
+                break;
         }
-
-        if (message_type != VAMEDAMsgBak.INSTRUCTION)
-            return false;   // I'll only be transmitting messages of type 1 (ordinary) or 2 (shutdown)
-
-        String byte_code = validate_command((String) msg.obj);
-        if (byte_code == null)
-            return false;   // Communications failure, which should never happen!
-
-        String response = encode_response (generate_response (byte_code));
-        if (response == null)
-            return true;    // Not every message received requires a response.
-
-
-        // Transmit the data that's been received to the connection.
-        try
-        {
-            _outbound_message_buffer.send(Messages.Create(VirtualAMEDAMessage.INSTRUCTION, response));
-        }
-        catch (RemoteException e)
-        {
-            // What the hell is going on? If the outbound buffer has disappeared, it can
-            // only mean that the virtual AMEDA connection has gone down.
-            // So shut this thing down!
-            Thread.currentThread().interrupt();
-            return true;
-        }
-
         return true;
     }
 
@@ -161,6 +153,12 @@ public class VirtualDevice implements Runnable, Handler.Callback
     }
 
 
+    /**
+     * Respond to the instruction that the virtual device has received.
+     *
+     * @param instruction_code The instruction sent from the app.
+     * @return The response, if any, to that instruction.
+     */
     private String generate_response(String instruction_code)
     {
         String res = "";
@@ -200,7 +198,8 @@ public class VirtualDevice implements Runnable, Handler.Callback
 
         try
         {
-            Thread.sleep (500);     // not so fast, cowboy!
+            Thread.sleep (500);     // not so fast, cowboy! Small delay here to make this
+                                    // device seem realistically (non)responsive.
         }
         catch (InterruptedException e)
         {
@@ -242,6 +241,11 @@ public class VirtualDevice implements Runnable, Handler.Callback
     }
 
 
+    /**
+     * Safe transmission of message.
+     *
+     * @param msg The message to send.
+     */
     private void send(Message msg)
     {
         try
@@ -250,7 +254,8 @@ public class VirtualDevice implements Runnable, Handler.Callback
         }
         catch (RemoteException e)
         {
-            // ghdfglkjd
+            // If the connection has been lost somehow, disconnect safely.
+            Shutdown();
         }
     }
 

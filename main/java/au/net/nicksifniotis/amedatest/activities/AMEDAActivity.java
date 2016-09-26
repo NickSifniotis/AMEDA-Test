@@ -2,7 +2,6 @@ package au.net.nicksifniotis.amedatest.activities;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -13,8 +12,10 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
-import au.net.nicksifniotis.amedatest.ConnectionManager.ManagerMessages;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.ActivityMessage;
+import au.net.nicksifniotis.amedatest.Messages.ManagerMessage;
+import au.net.nicksifniotis.amedatest.Messages.Messages;
 import au.net.nicksifniotis.amedatest.R;
 
 
@@ -68,24 +69,29 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     public void handleManagerMessage(Message msg)
     {
-        Globals.DebugToast.Send("AMEDAActivity handling message " + msg.what + " from connection");
+        Globals.DebugToast.Send("AMEDAActivity handling message "
+                + ManagerMessage.toString(msg) + " from manager");
 
-        int msg_type = msg.what;
+        switch (ManagerMessage.Message(msg))
+        {
+            case RCVD:
+                // data packet has been received from the AMEDA!
+                AMEDAResponse response = Messages.GetResponse(msg);
+                Globals.DebugToast.Send("Received " + response.toString() + " from connection");
 
-        if (msg_type == ManagerMessages.RECEIVE.ordinal())
-        {
-            AMEDAResponse response = (AMEDAResponse) msg.obj;
-            Globals.DebugToast.Send("Received " + response.toString() + " from connection");
+                ProcessAMEDAResponse(_instruction_buffer.Current(), response);
+                break;
 
-            ProcessAMEDAResponse(_instruction_buffer.Current(), response);
-        }
-        else if (msg_type == ManagerMessages.CONNECTION_DROPPED.ordinal())
-        {
-            FailButDontDie("Connection dropped. Please reconnect to continue.");
-        }
-        else if (msg_type == ManagerMessages.CONNECTION_RESTORED.ordinal())
-        {
-            FailButDontDie("Connection restored. You may now resume this activity.");
+            case CONNECTION_DROPPED:
+                FailButDontDie("Connection dropped. Please reconnect to continue.");
+                break;
+
+            case CONNECTION_RESUMED:
+                FailButDontDie("Connection restored. You may now resume this activity.");
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -122,21 +128,6 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _instruction_buffer.Enqueue(
                 AMEDAInstruction.Create()
                 .Instruction(AMEDAInstructionEnum.CALIBRATE)
-        );
-    }
-
-
-    /**
-     * Sends a ping message to the AMEDA. Keep alive!
-     */
-    protected void Ping ()
-    {
-        if (!Globals.ConnectionManager.Connected)
-            return;
-
-        _instruction_buffer.Enqueue(
-                AMEDAInstruction.Create()
-                .Instruction(AMEDAInstructionEnum.HELLO)
         );
     }
 
@@ -200,11 +191,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
         Globals.DebugToast.Send("Executing " + _instruction_buffer.Current().Build());
 
-        Message m = new Message();
-        m.what = ManagerMessages.SEND.ordinal();
-        m.obj = _instruction_buffer.Current();
-
-        send_connection(m);
+        send_connection(Messages.Create(ActivityMessage.SEND, _instruction_buffer.Current()));
     }
 
 

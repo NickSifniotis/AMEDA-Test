@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +23,9 @@ import java.util.UUID;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.ConnectionMessage;
+import au.net.nicksifniotis.amedatest.Messages.ManagerMessage;
+import au.net.nicksifniotis.amedatest.Messages.Messages;
 import au.net.nicksifniotis.amedatest.R;
 
 
@@ -117,12 +119,7 @@ public class AMEDAConnection extends Connection
             else
             {
                 Globals.DebugToast.Send("Sending message: " + response.toString());
-
-                Message message = new Message();
-                message.what = ConnectionMessage.RCVD.ordinal();
-                message.obj = response;
-
-                send_manager (message);
+                send_manager (Messages.Create (ConnectionMessage.RCVD, response));
             }
         }
     }
@@ -375,16 +372,19 @@ public class AMEDAConnection extends Connection
     }
 
 
+    /**
+     * Callback function for handling messages that are received from the connection manager.
+     *
+     * @param msg The message received.
+     * @return True, always.
+     */
     @Override
     public boolean handle_manager_message(Message msg)
     {
-        ConnectionMessage message = ConnectionMessage.index(msg.what);
-
-        switch (message)
+        switch (ManagerMessage.Message(msg))
         {
             case XMIT:
-                AMEDAInstruction instruction = (AMEDAInstruction) msg.obj;
-                _handle_transmission(instruction);
+                _handle_transmission(Messages.GetInstruction(msg));
                 break;
 
             case CONNECT:
@@ -400,12 +400,7 @@ public class AMEDAConnection extends Connection
                 Shutdown();
                 break;
 
-            case CONNECTED:
-            case DISCONNECTED:
-            case MESSENGER_READY:
-            case RCVD:
-                Globals.DebugToast.Send("Invalid message received from " +
-                        "connection manager in AMEDA connection: " + message.toString());
+            default:
                 break;
         }
 
@@ -414,8 +409,9 @@ public class AMEDAConnection extends Connection
 
 
     /**
-     * Dispatches a message to the connection manager (current todo make this not the global)
-     * @param m
+     * Dispatches a message to the connection manager.
+     *
+     * @param m The message to send.
      */
     private void send_manager(Message m)
     {
@@ -433,10 +429,11 @@ public class AMEDAConnection extends Connection
     }
 
 
+    /**
+     * Attempt to connect to the bluetooth device has failed. Notify the connection manager.
+     */
     private void connect_failed()
     {
-        Message m = new Message();
-        m.what = ConnectionMessage.CONNECT_FAILED.ordinal();
-        send_manager (m);
+        send_manager (Messages.Create (ConnectionMessage.CONNECT_FAILED));
     }
 }

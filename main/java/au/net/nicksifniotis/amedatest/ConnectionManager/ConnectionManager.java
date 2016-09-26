@@ -25,9 +25,12 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
-import au.net.nicksifniotis.amedatest.Connection.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.ActivityMessage;
+import au.net.nicksifniotis.amedatest.Messages.ConnectionMessage;
+import au.net.nicksifniotis.amedatest.Messages.ManagerMessage;
+import au.net.nicksifniotis.amedatest.Messages.Messages;
 import au.net.nicksifniotis.amedatest.R;
 import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
 
@@ -170,19 +173,19 @@ public class ConnectionManager implements Runnable
         }
     }
 
+
+    /**
+     * Opens up a new connection to the virtual device.
+     */
     private void open_virtual ()
     {
         if (DeviceConnection != null)
-        {
-            // shut down the old one first hey.
-            Message msg = new Message();
-            msg.what = ConnectionMessage.SHUTDOWN.ordinal();
-            send_message(connection_sent, msg);
-        }
+            send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
 
         // Fire up the connection.
         DeviceConnection = new VirtualConnection(too_many_variables);
-        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
+        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback()
+        {
             @Override
             public boolean handleMessage(Message msg)
             {
@@ -191,24 +194,25 @@ public class ConnectionManager implements Runnable
             }
         })));
         new Thread(DeviceConnection).start();
-
+        show_progress_dialog();
         Disconnected();
     }
 
 
+    /**
+     * Open up a new connection via the Bluetooth interface.
+     *
+     * @param device_name The name of the device to try and open a connection with.
+     */
     public void open_bluetooth (String device_name)
     {
         if (DeviceConnection != null)
-        {
-            // shut down the old one first hey.
-            Message msg = new Message();
-            msg.what = ConnectionMessage.SHUTDOWN.ordinal();
-            send_message(connection_sent, msg);
-        }
+            send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
 
         // Fire up the connection.
         DeviceConnection = new AMEDAConnection(too_many_variables, device_name);
-        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback() {
+        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback()
+        {
             @Override
             public boolean handleMessage(Message msg)
             {
@@ -224,7 +228,6 @@ public class ConnectionManager implements Runnable
 
     /**
      * Opens up the 'Connecting ...' dialog box while the connection is being made.
-     *
      */
     private void show_progress_dialog()
     {
@@ -247,49 +250,41 @@ public class ConnectionManager implements Runnable
      */
     private void connection_callback (Message m)
     {
-        Globals.DebugToast.Send("Manager received message " + m.what + " from device.");
+        Globals.DebugToast.Send("Manager received "
+                + ConnectionMessage.toString(m) + " from device.");
 
-        ConnectionMessage msg = ConnectionMessage.values()[m.what];
-
-        Message new_message;
-        switch (msg)
+        switch (ConnectionMessage.Message(m))
         {
             case RCVD:
-                AMEDAResponse response = (AMEDAResponse) m.obj;
+                // Data has been received from the AMEDA. Process it, and forward on to
+                // the right place.
+                AMEDAResponse response = Messages.GetResponse(m);
                 if (response.GetCode() == AMEDAResponse.Code.UNKNOWN_COMMAND)
                     Globals.DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
                 else if (response.GetCode() == AMEDAResponse.Code.EHLLO)
                     heart_diastole();
                 else
-                {
-                    new_message = new Message();
-                    new_message.what = ManagerMessages.RECEIVE.ordinal();
-                    new_message.obj = m.obj;
-                    send_message(activity_sent, new_message);
-                }
+                    send_activity(Messages.Create(ManagerMessage.RCVD, response));
+
                 break;
+
             case MESSENGER_READY:
+                // Grab the connection object's communications line, and then instruct it
+                // to try and connect to its device.
                 connection_sent = DeviceConnection.get_connection();
 
-                new_message = new Message();
-                new_message.what = ConnectionMessage.CONNECT.ordinal();
-                send_message(connection_sent, new_message);
-
+                send_connection (Messages.Create (ManagerMessage.CONNECT));
                 break;
-            case CONNECTED:
-                new_message = new Message();
-                new_message.what = ManagerMessages.CONNECTION_RESTORED.ordinal();
-                new_message.obj = m.obj;
-                send_message(activity_sent, new_message);
 
+            case CONNECTED:
+                // Inform the activity that the connection has been established.
+                send_activity (Messages.Create (ManagerMessage.CONNECTION_RESUMED));
                 Connected();
                 break;
-            case DISCONNECTED:
-                new_message = new Message();
-                new_message.what = ManagerMessages.CONNECTION_DROPPED.ordinal();
-                new_message.obj = m.obj;
-                send_message(activity_sent, new_message);
 
+            case DISCONNECTED:
+                // Inform the activity that the connection is lost ...
+                send_activity (Messages.Create (ManagerMessage.CONNECTION_DROPPED));
                 Disconnected();
                 break;
 
@@ -299,10 +294,7 @@ public class ConnectionManager implements Runnable
                 Disconnected();
                 break;
 
-            case CONNECT:
-            case SHUTDOWN:
-            case XMIT:
-                Globals.DebugToast.Send("Erroneous message received in master callback function: " + msg.toString());
+            default:
                 break;
         }
     }
@@ -317,16 +309,18 @@ public class ConnectionManager implements Runnable
     {
         if (Connected)
         {
-            if (msg.what == ManagerMessages.SEND.ordinal())
+            switch (ActivityMessage.Message(msg))
             {
-                if (((AMEDAInstruction) msg.obj).GetInstruction() == AMEDAInstructionEnum.HELLO)
-                    heart_systole();
+                case SEND:
+                    AMEDAInstruction instruction = Messages.GetInstruction(msg);
+                    if (instruction.GetInstruction() == AMEDAInstructionEnum.HELLO)
+                        heart_systole();
 
-                Message new_msg = new Message();
-                new_msg.what = ConnectionMessage.XMIT.ordinal();
-                new_msg.obj = msg.obj;
+                    send_connection(Messages.Create(ManagerMessage.XMIT, instruction));
+                    break;
 
-                send_message(connection_sent, new_msg);
+                default:
+                    break;
             }
         }
         else
@@ -399,25 +393,44 @@ public class ConnectionManager implements Runnable
 
         Message msg = new Message();
         msg.what = ConnectionMessage.DISCONNECT.ordinal();
-        send_message(connection_sent, msg);
+        send_connection(msg);
     }
 
 
     /**
-     * Safe transmission of a message through the given messenger object.
+     * Safe transmission of a message to the current connection object.
      *
-     * @param stream The messenger to send to.
-     * @param m The message to send.
+     * @param msg The message to transmit.
      */
-    private void send_message (Messenger stream, Message m)
+    private void send_connection(Message msg)
     {
         try
         {
-            stream.send(m);
+            connection_sent.send (msg);
         }
         catch (RemoteException e)
         {
-            Globals.DebugToast.Send ("Error transmitting a message within ConnectionManager.");
+            // disconnected for some reason.
+            Globals.DebugToast.Send ("Error transmitting a message to connection within ConnectionManager.");
+        }
+    }
+
+
+    /**
+     * Safe transmission of a message to the current listening activity.
+     *
+     * -@param msg The message to send.
+     */
+    private void send_activity(Message msg)
+    {
+        try
+        {
+            activity_sent.send (msg);
+        }
+        catch (RemoteException e)
+        {
+            // disconnected for some reason.
+            Globals.DebugToast.Send ("Error transmitting a message to activity within ConnectionManager.");
         }
     }
 

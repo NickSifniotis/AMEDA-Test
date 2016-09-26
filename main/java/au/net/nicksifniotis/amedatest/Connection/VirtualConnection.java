@@ -7,11 +7,11 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
-import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VAMEDAMsgBak;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualDevice;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.ConnectionMessage;
+import au.net.nicksifniotis.amedatest.Messages.ManagerMessage;
 import au.net.nicksifniotis.amedatest.Messages.Messages;
 import au.net.nicksifniotis.amedatest.Messages.VirtualAMEDAMessage;
 
@@ -64,18 +64,13 @@ public class VirtualConnection extends Connection
         if (_device == null)
             return;
 
-        Message shutdown_msg = new Message();
-        shutdown_msg.what = VAMEDAMsgBak.SHUTDOWN.ordinal();
-
-        send_device(shutdown_msg);
+        send_device(Messages.Create(ConnectionMessage.SHUTDOWN));
 
         _device_data_sent = null;
         _device_data_received = null;
         _device = null;
 
-        shutdown_msg = new Message();
-        shutdown_msg.what = ConnectionMessage.DISCONNECTED.ordinal();
-        send_manager(shutdown_msg);
+        send_manager(Messages.Create(ConnectionMessage.DISCONNECTED));
     }
 
 
@@ -94,30 +89,6 @@ public class VirtualConnection extends Connection
         new Thread(_device).start();
 
         return true;
-    }
-
-
-    /**
-     * Sends the instruction to the make-believe AMEDA.
-     *
-     * Convert the instruction to a packet, and send it through the communications
-     * channel that has been opened up.
-     *
-     * Interestingly, there's no room to return false if the connection doesn't exist.
-     * todo something about that, probably.
-     *
-     * @param instruction The instruction to transmit.
-     */
-    private void send_instruction(AMEDAInstruction instruction)
-    {
-        if (_device == null)
-            return;
-
-        Message msg = Message.obtain();
-        msg.what = VAMEDAMsgBak.INSTRUCTION.ordinal();
-        msg.obj = instruction.Build();
-
-        send_device(msg);
     }
 
 
@@ -209,18 +180,20 @@ public class VirtualConnection extends Connection
     @Override
     public boolean handle_manager_message(Message msg)
     {
-        switch (ConnectionMessage.index(msg.what))
+        Globals.DebugToast.Send("Virtual connection receiving message "
+                + ManagerMessage.toString(msg) + " from manager");
+
+        switch (ManagerMessage.Message(msg))
         {
             case CONNECT:
                 create_device();
                 break;
+
             case XMIT:
                 // This instruction needs to be transmitted to the virtual AMEDA asap.
-                AMEDAInstruction instruction = (AMEDAInstruction) msg.obj;
-                send_instruction(instruction);
+                send_device(Messages.Create(ConnectionMessage.XMIT, Messages.GetInstruction(msg).Build()));
                 break;
-            case RCVD:
-                break;
+
             case DISCONNECT:
                 destroy_device();
                 break;
@@ -235,9 +208,15 @@ public class VirtualConnection extends Connection
     }
 
 
+    /**
+     * Forward a message on to the connection manager.
+     *
+     * @param msg The message to send.
+     */
     private void send_manager(Message msg)
     {
-        Globals.DebugToast.Send("Virtual connection sending " + msg.what + " to manager");
+        Globals.DebugToast.Send("Virtual connection sending "
+                + ConnectionMessage.toString(msg) + " to manager");
         try
         {
             _connection_out.send (msg);
@@ -249,12 +228,19 @@ public class VirtualConnection extends Connection
     }
 
 
-    private void send_device(Message msg) {
+    /**
+     * Forward a message on to the virtual device.
+     *
+     * @param msg The message to send.
+     */
+    private void send_device(Message msg)
+    {
         if (!_connected)
             Globals.DebugToast.Send("Virtual connection attempting to send msg to unconnected device");
         else
         {
-            Globals.DebugToast.Send("Virtual connection sending " + msg.what + " to device.");
+            Globals.DebugToast.Send("Virtual connection sending "
+                    + ConnectionMessage.toString(msg) + " to device.");
             try
             {
                 _device_data_sent.send(msg);

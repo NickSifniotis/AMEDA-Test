@@ -7,6 +7,9 @@ import android.os.RemoteException;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.ManagerMessage;
+import au.net.nicksifniotis.amedatest.Messages.Messages;
+
 
 /**
  * Created by Nick Sifniotis on 19/09/16.
@@ -54,13 +57,9 @@ public class Heartbeat implements Runnable
                         .Create()
                         .Instruction(AMEDAInstructionEnum.HELLO);
 
-                Message m = new Message();
-                m.what = ManagerMessages.SEND.ordinal();
-                m.obj = instruction;
-
                 try
                 {
-                    connection_data_out.send (m);
+                    connection_data_out.send (Messages.Create (ManagerMessage.XMIT, instruction));
                 }
                 catch (RemoteException e)
                 {
