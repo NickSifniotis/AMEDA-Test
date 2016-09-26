@@ -8,6 +8,7 @@ package au.net.nicksifniotis.amedatest.activities;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -84,7 +85,7 @@ public class DatePickerDialogFragment extends DialogFragment implements OnDateSe
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
     {
         Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); // todo improve date local stuff
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         _dob_text.setText(sdf.format(cal.getTime()));
     }
 
