@@ -46,9 +46,14 @@ public class VirtualConnection extends Connection
     }
 
 
-    @Override
-    public void Shutdown()
+    /**
+     * Don't just _shutdown - remember to disconnect too.
+     */
+    public void shutdown()
     {
+        if (_device != null)
+            send_device(Messages.Create(ConnectionMessage.SHUTDOWN));
+
         if (Looper.myLooper() != null)
             Looper.myLooper().quitSafely();
     }
@@ -189,7 +194,7 @@ public class VirtualConnection extends Connection
                 break;
 
             case SHUTDOWN:
-                Shutdown();
+                shutdown();
                 break;
             default:
                 return false;

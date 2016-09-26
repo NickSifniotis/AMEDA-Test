@@ -85,10 +85,14 @@ public class AMEDAConnection extends Connection
     }
 
 
-    @Override
-    public void Shutdown()
+    /**
+     * Disconnect and completely shutdown.
+     */
+    public void _shutdown()
     {
         Globals.DebugToast.Send("Shutting down AMEDA connection");
+
+        _handle_disconnect();
 
         if (Looper.myLooper() != null)
             Looper.myLooper().quitSafely();
@@ -387,8 +391,7 @@ public class AMEDAConnection extends Connection
                 break;
 
             case SHUTDOWN:
-                _handle_disconnect();
-                Shutdown();
+                _shutdown();
                 break;
 
             default:

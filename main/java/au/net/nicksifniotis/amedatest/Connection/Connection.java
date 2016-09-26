@@ -30,8 +30,6 @@ public abstract class Connection implements Runnable
         return _connection_in;
     }
 
-    public abstract void Shutdown();
-
     public abstract void run();
 
     public abstract boolean handle_manager_message(Message msg); // todo the fuck you returning a boolean for?

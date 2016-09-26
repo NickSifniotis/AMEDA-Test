@@ -211,16 +211,6 @@ public class ConnectionManager implements Runnable
             send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
 
         // Fire up the connection.
-        connection_received = new Messenger(new Handler(new Handler.Callback()
-        {
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                connection_callback(msg);
-                return true;
-            }
-        }));
-
         DeviceConnection = new VirtualConnection(too_many_variables);
         DeviceConnection.UpdateCallback(connection_received);
 
@@ -242,15 +232,8 @@ public class ConnectionManager implements Runnable
 
         // Fire up the connection.
         DeviceConnection = new AMEDAConnection(too_many_variables, device_name);
-        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback()
-        {
-            @Override
-            public boolean handleMessage(Message msg)
-            {
-                connection_callback(msg);
-                return true;
-            }
-        })));
+        DeviceConnection.UpdateCallback(connection_received);
+
         new Thread(DeviceConnection).start();
         show_progress_dialog();
         Disconnected();
