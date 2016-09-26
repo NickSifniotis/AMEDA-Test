@@ -25,7 +25,6 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
-import au.net.nicksifniotis.amedatest.Connection.VirtualConnection;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.Messages.ActivityMessage;
 import au.net.nicksifniotis.amedatest.Messages.ConnectionMessage;
@@ -199,24 +198,6 @@ public class ConnectionManager implements Runnable
                 _alive = false;
             }
         }
-    }
-
-
-    /**
-     * Opens up a new connection to the virtual device.
-     */
-    private void open_virtual ()
-    {
-        if (_device_connection != null)
-            send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
-
-        // Fire up the connection.
-        _device_connection = new VirtualConnection(_current_activity);
-        _device_connection.UpdateCallback(connection_received);
-
-        new Thread(_device_connection).start();
-        show_progress_dialog();
-        Disconnected();
     }
 
 
@@ -456,7 +437,6 @@ public class ConnectionManager implements Runnable
         List<BluetoothDevice> pairedDevices = new ArrayList<>(BluetoothAdapter
                 .getDefaultAdapter().getBondedDevices());
         List<String> list_names = new LinkedList<>();
-        list_names.add("Virtual Device");
 
         for (BluetoothDevice d: pairedDevices)
             list_names.add (d.getName().trim());
@@ -468,20 +448,14 @@ public class ConnectionManager implements Runnable
         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity,
                 android.R.layout.simple_list_item_1, list_names);
         lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0)
-                {
-                    // open up a new virtual connection.
-                    open_virtual();
-                }
-                else
-                {
-                    // go for the real thing!
-                    String device_selected = parent.getAdapter().getItem(position).toString();
-                    open_bluetooth(device_selected);
-                }
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                // connect to the device!
+                String device_selected = parent.getAdapter().getItem(position).toString();
+                open_bluetooth(device_selected);
 
                 dialog.dismiss();
             }
