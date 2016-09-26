@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
 import au.net.nicksifniotis.amedatest.ConnectionManager.ConnectionManager;
 import au.net.nicksifniotis.amedatest.activities.HomeActivity;
@@ -44,16 +43,7 @@ public class Globals
             @Override
             public boolean handleMessage(Message msg)
             {
-                final String m = (String) msg.obj;
-                base_activity.runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        Toast t = Toast.makeText(base_activity, m, Toast.LENGTH_SHORT);
-                        t.show();
-                    }
-                });
+                /** Simple and fast way to deal with this. **/
                 return true;
             }
         }));

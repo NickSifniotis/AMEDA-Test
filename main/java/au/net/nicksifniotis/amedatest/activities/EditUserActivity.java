@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,15 +18,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 import au.net.nicksifniotis.amedatest.R;
+
 
 /**
  * Edit the user records activity.
@@ -178,15 +176,11 @@ public class EditUserActivity extends NoConnectionActivity
             }
         });
 
-        // until the address situation is clarified, this is becoming a thing.
-        LinearLayout _address_layout = (LinearLayout) findViewById(R.id.mpr_layout_address);
-        if (_address_layout != null)
-            _address_layout.setVisibility(
-                    (Globals.USING_ADDRESSES) ? View.VISIBLE : View.GONE);
-
         // hide the connection status, on this screen only.
         ImageView i = (ImageView)findViewById(R.id.heartbeat_liveness);
-        i.setVisibility(View.GONE);
+        if (i != null)
+            i.setVisibility(View.GONE);
+
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(bar);
         if (getSupportActionBar() != null)
