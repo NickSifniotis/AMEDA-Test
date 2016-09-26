@@ -10,6 +10,15 @@ import android.os.Message;
  */
 public enum ManagerMessage
 {
+    // The set of response codes that the device returns to activities.
+    READY,                  // Device signalling that it's ready for next instruction.
+    CANNOT_MOVE,            // Something is obstructing the wobble board.
+    NO_RESPONSE_ANGLE,      // Failed to read angle.
+    CALIBRATION_FAIL,       // Failed to calibrate correctly.
+    WOBBLE_NO_RESPONSE,     // Wobble board has lost power.
+    ANGLE,                  // Received angle - attached as a double value.
+
+    // Other messages that may be sent.
     XMIT,                   // instruct the connection to transmit an instruction
     RCVD,                   // inform the activity that a response has been received
     CONNECTION_DROPPED,     // inform the activity that the connection has been lost

@@ -40,6 +40,10 @@ import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
  *
  * The mid-tier layer that interfaces with implementations of Connection on the one hand,
  * and the application-level API on the other.
+ *
+ * The connection manager takes care of packing and unpacking AMEDA instructions into a format that
+ * can be transmitted to the devices. Top-level activities cannot see the instructions at all,
+ * the commands are codified into the messaging system itself.
  */
 public class ConnectionManager implements Runnable
 {
@@ -259,12 +263,42 @@ public class ConnectionManager implements Runnable
                 // Data has been received from the AMEDA. Process it, and forward on to
                 // the right place.
                 AMEDAResponse response = Messages.GetResponse(m);
-                if (response.GetCode() == AMEDAResponse.Code.UNKNOWN_COMMAND)
-                    Globals.DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
-                else if (response.GetCode() == AMEDAResponse.Code.EHLLO)
-                    heart_diastole();
-                else
-                    send_activity(Messages.Create(ManagerMessage.RCVD, response));
+                AMEDAResponse.Code code = response.GetCode();
+
+                switch (code)
+                {
+                    case READY:
+                        send_activity(Messages.Create(ManagerMessage.READY));
+                        break;
+
+                    case EHLLO:
+                        heart_diastole();
+                        break;
+
+                    case UNKNOWN_COMMAND:
+                        Globals.DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
+                        break;
+
+                    case CANNOT_MOVE:
+                        send_activity(Messages.Create(ManagerMessage.CANNOT_MOVE));
+                        break;
+
+                    case NO_RESPONSE_ANGLE:
+                        send_activity(Messages.Create(ManagerMessage.NO_RESPONSE_ANGLE));
+                        break;
+
+                    case CALIBRATION_FAIL:
+                        send_activity(Messages.Create(ManagerMessage.CALIBRATION_FAIL));
+                        break;
+
+                    case WOBBLE_NO_RESPONSE:
+                        send_activity(Messages.Create(ManagerMessage.WOBBLE_NO_RESPONSE));
+                        break;
+
+                    case ANGLE:
+                        send_activity(Messages.Create(ManagerMessage.ANGLE));
+                        break;
+                }
 
                 break;
 

@@ -15,7 +15,7 @@ public enum ConnectionMessage
     CONNECTED,                  // Send to manager - connection established
     DISCONNECTED,               // Sent to manager - connection has been closed down.
     MESSENGER_READY,            // Sent to manager - messenger object is ready.
-    CONNECT_FAILED;             // Sent to manager to indicate connection unsuccessful.
+    CONNECT_FAILED;             // Sent to manager - indicate connection unsuccessful.
 
 
     /**
