@@ -178,9 +178,15 @@ public class FamiliarisationActivity extends AMEDAActivity
 
                     ExecuteNextInstruction();
                     break;
+
                 case CANNOT_MOVE:
                     CannotMoveDialog();
                     break;
+
+                case WOBBLE_NO_RESPONSE:
+                    FailButDontDie("No response received from wobble board!");
+                    break;
+
                 default:
                     Globals.DebugToast.Send("Received unknown response code for current command.");
                     FailAndDieDialog(getString(R.string.error_ameda_fail_desc));

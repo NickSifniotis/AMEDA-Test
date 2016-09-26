@@ -7,6 +7,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.ViewGroup;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
@@ -58,7 +60,10 @@ public abstract class AMEDAActivity extends AppCompatActivity
         _data_sent = Globals.ConnectionManager.UpdateActivity(this);
 
         if (!Globals.ConnectionManager.Connected && uses_connection)
+        {
+            DisconnectionHandler();
             FailButDontDie("No connection detected. Please connect before attempting to begin this activity.");
+        }
     }
 
 
@@ -83,16 +88,39 @@ public abstract class AMEDAActivity extends AppCompatActivity
                 break;
 
             case CONNECTION_DROPPED:
+                DisconnectionHandler();
                 FailButDontDie("Connection dropped. Please reconnect to continue.");
                 break;
 
             case CONNECTION_RESUMED:
+                ReconnectionHandler();
                 FailButDontDie("Connection restored. You may now resume this activity.");
                 break;
 
             default:
                 break;
         }
+    }
+
+
+    /**
+     * Handle a connection loss by disabling the part of the view that requires the connection
+     * to be live for it to make any sense.
+     */
+    public void DisconnectionHandler()
+    {
+        setViewAndChildrenEnabled(findViewById(R.id.layout_base), false);
+    }
+
+
+    /**
+     * Handles a reconnection after a dropout.
+     *
+     * This method is guaranteed to not be called before a call to DisconnectionHandler() is made.
+     */
+    public void ReconnectionHandler()
+    {
+        setViewAndChildrenEnabled(findViewById(R.id.layout_base), true);
     }
 
 
@@ -306,6 +334,28 @@ public abstract class AMEDAActivity extends AppCompatActivity
         catch (RemoteException e)
         {
             ///lkdfhgdkjh
+        }
+    }
+
+
+    /**
+     * Recursively set the enabled parameter on the given View object and any children that
+     * the view might have.
+     *
+     * @param view The object to en/disable.
+     * @param enabled True to enable, false to disable.
+     */
+    private static void setViewAndChildrenEnabled(View view, boolean enabled)
+    {
+        view.setEnabled(enabled);
+        if (view instanceof ViewGroup)
+        {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++)
+            {
+                View child = viewGroup.getChildAt(i);
+                setViewAndChildrenEnabled(child, enabled);
+            }
         }
     }
 }

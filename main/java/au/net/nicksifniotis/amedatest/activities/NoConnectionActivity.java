@@ -48,4 +48,24 @@ public abstract class NoConnectionActivity extends AMEDAActivity
     {
         // Again, do nothing.
     }
+
+
+    /**
+     * Null override for unused method.
+     */
+    @Override
+    public void DisconnectionHandler()
+    {
+        // :)
+    }
+
+
+    /**
+     * Null override for unused method.
+     */
+    @Override
+    public void ReconnectionHandler()
+    {
+        // :'(
+    }
 }

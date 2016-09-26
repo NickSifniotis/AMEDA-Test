@@ -104,13 +104,15 @@ public class CalibrationActivity extends AMEDAActivity
     {
         AMEDAInstructionEnum instruction_code = instruction.GetInstruction();
 
-        if (!instruction_code.IsValidResponse(response)) // todo instruction recognition failure needs to be handled properly
+        if (!instruction_code.IsValidResponse(response))
             FailAndDieDialog(getString(R.string.error_ameda_fail_desc));
 
         if (instruction_code == AMEDAInstructionEnum.CALIBRATE && response.GetCode() == AMEDAResponse.Code.CALIBRATION_FAIL)
             CalibrationFailedDialog();
         else if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION && response.GetCode() == AMEDAResponse.Code.CANNOT_MOVE)
             CannotMoveDialog();
+        else if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION && response.GetCode() == AMEDAResponse.Code.WOBBLE_NO_RESPONSE)
+            WobbleDeadDialog();
         else
             _images[instruction_code == AMEDAInstructionEnum.CALIBRATE ? 0 : instruction.GetN()].setVisibility(View.VISIBLE);
     }
@@ -182,6 +184,35 @@ public class CalibrationActivity extends AMEDAActivity
         builder.setTitle(getString(R.string.error_title))
         .setMessage(getString(R.string.c_calibration_failure))
                 .setPositiveButton(R.string.btn_done, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        RepeatInstruction();
+                    }
+                })
+                .setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        ClearInstructions();
+                        finish();
+                    }
+                });
+        builder.create().show();
+    }
+
+
+    /**
+     * Dialog box reporting non-response from wobble board.
+     */
+    private void WobbleDeadDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.error_title))
+                .setMessage("No response received from the wobble board. Please check to make sure that it is switched on.")
+                .setPositiveButton("Try Again",new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which)

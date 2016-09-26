@@ -2,6 +2,7 @@
 <resources>
     <!-- Resource IDs for Home activity -->
     <item type="id" name="toolbar" />
+    <item type="id" name="layout_base" />
 
     <item type="id" name="heartbeat_liveness" />
     <item type="id" name="h_btn_tutorial" />
