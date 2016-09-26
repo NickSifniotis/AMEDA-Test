@@ -119,14 +119,16 @@ public class Globals
 
 
     /**
-     * I'd be lying if I said I understood this method.
+     * I'd be lying if I said I understood this method. It compares two rows in the score
+     * matrix and returns a value (between zero and one) that represents something about the
+     * data in that matrix.
      *
      * It's been tested against the Excel spreadsheet data and produces the correct results.
      *
-     * @param matrix todo
-     * @param row1
-     * @param row2
-     * @return
+     * @param matrix The matrix containing the score data.
+     * @param row1 The first row in the matrix to calculate.
+     * @param row2 The second row in the matrix to calculate.
+     * @return The AUC calculation, whatever that is.
      */
     private static double _get_auc(int [] [] matrix, int row1, int row2)
     {
@@ -158,9 +160,9 @@ public class Globals
     /**
      * Generates the matrix used in the calculation of the mean AUC.
      *
-     * @param correct todo
-     * @param responses todo
-     * @return todo
+     * @param correct The correct answers to each question in the test.
+     * @param responses The answers provided by the user to each question in the test.
+     * @return A matrix containing the score data for this test.
      */
     private static int [] [] _get_matrix(int [] correct, int [] responses)
     {
