@@ -240,54 +240,6 @@
                     android:text="@string/h_d_exit"
                     android:onClick="h_d_exit" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/menuUpper"/>
-
-                <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:paddingTop="15dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:text="@string/h_d_t_desc" />
-
-                <TextView
-                    android:id="@id/h_d_t_address"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
-                    android:onClick="h_d_t_address" />
-
-                <TextView
-                    android:id="@id/h_d_t_debug"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
-                    android:onClick="h_d_t_debug" />
-
-                <TextView
-                    android:id="@id/h_d_t_shorttest"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
-                    android:onClick="h_d_t_shorttest" />
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

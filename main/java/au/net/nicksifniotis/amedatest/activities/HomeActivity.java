@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
 
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.ManageRecordsEnum;
@@ -24,9 +23,6 @@ import au.net.nicksifniotis.amedatest.R;
  */
 public class HomeActivity extends NoConnectionActivity
 {
-    private TextView _debug_toggle;
-    private TextView _short_test_toggle;
-    private TextView _address_toggle;
     private DrawerLayout _drawer;
 
 
@@ -36,8 +32,6 @@ public class HomeActivity extends NoConnectionActivity
         setContentView(R.layout.home_activity);
 
         _connect_gui();
-
-        _update_drawer_toggles();
 
         checkBTState();
 
@@ -91,11 +85,6 @@ public class HomeActivity extends NoConnectionActivity
 
         if (_drawer != null)
             _drawer.addDrawerListener(mDrawerToggle);
-
-        // Link to the textbox accessor variables.
-        _debug_toggle = (TextView)findViewById(R.id.h_d_t_debug);
-        _short_test_toggle = (TextView)findViewById(R.id.h_d_t_shorttest);
-        _address_toggle = (TextView)findViewById(R.id.h_d_t_address);
     }
 
 
@@ -142,36 +131,6 @@ public class HomeActivity extends NoConnectionActivity
     public void h_d_exit(View view)
     {
         finish();
-    }
-
-    public void h_d_t_debug(View view)
-    {
-        Globals.DEBUG_MODE = !Globals.DEBUG_MODE;
-        _update_drawer_toggles();
-    }
-
-    public void h_d_t_shorttest(View view)
-    {
-        Globals.SHORT_TESTS = !Globals.SHORT_TESTS;
-        _update_drawer_toggles();
-    }
-
-    public void h_d_t_address(View view)
-    {
-        Globals.USING_ADDRESSES = !Globals.USING_ADDRESSES;
-        _update_drawer_toggles();
-    }
-
-
-    /**
-     * Update the text on the navigation drawer's 'developer options' subsegment.
-     * To reflect the current state of the global variables that they are linked to.
-     */
-    private void _update_drawer_toggles()
-    {
-        _address_toggle.setText(getString(R.string.h_d_t_address, String.valueOf(Globals.USING_ADDRESSES)));
-        _debug_toggle.setText(getString(R.string.h_d_t_debug, String.valueOf(Globals.DEBUG_MODE)));
-        _short_test_toggle.setText(getString(R.string.h_d_t_shorttest, String.valueOf(Globals.SHORT_TESTS)));
     }
 
 
