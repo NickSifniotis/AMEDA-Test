@@ -5,6 +5,8 @@ package au.net.nicksifniotis.amedatest.Connection;
  *
  * Asynchronous messages that can be passed between connection manager objects and
  * active connections.
+ *
+ * todo flesh out these message classes connectionmessage, managermessage and virt.ameda.message
  */
 public enum ConnectionMessage
 {
