@@ -1,17 +1,24 @@
 package au.net.nicksifniotis.amedatest.AMEDA;
 
+
 /**
  * Enumeration class containing the commands that can be sent to the AMEDA,
  * along with associated data.
  */
 public enum AMEDAInstructionEnum
 {
-    HELLO(new AMEDAResponse.Code[]{ AMEDAResponse.Code.READY }),
-    BUZZER_SHORT(new AMEDAResponse.Code[]{ }),
-    BUZZER_LONG(new AMEDAResponse.Code[]{ }),
-    MOVE_TO_POSITION(new AMEDAResponse.Code[]{ AMEDAResponse.Code.READY, AMEDAResponse.Code.CANNOT_MOVE }),
-    CALIBRATE(new AMEDAResponse.Code[]{ AMEDAResponse.Code.READY, AMEDAResponse.Code.CALIBRATION_FAIL }),
-    REQUEST_ANGLE(new AMEDAResponse.Code[]{ AMEDAResponse.Code.NO_RESPONSE_ANGLE, AMEDAResponse.Code.ANGLE });
+    HELLO(new AMEDAResponse.Code[]
+            { AMEDAResponse.Code.EHLLO }),
+    BUZZER_SHORT(new AMEDAResponse.Code[]
+            { }),
+    BUZZER_LONG(new AMEDAResponse.Code[]
+            { }),
+    MOVE_TO_POSITION(new AMEDAResponse.Code[]
+            { AMEDAResponse.Code.READY, AMEDAResponse.Code.CANNOT_MOVE, AMEDAResponse.Code.WOBBLE_NO_RESPONSE }),
+    CALIBRATE(new AMEDAResponse.Code[]
+            { AMEDAResponse.Code.READY, AMEDAResponse.Code.CALIBRATION_FAIL }),
+    REQUEST_ANGLE(new AMEDAResponse.Code[]
+            { AMEDAResponse.Code.NO_RESPONSE_ANGLE, AMEDAResponse.Code.ANGLE });
 
     final private AMEDAResponse.Code [] _valid_responses;
 
