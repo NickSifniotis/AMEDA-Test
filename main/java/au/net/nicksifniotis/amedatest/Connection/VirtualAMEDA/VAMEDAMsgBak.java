@@ -5,7 +5,7 @@ package au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA;
  *
  * Messages passed between the virtual device and the virtual connection.
  */
-public enum VirtualAMEDAMessage
+public enum VAMEDAMsgBak
 {
     INSTRUCTION, SHUTDOWN, MESSENGER_READY;
 
@@ -16,8 +16,8 @@ public enum VirtualAMEDAMessage
      * @param c The integer to convert.
      * @return The corresponding message.
      */
-    public static VirtualAMEDAMessage index (int c)
+    public static VAMEDAMsgBak index (int c)
     {
-        return VirtualAMEDAMessage.values()[c];
+        return VAMEDAMsgBak.values()[c];
     }
 }

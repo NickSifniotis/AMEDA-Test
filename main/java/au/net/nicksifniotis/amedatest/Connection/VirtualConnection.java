@@ -9,9 +9,10 @@ import android.os.RemoteException;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
-import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualAMEDAMessage;
+import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VAMEDAMsgBak;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualDevice;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.VirtualAMEDAMessage;
 
 
 /**
@@ -63,7 +64,7 @@ public class VirtualConnection extends Connection
             return;
 
         Message shutdown_msg = new Message();
-        shutdown_msg.what = VirtualAMEDAMessage.SHUTDOWN.ordinal();
+        shutdown_msg.what = VAMEDAMsgBak.SHUTDOWN.ordinal();
 
         send_device(shutdown_msg);
 
@@ -112,7 +113,7 @@ public class VirtualConnection extends Connection
             return;
 
         Message msg = Message.obtain();
-        msg.what = VirtualAMEDAMessage.INSTRUCTION.ordinal();
+        msg.what = VAMEDAMsgBak.INSTRUCTION.ordinal();
         msg.obj = instruction.Build();
 
         send_device(msg);
@@ -126,44 +127,45 @@ public class VirtualConnection extends Connection
     {
         /**
          * Handle messages received by the AMEDA.
-         * Essentially these are part-processed and piped through to the UI thread
-         * via the other handler (that will be refactored into a Messenger object in time ..)
+         * Most of the time, messages received will be passed straight on to the connection
+         * manager.
          *
          * @param msg The message received from the virtual AMEDA.
-         * @return True! Or false, if the message is wrong.
+         * @return True!
          */
         @Override
         public boolean handleMessage(Message msg)
         {
-            Globals.DebugToast.Send("Virtual connection handling message " + msg.what + " from device");
+            Globals.DebugToast.Send("Virtual connection receiving message "
+                    + VirtualAMEDAMessage.toString(msg) + " from device");
 
-            if (msg.what == VirtualAMEDAMessage.MESSENGER_READY.ordinal())
+            switch (VirtualAMEDAMessage.Message(msg))
             {
-                _device_data_sent = _device.GetMessenger();
-                _connected = true;
+                case INSTRUCTION:
+                    // get the message from the payload, and pass it upstream to the manager.
+                    AMEDAResponse response = new AMEDAResponse(VirtualAMEDAMessage.Payload(msg));
 
-                Message m = new Message();
-                m.what = ConnectionMessage.CONNECTED.ordinal();
-                send_manager(m);
+                    msg = new Message();
+                    msg.what = ConnectionMessage.RCVD.ordinal();
+                    msg.obj = response;
 
-                return true;
+                    send_manager(msg);
+                    break;
+
+                case MESSENGER_READY:
+                    // get the device's messenger, and then
+                    // let the manager know that we are now connected.
+                    _device_data_sent = _device.GetMessenger();
+                    _connected = true;
+
+                    Message m = new Message();
+                    m.what = ConnectionMessage.CONNECTED.ordinal();
+                    send_manager(m);
+                    break;
+
+                default:
+                    break;
             }
-
-            if (msg.what != VirtualAMEDAMessage.INSTRUCTION.ordinal())
-            {
-                // what is going on? There's literally no code in the virtual device
-                // that is capable of generating messages other than INSTRUCTION
-
-                return false;
-            }
-
-            AMEDAResponse response = new AMEDAResponse((String) msg.obj);
-
-            msg = new Message();
-            msg.what = ConnectionMessage.RCVD.ordinal();
-            msg.obj = response;
-
-            send_manager(msg);
 
             return true;
         }

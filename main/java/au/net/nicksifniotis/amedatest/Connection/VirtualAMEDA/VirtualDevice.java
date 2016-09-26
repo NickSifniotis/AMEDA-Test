@@ -9,6 +9,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.VirtualAMEDAMessage;
 import au.net.nicksifniotis.amedatest.R;
 
 
@@ -68,16 +69,16 @@ public class VirtualDevice implements Runnable, Handler.Callback
     {
         Globals.DebugToast.Send ("Virtual AMEDA Handling message");
 
-        VirtualAMEDAMessage message_type = VirtualAMEDAMessage.index(msg.what);
+        VAMEDAMsgBak message_type = VAMEDAMsgBak.index(msg.what);
 
-        if (message_type == VirtualAMEDAMessage.SHUTDOWN)
+        if (message_type == VAMEDAMsgBak.SHUTDOWN)
         {
             // A shutdown signal!
             Shutdown();
             return true;
         }
 
-        if (message_type != VirtualAMEDAMessage.INSTRUCTION)
+        if (message_type != VAMEDAMsgBak.INSTRUCTION)
             return false;   // I'll only be transmitting messages of type 1 (ordinary) or 2 (shutdown)
 
         String byte_code = validate_command((String) msg.obj);
@@ -88,13 +89,11 @@ public class VirtualDevice implements Runnable, Handler.Callback
         if (response == null)
             return true;    // Not every message received requires a response.
 
-        Message message = new Message();
-        message.what = VirtualAMEDAMessage.INSTRUCTION.ordinal();
-        message.obj = response;
 
+        // Transmit the data that's been received to the connection.
         try
         {
-            _outbound_message_buffer.send(message);
+            _outbound_message_buffer.send(VirtualAMEDAMessage.INSTRUCTION.Create(response));
         }
         catch (RemoteException e)
         {
@@ -121,10 +120,7 @@ public class VirtualDevice implements Runnable, Handler.Callback
         Handler _my_handler = new Handler(this);
         _inbound_message_buffer = new Messenger(_my_handler);
 
-
-        Message msg = new Message();
-        msg.what = VirtualAMEDAMessage.MESSENGER_READY.ordinal();
-        send(msg);
+        send(VirtualAMEDAMessage.MESSENGER_READY.Create());
 
         Looper.loop();
 
