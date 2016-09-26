@@ -1,6 +1,5 @@
 package au.net.nicksifniotis.amedatest.activities;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,7 +36,6 @@ import au.net.nicksifniotis.amedatest.TestState;
  * Outstanding issues todo
  * - it would be great if the tests that were loaded into the database were in their own
  *   static class
- * - Get tests to work correctly across a screen rotation. At the moment they crap out.
  */
 public class TestActivity extends AMEDAActivity
 {
@@ -47,7 +45,6 @@ public class TestActivity extends AMEDAActivity
     private int _current_question;
     private int _num_questions;
     private Random randomiser;
-    private ProgressDialog _setting_progress;
     private TextView _questions_progress;
 
     private TestState current_state;
@@ -121,16 +118,12 @@ public class TestActivity extends AMEDAActivity
     }
 
     /**
-     * Sets up the GUI-y things, like the progress dialog and the text for certain elements.
+     * Sets up the GUI-y things.
      *
      */
     private void _connect_gui()
     {
         _questions_progress = (TextView) findViewById(R.id.t_progress_counter);
-
-        _setting_progress = new ProgressDialog(this);
-        _setting_progress.setTitle (getString(R.string.t_setting_title));
-        _setting_progress.setMessage(getString(R.string.t_setting_desc));
 
         Resources r = getResources();
         for (int i = 1; i <= 5; i ++)
@@ -341,21 +334,20 @@ public class TestActivity extends AMEDAActivity
                             }
                         });
                 builder.create().show();
-
                 break;
 
             case R.id.t_mnu_stop:
                 _confirm_abort_test();
-
                 break;
+
             case R.id.t_mnu_help:
                 builder = new AlertDialog.Builder(this)
                         .setTitle(getString(R.string.not_implemented_title))
                         .setMessage(getString(R.string.not_implemented_desc))
                         .setPositiveButton(getString(R.string.btn_done), null);
                 builder.create().show();
-
                 break;
+
             default:
                 super.onOptionsItemSelected(item);
         }

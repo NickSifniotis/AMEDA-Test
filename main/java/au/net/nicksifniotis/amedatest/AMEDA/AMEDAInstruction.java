@@ -1,7 +1,8 @@
 package au.net.nicksifniotis.amedatest.AMEDA;
 
+
 /**
- * Created by nsifniotis on 9/06/16.
+ * Created by Nick Sifniotis on 9/06/16.
  *
  * This class essentially contains the communications protocols specified in
  * the technical manual. Note that this class converts packets to and from the instruction set,
@@ -10,7 +11,8 @@ package au.net.nicksifniotis.amedatest.AMEDA;
  * enumeration, and then edit this code to implement those changes.
  *
  */
-public class AMEDAInstruction {
+public class AMEDAInstruction
+{
     private AMEDAInstructionEnum _instruction;
     private int _n;
 
@@ -36,28 +38,39 @@ public class AMEDAInstruction {
     }
 
 
+    /**
+     * Factory method.
+     * Sets the sort of instruction that this is.
+     *
+     * @param in The instruction code to use.
+     * @return A reference to this factory object.
+     */
     public AMEDAInstruction Instruction (AMEDAInstructionEnum in)
     {
         this._instruction = in;
         return this;
     }
 
+
+    /**
+     * Factory method.
+     * Sets the instruction's payload.
+     *
+     * @param n The value to store along with the instruction.
+     * @return A reference to the instruction factory object.
+     */
     public AMEDAInstruction N (int n)
     {
-//        if (n < 1 || n > 9)
-//            throw new_btn AMEDAException("Invalid n passed to packet factory.");
-//
-//        if (_instruction == AMEDAInstructionEnum.NONE
-//                || _instruction == AMEDAInstructionEnum.HELLO
-//                || _instruction == AMEDAInstructionEnum.REQUEST_ANGLE
-//                || _instruction == AMEDAInstructionEnum.CALIBRATE)
-//            throw new_btn AMEDAException("Attempting to set data byte on instruction" +
-//                    " that doesn't use it");
-
         this._n = n;
         return this;
     }
 
+
+    /**
+     * Converts this instruction factory into a string.
+     *
+     * @return A string representation of the instruction form held by this factory.
+     */
     public String Build()
     {
         String res = "XXXXX";

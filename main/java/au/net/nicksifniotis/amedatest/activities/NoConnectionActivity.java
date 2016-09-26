@@ -15,8 +15,7 @@ import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 public abstract class NoConnectionActivity extends AMEDAActivity
 {
     /**
-     * This is an ugly hack but it'll do until I get a better class structure going
-     * todo that thing.
+     * This is an ugly hack but it'll do.
      */
     @Override
     public void onStart()
@@ -45,7 +44,7 @@ public abstract class NoConnectionActivity extends AMEDAActivity
      * @param msg The message received.
      */
     @Override
-    public void handleManagerMessage (Message msg)
+    public void HandleManagerMessage(Message msg)
     {
         // Again, do nothing.
     }

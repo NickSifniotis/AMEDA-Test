@@ -134,7 +134,7 @@ public class ConnectionManager implements Runnable
             @Override
             public boolean handleMessage(Message msg)
             {
-                activity.handleManagerMessage(msg);
+                activity.HandleManagerMessage(msg);
                 return true;
             }
         }));

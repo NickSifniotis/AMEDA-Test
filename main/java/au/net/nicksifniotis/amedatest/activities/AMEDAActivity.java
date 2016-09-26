@@ -67,7 +67,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      *
      * @param msg The message received.
      */
-    public void handleManagerMessage(Message msg)
+    public void HandleManagerMessage(Message msg)
     {
         Globals.DebugToast.Send("AMEDAActivity handling message "
                 + ManagerMessage.toString(msg) + " from manager");
@@ -134,14 +134,13 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
     /**
      * Sends a request to the AMEDA for the current angle of the wobble board.
-     * @TODO implementation disabled as no way to correctly process this.
      */
     protected void RequestAngle ()
     {
-//        _instruction_buffer.Enqueue(
-//                AMEDAInstructionFactory.Create()
-//                .Instruction(AMEDAInstructionEnum.REQUEST_ANGLE)
-//        );
+        _instruction_buffer.Enqueue(
+                AMEDAInstruction.Create()
+                .Instruction(AMEDAInstructionEnum.REQUEST_ANGLE)
+        );
     }
 
 
@@ -278,26 +277,7 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     protected void FailAndDieDialog(String message)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.error_title))
-                .setMessage(message)
-                .setCancelable(false)
-                .setNegativeButton(getString(R.string.btn_done), new DialogInterface.OnClickListener()
-                {
-                    /**
-                     * This is the end of all things.
-                     *
-                     * @param dialog Unused
-                     * @param which Unused
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        finish();
-                    }
-                });
-
-        builder.create().show();
+        Globals.Error (this, message);
     }
 
 
@@ -308,15 +288,15 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     protected void FailButDontDie(String message)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Alert")
-                .setMessage(message)
-                .setCancelable(false)
-                .setNegativeButton(getString(R.string.btn_done), null);
-
-        builder.create().show();
+        Globals.Alert (this, message);
     }
 
+
+    /**
+     * Safe tramsmission of a message to the connection manager.
+     *
+     * @param m The message to send.
+     */
     private void send_connection (Message m)
     {
         try

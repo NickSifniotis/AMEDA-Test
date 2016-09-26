@@ -25,6 +25,7 @@
             android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.TestActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.ManageRecordsActivity" />
         <activity
             android:name=".activities.FamiliarisationActivity"
