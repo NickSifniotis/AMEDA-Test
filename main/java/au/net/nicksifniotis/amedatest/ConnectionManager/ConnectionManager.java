@@ -41,9 +41,6 @@ import au.net.nicksifniotis.amedatest.activities.AMEDAActivity;
  * The mid-tier layer that interfaces with implementations of Connection on the one hand,
  * and the application-level API on the other.
  *
- * The connection manager takes care of packing and unpacking AMEDA instructions into a format that
- * can be transmitted to the devices. Top-level activities cannot see the instructions at all,
- * the commands are codified into the messaging system itself.
  */
 public class ConnectionManager implements Runnable
 {
@@ -54,10 +51,10 @@ public class ConnectionManager implements Runnable
     private ImageView ConnectionLamp;
     private Activity too_many_variables;
 
-    public Messenger activity_sent;
-    public Messenger activity_received;
-    public Messenger connection_sent;
-    public Messenger connection_received;
+    private Messenger activity_sent;
+    private Messenger activity_received;
+    private Messenger connection_sent;
+    private Messenger connection_received;
 
     private Heartbeat heart;
 
@@ -65,10 +62,6 @@ public class ConnectionManager implements Runnable
     public Drawable yellow;
     public Drawable red;
 
-
-    // message passing mapping
-
-    // me, myself and I
     private volatile boolean _alive;
 
 
@@ -94,6 +87,23 @@ public class ConnectionManager implements Runnable
             public boolean handleMessage(Message msg)
             {
                 activity_callback(msg);
+                return true;
+            }
+        }));
+
+
+        connection_received = new Messenger(new Handler(new Handler.Callback()
+        {
+            /**
+             * Simple method to call the callback function for Connection messages.
+             *
+             * @param msg The message received.
+             * @return True, always.
+             */
+            @Override
+            public boolean handleMessage(Message msg)
+            {
+                connection_callback(msg);
                 return true;
             }
         }));
@@ -150,6 +160,16 @@ public class ConnectionManager implements Runnable
     }
 
 
+    /**
+     * Terminate this service!
+     */
+    public void Shutdown()
+    {
+        Disconnect();
+        _alive = false;
+    }
+
+
     public void onLampClick()
     {
         Globals.DebugToast.Send("Lamp onclick triggered! connection status is " + Connected);
@@ -160,8 +180,12 @@ public class ConnectionManager implements Runnable
     }
 
 
+    /**
+     * The main loop for this service.
+     */
     @Override
-    public void run() {
+    public void run()
+    {
         _alive = true;
 
         while (_alive)
@@ -187,8 +211,7 @@ public class ConnectionManager implements Runnable
             send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
 
         // Fire up the connection.
-        DeviceConnection = new VirtualConnection(too_many_variables);
-        DeviceConnection.UpdateCallback(new Messenger(new Handler(new Handler.Callback()
+        connection_received = new Messenger(new Handler(new Handler.Callback()
         {
             @Override
             public boolean handleMessage(Message msg)
@@ -196,7 +219,11 @@ public class ConnectionManager implements Runnable
                 connection_callback(msg);
                 return true;
             }
-        })));
+        }));
+
+        DeviceConnection = new VirtualConnection(too_many_variables);
+        DeviceConnection.UpdateCallback(connection_received);
+
         new Thread(DeviceConnection).start();
         show_progress_dialog();
         Disconnected();
@@ -263,43 +290,13 @@ public class ConnectionManager implements Runnable
                 // Data has been received from the AMEDA. Process it, and forward on to
                 // the right place.
                 AMEDAResponse response = Messages.GetResponse(m);
-                AMEDAResponse.Code code = response.GetCode();
 
-                switch (code)
-                {
-                    case READY:
-                        send_activity(Messages.Create(ManagerMessage.READY));
-                        break;
-
-                    case EHLLO:
-                        heart_diastole();
-                        break;
-
-                    case UNKNOWN_COMMAND:
-                        Globals.DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
-                        break;
-
-                    case CANNOT_MOVE:
-                        send_activity(Messages.Create(ManagerMessage.CANNOT_MOVE));
-                        break;
-
-                    case NO_RESPONSE_ANGLE:
-                        send_activity(Messages.Create(ManagerMessage.NO_RESPONSE_ANGLE));
-                        break;
-
-                    case CALIBRATION_FAIL:
-                        send_activity(Messages.Create(ManagerMessage.CALIBRATION_FAIL));
-                        break;
-
-                    case WOBBLE_NO_RESPONSE:
-                        send_activity(Messages.Create(ManagerMessage.WOBBLE_NO_RESPONSE));
-                        break;
-
-                    case ANGLE:
-                        send_activity(Messages.Create(ManagerMessage.ANGLE));
-                        break;
-                }
-
+                if (response.GetCode() == AMEDAResponse.Code.UNKNOWN_COMMAND)
+                    Globals.DebugToast.Send("Unknown response received from AMEDA: " + response.toString());
+                else if (response.GetCode() == AMEDAResponse.Code.EHLLO)
+                    heart_diastole();
+                else
+                    send_activity(Messages.Create(ManagerMessage.RCVD, response));
                 break;
 
             case MESSENGER_READY:

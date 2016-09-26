@@ -64,13 +64,17 @@ public class Globals
         new Thread(DebugToast).start();
 
         ConnectionManager = new ConnectionManager(base_activity);
+        new Thread(ConnectionManager).start();
     }
 
 
+    /**
+     * Shut down the service threads; we don't need em no more.
+     */
     public static void TerminateServices()
     {
         DebugToast.Shutdown();
-//        DeviceConnection.Shutdown();
+        ConnectionManager.Shutdown();
     }
 
 

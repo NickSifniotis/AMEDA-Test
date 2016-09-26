@@ -7,7 +7,7 @@ package au.net.nicksifniotis.amedatest.AMEDA;
 public class AMEDAResponse
 {
     final private Code _code;
-    final private int _angle;
+    final private double _angle;
 
 
     /**
@@ -23,7 +23,7 @@ public class AMEDAResponse
         {
             this._code = Code.FindCode(p);
             if (this._code == Code.ANGLE)
-                this._angle = Integer.parseInt(p.substring(1, 5));
+                this._angle = Double.parseDouble(p.substring(2, 5));
             else
                 this._angle = 0;
         }
@@ -41,7 +41,7 @@ public class AMEDAResponse
      *
      * @return The angle
      */
-    public int GetAngle()
+    public double GetAngle()
     {
         return this._angle;
     }
