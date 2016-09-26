@@ -383,6 +383,9 @@ public class ConnectionManager implements Runnable
     }
 
 
+    /**
+     * Send a message to the connection requesting a disconnection.
+     */
     public void Disconnect()
     {
         if (!Connected)
@@ -391,9 +394,7 @@ public class ConnectionManager implements Runnable
         if (connection_sent == null)
             return;
 
-        Message msg = new Message();
-        msg.what = ConnectionMessage.DISCONNECT.ordinal();
-        send_connection(msg);
+        send_connection(Messages.Create (ManagerMessage.DISCONNECT));
     }
 
 

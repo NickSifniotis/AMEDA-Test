@@ -9,14 +9,12 @@ import android.os.Message;
  */
 public enum ConnectionMessage
 {
-    RCVD,
-    XMIT,                       // Sent to virtual device to request transmission of data.
-    SHUTDOWN,                   // Sent to virtual device to force a shut down.
+    RCVD,                       // Sent to manager - response received from device.
+    XMIT,                       // Sent to device  - request transmission of data.
+    SHUTDOWN,                   // Sent to device  - force a shut down.
     CONNECTED,                  // Send to manager - connection established
     DISCONNECTED,               // Sent to manager - connection has been closed down.
     MESSENGER_READY,            // Sent to manager - messenger object is ready.
-    CONNECT,
-    DISCONNECT,
     CONNECT_FAILED;             // Sent to manager to indicate connection unsuccessful.
 
 

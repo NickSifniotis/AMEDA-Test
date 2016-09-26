@@ -116,12 +116,7 @@ public class VirtualConnection extends Connection
                 case RCV_PACKET:
                     // get the message from the payload, and pass it upstream to the manager.
                     AMEDAResponse response = new AMEDAResponse(Messages.GetString(msg));
-
-                    msg = new Message();
-                    msg.what = ConnectionMessage.RCVD.ordinal();
-                    msg.obj = response;
-
-                    send_manager(msg);
+                    send_manager(Messages.Create(ConnectionMessage.RCVD, response));
                     break;
 
                 case MESSENGER_READY:
@@ -130,9 +125,7 @@ public class VirtualConnection extends Connection
                     _device_data_sent = _device.GetMessenger();
                     _connected = true;
 
-                    Message m = new Message();
-                    m.what = ConnectionMessage.CONNECTED.ordinal();
-                    send_manager(m);
+                    send_manager(Messages.Create(ConnectionMessage.CONNECTED));
                     break;
 
                 default:
@@ -161,10 +154,7 @@ public class VirtualConnection extends Connection
             }
         }));
 
-        Message m = new Message();
-        m.what = ConnectionMessage.MESSENGER_READY.ordinal();
-        send_manager(m);
-
+        send_manager(Messages.Create(ConnectionMessage.MESSENGER_READY));
         Looper.loop();
 
         destroy_device();

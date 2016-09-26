@@ -298,10 +298,7 @@ public class AMEDAConnection extends Connection
 
 
         // Signal the success of the connection by sending a message back to the parent UI
-        Message message = new Message();
-        message.what = ConnectionMessage.CONNECTED.ordinal();
-
-        send_manager(message);
+        send_manager(Messages.Create(ConnectionMessage.CONNECTED));
     }
 
 
@@ -338,10 +335,7 @@ public class AMEDAConnection extends Connection
         }
 
         // Signal the success of the disconnection by sending a message back to the manager
-        Message message = new Message();
-        message.what = ConnectionMessage.DISCONNECTED.ordinal();
-
-        send_manager(message);
+        send_manager(Messages.Create(ConnectionMessage.DISCONNECTED));
     }
 
 
@@ -360,10 +354,7 @@ public class AMEDAConnection extends Connection
             }
         }));
 
-        Message m = new Message();
-        m.what = ConnectionMessage.MESSENGER_READY.ordinal();
-        send_manager(m);
-
+        send_manager(Messages.Create(ConnectionMessage.MESSENGER_READY));
         Looper.loop();
 
         _handle_disconnect();
