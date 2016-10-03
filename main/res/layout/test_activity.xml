@@ -73,7 +73,7 @@
 
                 <ImageView
                     android:contentDescription="@string/t_pic_middle_desc"
-                    android:src="@drawable/horizontal"
+                    android:src="@drawable/test_start_demo"
                     android:id="@+id/t_middle_2"
                     android:adjustViewBounds="true"
                     android:layout_below="@+id/t_middle_1"
@@ -102,7 +102,7 @@
 
                 <ImageView
                     android:contentDescription="@string/t_pic_middle_desc"
-                    android:src="@drawable/horizontal"
+                    android:src="@drawable/test_rotate_demo"
                     android:id="@+id/t_exc_2"
                     android:adjustViewBounds="true"
                     android:layout_below="@+id/t_exc_1"

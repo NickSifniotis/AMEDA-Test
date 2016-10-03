@@ -1,166 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    style="@style/Activity"
+    android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
 
     <RelativeLayout
-        android:id="@id/layout_base"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8"
-        android:padding="30dp"
-        android:gravity="center" >
+        style="@style/Activity.BelowToolbar"
+        android:id="@id/layout_base" >
 
         <LinearLayout
-            android:id="@id/c_row_calibrate"
-            android:layout_alignParentTop="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            style="@style/CalibrationRow.Top"
+            android:id="@id/c_row_calibrate" >
 
             <Button
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
+                style="@style/CalibrationRow.Button"
                 android:onClick="c_btn_calibrate"
-                android:padding="20dp"
-                android:text="Set horizontal"
+                android:text="@string/c_check_hoz"
                 android:id="@id/c_btn_calibrate" />
 
             <ImageView
-                android:src="@drawable/c_smiley"
-                android:contentDescription="@string/c_smiley_desc"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_calibrate" />
         </LinearLayout>
 
         <LinearLayout
+            style="@style/CalibrationRow"
             android:id="@id/c_row_position_1"
-            android:layout_below="@id/c_row_calibrate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_below="@id/c_row_calibrate" >
 
             <Button
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
+                style="@style/CalibrationRow.Button"
                 android:onClick="c_btn_position_1"
-                android:padding="20dp"
-                android:text="Check step 1"
+                android:text="@string/c_check_1"
                 android:id="@id/c_btn_position_1" />
 
             <ImageView
-                android:src="@drawable/c_smiley"
-                android:contentDescription="@string/c_smiley_desc"
-                android:id="@id/c_img_position_1"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"/>
+                style="@style/CalibrationRow.Image"
+                android:id="@id/c_img_position_1" />
 
         </LinearLayout>
 
         <LinearLayout
+            style="@style/CalibrationRow"
             android:id="@id/c_row_position_2"
-            android:layout_below="@id/c_row_position_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_below="@id/c_row_position_1" >
 
             <Button
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:padding="20dp"
+                style="@style/CalibrationRow.Button"
                 android:onClick="c_btn_position_2"
-                android:text="Check step 2"
+                android:text="@string/c_check_2"
                 android:id="@id/c_btn_position_2" />
 
             <ImageView
-                android:src="@drawable/c_smiley"
-                android:contentDescription="@string/c_smiley_desc"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_2" />
 
         </LinearLayout>
 
         <LinearLayout
+            style="@style/CalibrationRow"
             android:id="@id/c_row_position_3"
-            android:layout_below="@id/c_row_position_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_below="@id/c_row_position_2" >
 
             <Button
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
+                style="@style/CalibrationRow.Button"
                 android:onClick="c_btn_position_3"
-                android:padding="20dp"
-                android:text="Check step 3"
+                android:text="@string/c_check_3"
                 android:id="@id/c_btn_position_3" />
 
             <ImageView
-                android:src="@drawable/c_smiley"
-                android:contentDescription="@string/c_smiley_desc"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_3" />
 
         </LinearLayout>
 
         <LinearLayout
+            style="@style/CalibrationRow"
             android:id="@id/c_row_position_4"
-            android:layout_below="@id/c_row_position_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_below="@id/c_row_position_3" >
 
             <Button
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:padding="20dp"
+                style="@style/CalibrationRow.Button"
                 android:onClick="c_btn_position_4"
-                android:text="Check step 4"
+                android:text="@string/c_check_4"
                 android:id="@id/c_btn_position_4" />
 
 
             <ImageView
-                android:src="@drawable/c_smiley"
-                android:contentDescription="@string/c_smiley_desc"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_4" />
 
         </LinearLayout>
 
 
         <LinearLayout
+            style="@style/CalibrationRow"
             android:id="@id/c_row_position_5"
-            android:layout_below="@id/c_row_position_4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_below="@id/c_row_position_4" >
 
             <Button
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:padding="20dp"
+                style="@style/CalibrationRow.Button"
                 android:onClick="c_btn_position_5"
-                android:text="Check step 5"
+                android:text="@string/c_check_5"
                 android:id="@id/c_btn_position_5" />
 
             <ImageView
-                android:src="@drawable/c_smiley"
-                android:contentDescription="@string/c_smiley_desc"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_5" />
 
         </LinearLayout>

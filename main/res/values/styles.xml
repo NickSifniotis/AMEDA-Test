@@ -53,4 +53,65 @@
         <item name="android:layout_marginBottom">15dp</item>
     </style>
 
+    <style name="Activity">
+        <item name="android:background">@color/mainBackground</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="Activity.BelowToolbar">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">8</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">30dp</item>
+    </style>
+
+    <!-- Styles used by the Home activity -->
+    <style name="HomeButton">
+        <item name="android:background">@drawable/home_button_background</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">35dp</item>
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:layout_marginBottom">25dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="HomeButton.Top">
+        <item name="android:layout_marginTop">75dp</item>
+    </style>
+
+    <!-- Styles used exclusively by the calibration activity -->
+    <style name="CalibrationRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <style name="CalibrationRow.Top">
+        <item name="android:layout_alignParentTop">true</item>
+    </style>
+
+    <style name="CalibrationRow.Button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="CalibrationRow.Image">
+        <item name="android:src">@drawable/c_smiley</item>
+        <item name="android:contentDescription">@string/c_smiley_desc</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="BasicButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:layout_margin">10dp</item>
+
+    </style>
 </resources>

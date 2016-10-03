@@ -27,6 +27,13 @@
 
 
     <!-- Strings -->
+    <string name="c_check_hoz">Check horizontal</string>
+    <string name="c_check_1">Check Step 1</string>
+    <string name="c_check_2">Check Step 2</string>
+    <string name="c_check_3">Check Step 3</string>
+    <string name="c_check_4">Check Step 4</string>
+    <string name="c_check_5">Check Step 5</string>
+
     <string name="c_calibrate">Calibrate</string>
     <string name="c_smiley_desc">Smiley face, calibration successful!</string>
     <string name="c_calibration_failure">The AMEDA has failed to calibrate itself. Please make sure the wobble board is horizontal and try again.</string>
