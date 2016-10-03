@@ -158,134 +158,63 @@
                 android:background="@color/menuBackground">
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_tutorial"
-                    android:textColor="@color/mainBackground"
                     android:onClick="h_btn_tutorial" />
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_familiarisation"
-                    android:textColor="@color/mainBackground"
                     android:onClick="h_btn_familiarisation" />
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_new"
-                    android:textColor="@color/mainBackground"
                     android:onClick="h_d_new" />
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_open"
-                    android:textColor="@color/mainBackground"
                     android:onClick="h_d_open" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/menuUpper"/>
+                    style="@style/MenuSliderBar" />
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingTop="15dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_calibrate"
                     android:onClick="h_d_calibrate" />
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/mainBackground"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_help"
                     android:onClick="h_d_help" />
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/mainBackground"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_exit"
                     android:onClick="h_d_exit" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/menuUpper"/>
+                    style="@style/MenuSliderBar" />
 
                 <TextView
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:paddingTop="15dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
+                    style="@style/MenuSliderHeading"
                     android:text="@string/h_d_t_desc" />
 
                 <TextView
+                    style="@style/MenuSliderEntry"
                     android:id="@id/h_d_t_address"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
                     android:onClick="h_d_t_address" />
 
                 <TextView
+                    style="@style/MenuSliderEntry"
                     android:id="@id/h_d_t_debug"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
                     android:onClick="h_d_t_debug" />
 
                 <TextView
+                    style="@style/MenuSliderEntry"
                     android:id="@id/h_d_t_shorttest"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="12dp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textColor="@color/mainBackground"
                     android:onClick="h_d_t_shorttest" />
 
             </LinearLayout>

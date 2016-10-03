@@ -30,4 +30,27 @@
         <item name="android:color">@color/colorPrimary</item>
     </style>
 
+
+    <!-- Menu slider styles -->
+    <style name="MenuSliderEntry">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/menuText</item>
+    </style>
+
+    <style name="MenuSliderHeading" parent="@style/MenuSliderEntry">
+        <item name="android:textColor">@color/menuHeader</item>
+    </style>
+
+    <style name="MenuSliderBar">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/menuUpper</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
+
 </resources>
