@@ -1,5 +1,6 @@
 package au.net.nicksifniotis.amedatest.activities;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -50,6 +52,7 @@ public class TestActivity extends AMEDAActivity
     private TestState current_state;
     private int _current_test_id;
     private DBOpenHelper _database_helper;
+    private ProgressDialog _please_wait;
 
 
     /**
@@ -128,9 +131,9 @@ public class TestActivity extends AMEDAActivity
         Resources r = getResources();
         for (int i = 1; i <= 5; i ++)
         {
-            Button button = (Button) findViewById(r.getIdentifier("t_btn_excursion_" + i, "id", "au.net.nicksifniotis.amedatest"));
+            ImageButton button = (ImageButton) findViewById(r.getIdentifier("t_btn_excursion_" + i, "id", "au.net.nicksifniotis.amedatest"));
             if (button != null)
-                button.setText(getString(R.string.t_excursion_button, i));
+                button.setContentDescription(getString(R.string.t_excursion_button, i));
         }
 
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
@@ -156,6 +159,10 @@ public class TestActivity extends AMEDAActivity
                 }
             });
         }
+
+        _please_wait = new ProgressDialog(this);
+        _please_wait.setTitle ("One moment");
+        _please_wait.setMessage ("Please wait while the AMEDA device moves to the next position.");
     }
 
 
@@ -437,11 +444,17 @@ public class TestActivity extends AMEDAActivity
         Globals.DebugToast.Send("Setting new state to " + new_state.toString());
         current_state = new_state;
 
-        for (TestState t: TestState.values())
+        if (current_state == TestState.MIDDLE)
+            _please_wait.show();
+        else
         {
-            View layout = findViewById(t.Layout());
-            if (layout != null)
-                layout.setVisibility ((current_state == t) ? View.VISIBLE : View.GONE);
+            _please_wait.dismiss();
+            for (TestState t : TestState.values())
+            {
+                View layout = findViewById(t.Layout());
+                if (layout != null)
+                    layout.setVisibility((current_state == t) ? View.VISIBLE : View.GONE);
+            }
         }
     }
 

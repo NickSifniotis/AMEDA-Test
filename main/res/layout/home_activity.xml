@@ -21,21 +21,21 @@
             tools:context=".activities.HomeActivity">
 
                 <ImageButton
-                    style="@style/HomeButton.Top"
+                    style="@style/BasicButton.HomeButton.Top"
                     android:contentDescription="@string/h_btn_tutorial"
                     android:src="@drawable/home_tutorial_text"
                     android:id="@id/h_btn_tutorial"
                     android:onClick="h_btn_tutorial" />
 
                 <ImageButton
-                    style="@style/HomeButton"
+                    style="@style/BasicButton.HomeButton"
                     android:contentDescription="@string/h_btn_familiarisation"
                     android:src="@drawable/home_familiarisation_text"
                     android:id="@id/h_btn_familiarisation"
                     android:onClick="h_btn_familiarisation" />
 
                 <ImageButton
-                    style="@style/HomeButton"
+                    style="@style/BasicButton.HomeButton"
                     android:contentDescription="@string/h_btn_new_test"
                     android:src="@drawable/home_newrecord_text"
                     android:id="@id/h_btn_begintest"

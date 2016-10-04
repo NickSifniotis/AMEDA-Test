@@ -67,18 +67,14 @@
     </style>
 
     <!-- Styles used by the Home activity -->
-    <style name="HomeButton">
+    <style name="BasicButton.HomeButton">
         <item name="android:background">@drawable/home_button_background</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">35dp</item>
         <item name="android:layout_marginLeft">25dp</item>
         <item name="android:layout_marginBottom">25dp</item>
-        <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:scaleType">centerInside</item>
     </style>
 
-    <style name="HomeButton.Top">
+    <style name="BasicButton.HomeButton.Top">
         <item name="android:layout_marginTop">75dp</item>
     </style>
 
@@ -110,8 +106,36 @@
     <style name="BasicButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">20dp</item>
         <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
 
+
+    <!-- Test activity styles -->
+    <style name="TestOuterFrame">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">30dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="TestOuterOuterFrame">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="TestImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="BasicButton.TestButton">
+        <item name="android:background">@drawable/test_rotate_button_bgd</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 </resources>
