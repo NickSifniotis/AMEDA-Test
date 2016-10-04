@@ -8,54 +8,31 @@
     <RelativeLayout
         style="@style/Activity.BelowToolbar" >
 
-        <TextView
-            android:padding="20dp"
-            android:id="@id/tut_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:gravity="center_horizontal"
-            android:text="@string/tut_title"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:padding="20dp"
-            android:paddingBottom="50dp"
-            android:id="@id/tut_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/tut_description"
-            android:gravity="center_horizontal"
-            android:layout_below="@id/tut_title" />
-
         <VideoView
             android:padding="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
             android:id="@id/tut_videoview"
-            android:layout_below="@id/tut_description"
             android:layout_centerHorizontal="true" />
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:gravity="center_horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            style="@style/BasicButtonBar"
+            android:layout_below="@id/tut_videoview">
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tut_btn_repeat"
-                android:onClick="tut_btn_repeat"/>
-
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_done"
+            <ImageButton
+                style="@style/BasicButton.BarButton"
+                android:background="@drawable/tutorial_btn_bgd2"
+                android:src="@drawable/tutorial_done_text"
+                android:contentDescription="@string/btn_done"
                 android:onClick="tut_btn_done"/>
+
+            <ImageButton
+                style="@style/BasicButton.BarButton"
+                android:background="@drawable/tutorial_btn_bgd2"
+                android:src="@drawable/tutorial_repeat_text"
+                android:contentDescription="@string/tut_btn_repeat"
+                android:onClick="tut_btn_repeat"/>
 
         </LinearLayout>
 
