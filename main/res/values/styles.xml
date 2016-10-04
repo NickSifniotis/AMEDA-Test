@@ -1,28 +1,34 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-   <!--     <item name="android:textViewStyle">@style/RobotoTextViewStyle</item> -->
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
 
-  <!--      <item name="android:buttonStyle">@style/RobotoButtonStyle</item> -->
     </style>
 
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily">serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">24sp</item>
     </style>
+
+    <style name="BigButtonText">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">42sp</item>
+    </style>
+
 
     <!-- ActionBar styles -->
     <style name="MyActionBar">
@@ -72,6 +78,7 @@
         <item name="android:layout_marginTop">35dp</item>
         <item name="android:layout_marginLeft">25dp</item>
         <item name="android:layout_marginBottom">25dp</item>
+        <item name="android:textSize">42sp</item>
     </style>
 
     <style name="BasicButton.HomeButton.Top">
@@ -103,12 +110,17 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+
+    <!-- button styles -->
+
     <style name="BasicButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">10dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:scaleType">centerInside</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">36sp</item>
     </style>
 
     <style name="BasicButtonBar">

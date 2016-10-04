@@ -20,24 +20,21 @@
             android:orientation="vertical"
             tools:context=".activities.HomeActivity">
 
-                <ImageButton
+                <Button
                     style="@style/BasicButton.HomeButton.Top"
-                    android:contentDescription="@string/h_btn_tutorial"
-                    android:src="@drawable/home_tutorial_text"
+                    android:text="@string/h_btn_tutorial"
                     android:id="@id/h_btn_tutorial"
                     android:onClick="h_btn_tutorial" />
 
-                <ImageButton
+                <Button
                     style="@style/BasicButton.HomeButton"
-                    android:contentDescription="@string/h_btn_familiarisation"
-                    android:src="@drawable/home_familiarisation_text"
+                    android:text="@string/h_btn_familiarisation"
                     android:id="@id/h_btn_familiarisation"
                     android:onClick="h_btn_familiarisation" />
 
-                <ImageButton
+                <Button
                     style="@style/BasicButton.HomeButton"
-                    android:contentDescription="@string/h_btn_new_test"
-                    android:src="@drawable/home_newrecord_text"
+                    android:text="@string/h_btn_new_test"
                     android:id="@id/h_btn_begintest"
                     android:onClick="h_btn_begintest" />
 
@@ -47,7 +44,8 @@
 
     <ScrollView
         android:layout_gravity="start"
-        android:layout_width="300dp"
+        android:minWidth="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
         <LinearLayout

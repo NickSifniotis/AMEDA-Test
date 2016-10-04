@@ -20,18 +20,16 @@
             style="@style/BasicButtonBar"
             android:layout_below="@id/tut_videoview">
 
-            <ImageButton
+            <Button
                 style="@style/BasicButton.BarButton"
                 android:background="@drawable/tutorial_btn_bgd2"
-                android:src="@drawable/tutorial_done_text"
-                android:contentDescription="@string/btn_done"
-                android:onClick="tut_btn_done"/>
+                android:text="@string/btn_done"
+                android:onClick="tut_btn_done" />
 
-            <ImageButton
+            <Button
                 style="@style/BasicButton.BarButton"
                 android:background="@drawable/tutorial_btn_bgd2"
-                android:src="@drawable/tutorial_repeat_text"
-                android:contentDescription="@string/tut_btn_repeat"
+                android:text="@string/tut_btn_repeat"
                 android:onClick="tut_btn_repeat"/>
 
         </LinearLayout>
