@@ -5,16 +5,21 @@
 
     <include layout="@layout/toolbar" />
 
+    <ScrollView
+        style="@style/Activity.BelowToolbar">
+
     <RelativeLayout
-        style="@style/Activity.BelowToolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:id="@id/layout_base">
 
         <TextView
             android:id="@+id/famil_1"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/subtitleTextAppearance"
             android:gravity="center_horizontal"
+            android:textSize="42sp"
             android:text="@string/f_title"/>
 
         <TextView
@@ -23,7 +28,6 @@
             android:id="@+id/famil_2"
             android:layout_below="@+id/famil_1"
             android:gravity="center_horizontal"
-            android:paddingBottom="50dp"
             android:text="@string/f_description" />
 
         <LinearLayout
@@ -35,17 +39,16 @@
             android:layout_height="wrap_content">
 
             <Button
+                style="@style/CalibrationRow.Button"
+                android:layout_weight="3"
                 android:id="@id/f_btn_1"
-                android:onClick="f_btn_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:onClick="f_btn_1" />
 
             <TextView
-                android:paddingLeft="40dp"
+                style="@style/FamiliarisationCounter"
+                android:layout_weight="1"
                 android:id="@id/f_txt_1"
-                android:text="@string/f_initial_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:text="@string/f_initial_count" />
         </LinearLayout>
 
         <LinearLayout
@@ -59,15 +62,14 @@
             <Button
                 android:id="@id/f_btn_2"
                 android:onClick="f_btn_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_weight="3"
+                style="@style/CalibrationRow.Button" />
 
             <TextView
-                android:paddingLeft="40dp"
+                style="@style/FamiliarisationCounter"
+                android:layout_weight="1"
                 android:id="@id/f_txt_2"
-                android:text="@string/f_initial_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:text="@string/f_initial_count" />
         </LinearLayout>
 
         <LinearLayout
@@ -81,15 +83,14 @@
             <Button
                 android:id="@id/f_btn_3"
                 android:onClick="f_btn_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_weight="3"
+                style="@style/CalibrationRow.Button" />
 
             <TextView
-                android:paddingLeft="40dp"
+                style="@style/FamiliarisationCounter"
+                android:layout_weight="1"
                 android:id="@id/f_txt_3"
-                android:text="@string/f_initial_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:text="@string/f_initial_count" />
         </LinearLayout>
 
         <LinearLayout
@@ -103,15 +104,14 @@
             <Button
                 android:id="@id/f_btn_4"
                 android:onClick="f_btn_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_weight="3"
+                style="@style/CalibrationRow.Button" />
 
             <TextView
-                android:paddingLeft="40dp"
+                style="@style/FamiliarisationCounter"
+                android:layout_weight="1"
                 android:id="@id/f_txt_4"
-                android:text="@string/f_initial_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:text="@string/f_initial_count" />
         </LinearLayout>
 
         <LinearLayout
@@ -125,25 +125,30 @@
             <Button
                 android:id="@id/f_btn_5"
                 android:onClick="f_btn_5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_weight="3"
+                style="@style/CalibrationRow.Button" />
 
             <TextView
-                android:paddingLeft="40dp"
+                style="@style/FamiliarisationCounter"
+                android:layout_weight="1"
                 android:id="@id/f_txt_5"
-                android:text="@string/f_initial_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:text="@string/f_initial_count" />
         </LinearLayout>
 
-        <Button
-            android:text="@string/btn_done"
-            android:onClick="f_btn_done"
-            android:layout_centerHorizontal="true"
-            android:padding="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_below="@+id/famil_7"
+            style="@style/BasicButtonBar" >
+
+            <Button
+                style="@style/BasicButton.BarButton"
+                android:background="@drawable/tutorial_btn_bgd2"
+                android:id="@id/c_btn_done"
+                android:text="@string/btn_done"
+                android:onClick="f_btn_done" />
+        </LinearLayout>
+
     </RelativeLayout>
+    </ScrollView>
 
 </LinearLayout>
