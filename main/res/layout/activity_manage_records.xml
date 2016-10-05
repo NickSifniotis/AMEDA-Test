@@ -1,47 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Activity"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".activities.ManageRecordsActivity">
 
     <include layout="@layout/toolbar" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="0dp"
-        android:layout_weight="8">
+        style="@style/Activity.BelowToolbar">
 
-        <RelativeLayout
-            android:layout_alignParentTop="true"
-            android:id="@+id/manage_header_layout"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@id/amr_txt_title"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:textSize="42sp"
+            android:paddingBottom="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@id/amr_txt_title"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:paddingBottom="20dp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <Button
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:text="@string/amr_btn_view_last"
-                android:onClick="manage_searchbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
+        <Button
+            style="@style/BasicButton"
+            android:layout_margin="0dp"
+            android:textSize="24sp"
+            android:id="@+id/view_last_btn"
+            android:background="@drawable/small_button_bgd"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/amr_btn_view_last"
+            android:onClick="manage_searchbar" />
 
         <SearchView
-            android:layout_below="@+id/manage_header_layout"
+            android:layout_below="@+id/view_last_btn"
             android:id="@+id/manage_searchbar"
             android:onClick="manage_searchbar"
+            android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -59,7 +53,6 @@
                 android:layout_weight="6"
                 android:text="@string/amr_column_name"
                 android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_height="match_parent" />
 
             <TextView
@@ -69,7 +62,6 @@
                 android:layout_width="0dp"
                 android:layout_weight="4"
                 android:padding="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_height="match_parent" />
 
         </LinearLayout>
@@ -82,30 +74,24 @@
             android:layout_gravity="center_horizontal" />
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:padding="40dp"
-            android:orientation="horizontal">
+            style="@style/BasicButtonBar">
 
-            <Button style="?android:attr/buttonBarButtonStyle"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="0.5"
+            <Button style="@style/BasicButton.BarButton"
+                android:background="@drawable/small_button_bgd"
+                android:textSize="24sp"
                 android:text="@string/btn_cancel"
                 android:onClick="amr_btn_close">
             </Button>
 
-            <Button style="?android:attr/buttonBarButtonStyle"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="0.5"
+            <Button style="@style/BasicButton.BarButton"
+                android:background="@drawable/small_button_bgd"
+                android:textSize="24sp"
                 android:text="@string/btn_new"
                 android:onClick="amr_btn_new">
             </Button>
 
         </LinearLayout>
-
     </RelativeLayout>
+
 </LinearLayout>

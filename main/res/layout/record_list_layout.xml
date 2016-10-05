@@ -9,8 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="6"
         android:padding="10dp"
-        android:background="@color/menuUpper"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:background="@color/menuUpper" />
     <TextView
         android:id="@+id/record_score"
         android:layout_width="0dp"
@@ -18,6 +17,5 @@
         android:layout_weight="4"
         android:padding="10dp"
         android:layout_margin="0dp"
-        android:background="@color/menuUpper"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:background="@color/menuUpper" />
 </LinearLayout>

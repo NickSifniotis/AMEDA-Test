@@ -19,7 +19,8 @@
         </activity>
         <activity
             android:name=".activities.EditUserActivity"
-            android:parentActivityName=".activities.ManageRecordsActivity" />
+            android:parentActivityName=".activities.ManageRecordsActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.ManageRecordsActivity"
             android:parentActivityName=".activities.HomeActivity" />

@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    style="@style/Activity" >
 
     <include layout="@layout/toolbar" />
 
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:layout_weight="8"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
+        style="@style/Activity.BelowToolbar"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@id/vu_txt_title"
@@ -84,25 +81,17 @@
                 android:layout_height="wrap_content" />
 
             <LinearLayout
-                style="?android:attr/buttonBarStyle"
-                android:layout_alignParentBottom="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:orientation="horizontal">
+                style="@style/BasicButtonBar"
+                android:layout_alignParentBottom="true">
 
-                <Button style="?android:attr/buttonBarButtonStyle"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                <Button
+                    style="@style/BasicButton.BarButton"
                     android:text="@string/btn_cancel"
                     android:onClick="vu_btn_close">
                 </Button>
 
-                <Button style="?android:attr/buttonBarButtonStyle"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                <Button
+                    style="@style/BasicButton.BarButton"
                     android:text="@string/vu_btn_new"
                     android:onClick="vu_btn_new">
                 </Button>

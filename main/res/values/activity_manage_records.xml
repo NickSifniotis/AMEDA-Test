@@ -6,10 +6,10 @@
     <string name="amr_view_descriptor">view</string>
     <string name="amr_title_stub">Select user to </string>
     <string name="amr_title">%1$s %2$s</string>
-    <string name="amr_btn_view_last">View Last Record</string>
+    <string name="amr_btn_view_last">View Last ..</string>
 
     <string name="amr_column_name">Name</string>
-    <string name="amr_column_last_date">Date of last test.</string>
+    <string name="amr_column_last_date">Most recent test</string>
 
     <!-- GUI component IDs -->
     <item type="id" name="amr_txt_title" />
