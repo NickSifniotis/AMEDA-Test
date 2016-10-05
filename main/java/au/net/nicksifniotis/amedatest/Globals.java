@@ -18,7 +18,7 @@ import au.net.nicksifniotis.amedatest.activities.HomeActivity;
 public class Globals
 {
     /* TRUE if you want to dump a bunch of debug toasts to the device during execution. */
-    public static volatile boolean DEBUG_MODE = true;
+    public static volatile boolean DEBUG_MODE = false;
 
     /* TRUE if we want to save the addresses of users in the database. */
     public static boolean USING_ADDRESSES = true;

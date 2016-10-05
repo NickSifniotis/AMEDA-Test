@@ -97,17 +97,16 @@
     </style>
 
     <style name="CalibrationRow.Button">
+        <item name="android:background">@drawable/home_button_background</item>
+        <item name="android:textSize">36sp</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">2</item>
         <item name="android:padding">20dp</item>
     </style>
 
     <style name="CalibrationRow.Image">
-        <item name="android:src">@drawable/c_smiley</item>
         <item name="android:contentDescription">@string/c_smiley_desc</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
     </style>
 
 

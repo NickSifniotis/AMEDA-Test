@@ -75,7 +75,7 @@ public class CalibrationActivity extends AMEDAActivity
         super.onStart();
 
         for (ImageView v: _images)
-            v.setVisibility(View.INVISIBLE);
+            v.setImageDrawable(getDrawable(R.drawable.calibrate_grey));
     }
 
 
@@ -114,7 +114,7 @@ public class CalibrationActivity extends AMEDAActivity
         else if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION && response.GetCode() == AMEDAResponse.Code.WOBBLE_NO_RESPONSE)
             WobbleDeadDialog();
         else
-            _images[instruction_code == AMEDAInstructionEnum.CALIBRATE ? 0 : instruction.GetN()].setVisibility(View.VISIBLE);
+            _images[instruction_code == AMEDAInstructionEnum.CALIBRATE ? 0 : instruction.GetN()].setImageDrawable(getDrawable(R.drawable.calibrate_green));
     }
 
 

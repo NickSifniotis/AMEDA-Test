@@ -5,13 +5,28 @@
 
     <include layout="@layout/toolbar" />
 
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8">
+
     <RelativeLayout
-        style="@style/Activity.BelowToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@id/layout_base" >
 
-        <LinearLayout
+        <TextView
             style="@style/CalibrationRow.Top"
-            android:id="@id/c_row_calibrate" >
+            android:id="@+id/calibrate_title"
+            android:text="@string/c_calibrate"
+            android:textSize="48sp"
+            android:gravity="center" />
+
+        <LinearLayout
+            style="@style/CalibrationRow"
+            android:id="@id/c_row_calibrate"
+            android:layout_below="@+id/calibrate_title">
 
             <Button
                 style="@style/CalibrationRow.Button"
@@ -19,9 +34,14 @@
                 android:text="@string/c_check_hoz"
                 android:id="@id/c_btn_calibrate" />
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
             <ImageView
                 style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_calibrate" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -35,9 +55,16 @@
                 android:text="@string/c_check_1"
                 android:id="@id/c_btn_position_1" />
 
-            <ImageView
-                style="@style/CalibrationRow.Image"
-                android:id="@id/c_img_position_1" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    style="@style/CalibrationRow.Image"
+                    android:id="@id/c_img_position_1" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -52,9 +79,14 @@
                 android:text="@string/c_check_2"
                 android:id="@id/c_btn_position_2" />
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
             <ImageView
                 style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_2" />
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -69,9 +101,15 @@
                 android:text="@string/c_check_3"
                 android:id="@id/c_btn_position_3" />
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
             <ImageView
                 style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_3" />
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -86,11 +124,14 @@
                 android:text="@string/c_check_4"
                 android:id="@id/c_btn_position_4" />
 
-
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
             <ImageView
                 style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_4" />
-
+            </RelativeLayout>
         </LinearLayout>
 
 
@@ -104,24 +145,28 @@
                 android:onClick="c_btn_position_5"
                 android:text="@string/c_check_5"
                 android:id="@id/c_btn_position_5" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
 
             <ImageView
                 style="@style/CalibrationRow.Image"
                 android:id="@id/c_img_position_5" />
-
+            </RelativeLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_below="@id/c_row_position_5"
+            style="@style/BasicButtonBar" >
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            style="@style/BasicButton.BarButton"
+            android:background="@drawable/tutorial_btn_bgd2"
             android:id="@id/c_btn_done"
             android:text="@string/btn_done"
-            android:onClick="c_btn_done"
-            android:layout_below="@id/c_row_position_5"
-            android:layout_centerHorizontal="true"/>
-
+            android:onClick="c_btn_done" />
+        </LinearLayout>
     </RelativeLayout>
-
+    </ScrollView>
 </LinearLayout>
