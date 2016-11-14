@@ -20,7 +20,7 @@
             android:id="@id/vu_layout_notes"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/vu_notes_1"
@@ -44,11 +44,20 @@
                 android:id="@id/vu_btn_edit"
                 android:text="@string/vu_btn_edit"
                 android:onClick="vu_btn_edit"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/vu_layout_belownotes"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/vu_layout_header"
-                android:layout_alignBottom="@id/vu_txt_notes"
+                android:layout_alignParentTop="true"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
