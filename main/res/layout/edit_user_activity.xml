@@ -200,20 +200,20 @@
                 <Button
                     style="@style/BasicButton.BarButton"
                     android:onClick="mpr_btn_cancel"
-                    android:background="@drawable/small_button_bgd"
+                    android:background="@drawable/tutorial_btn_bgd2"
                     android:id="@id/mpr_btn_cancel"
                     android:text="@string/btn_cancel" />
 
                 <Button
                     style="@style/BasicButton.BarButton"
                     android:onClick="mpr_btn_delete"
-                    android:background="@drawable/small_button_bgd"
+                    android:background="@drawable/tutorial_btn_bgd2"
                     android:id="@id/mpr_btn_delete"
                     android:text="@string/btn_delete" />
 
                 <Button
                     style="@style/BasicButton.BarButton"
-                    android:background="@drawable/small_button_bgd"
+                    android:background="@drawable/tutorial_btn_bgd2"
                     android:onClick="mpr_btn_done"
                     android:id="@id/mpr_btn_done"
                     android:text="@string/btn_done" />

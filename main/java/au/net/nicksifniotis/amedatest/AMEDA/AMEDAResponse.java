@@ -23,7 +23,7 @@ public class AMEDAResponse
         {
             this._code = Code.FindCode(p);
             if (this._code == Code.ANGLE)
-                this._angle = Double.parseDouble(p.substring(2, 5));
+                this._angle = Double.parseDouble(p.substring(1, 5));
             else
                 this._angle = 0;
         }

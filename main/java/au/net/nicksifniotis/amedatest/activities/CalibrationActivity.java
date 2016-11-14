@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
@@ -25,6 +26,8 @@ import au.net.nicksifniotis.amedatest.R;
 public class CalibrationActivity extends AMEDAActivity
 {
     private ImageView[] _images;
+    private Button[] _buttons;
+    private int last_position = 0;
 
 
     /**
@@ -82,14 +85,17 @@ public class CalibrationActivity extends AMEDAActivity
     /**
      * Connects the GUI elements to the variables that represent them.
      */
-    private void _connect_gui ()
-    {
+    private void _connect_gui () {
         _images = new ImageView[6];
+        _buttons = new Button[6];
 
-        _images[0] = (ImageView)findViewById(R.id.c_img_calibrate);
+        _images[0] = (ImageView) findViewById(R.id.c_img_calibrate);
+        _buttons[0] = (Button) findViewById(R.id.c_btn_calibrate);
         Resources r = getResources();
-        for (int i = 1; i <= 5; i ++)
-            _images[i] = (ImageView)findViewById(r.getIdentifier("c_img_position_" + i, "id", "au.net.nicksifniotis.amedatest"));
+        for (int i = 1; i <= 5; i++) {
+            _images[i] = (ImageView) findViewById(r.getIdentifier("c_img_position_" + i, "id", "au.net.nicksifniotis.amedatest"));
+            _buttons[i] = (Button) findViewById(r.getIdentifier("c_btn_position_" + i, "id", "au.net.nicksifniotis.amedatest"));
+        }
     }
 
 
@@ -113,8 +119,21 @@ public class CalibrationActivity extends AMEDAActivity
             CannotMoveDialog();
         else if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION && response.GetCode() == AMEDAResponse.Code.WOBBLE_NO_RESPONSE)
             WobbleDeadDialog();
-        else
-            _images[instruction_code == AMEDAInstructionEnum.CALIBRATE ? 0 : instruction.GetN()].setImageDrawable(getDrawable(R.drawable.calibrate_green));
+        else if (response.GetCode() == AMEDAResponse.Code.ANGLE)
+        {
+            double angle = response.GetAngle();
+            int position = instruction_code == AMEDAInstructionEnum.CALIBRATE ? 0 : instruction.GetN();
+
+            int expected_angle = 8 + position;
+            String text = _buttons[last_position].getText().toString();
+            text += " (" + String.format("%1$.3f", angle) + ")";
+            _buttons[last_position].setText(text);
+            _images[last_position].setImageDrawable(getDrawable(R.drawable.calibrate_green));
+        }
+        else if (instruction_code == AMEDAInstructionEnum.MOVE_TO_POSITION)
+            ExecuteNextInstruction();
+        else if (instruction_code == AMEDAInstructionEnum.CALIBRATE)
+            _images[0].setImageDrawable(getDrawable(R.drawable.calibrate_green));
     }
 
 
@@ -169,8 +188,12 @@ public class CalibrationActivity extends AMEDAActivity
         if (pressed == 0)
             Calibrate();
         else
+        {
             GoToPosition(pressed);
+            RequestAngle();
+        }
 
+        last_position = pressed;
         ExecuteNextInstruction();
     }
 

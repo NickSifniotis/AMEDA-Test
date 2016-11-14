@@ -5,13 +5,14 @@
 
     <include layout="@layout/toolbar" />
 
-    <LinearLayout
-        style="@style/Activity.BelowToolbar"
-        android:orientation="vertical" >
+
+        <LinearLayout
+            style="@style/Activity.BelowToolbar"
+            android:orientation="vertical" >
 
         <TextView
             android:id="@id/vu_txt_title"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="42sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -30,7 +31,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:layout_alignEnd="@+id/vu_notes_1"
+                android:layout_alignBottom="@+id/vu_notes_1"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@id/vu_txt_notes"
                 android:layout_width="wrap_content"
@@ -38,12 +39,12 @@
                 android:layout_height="wrap_content" />
 
             <Button
+                style="@style/BasicButton"
+                android:background="@drawable/tutorial_btn_bgd2"
                 android:id="@id/vu_btn_edit"
                 android:text="@string/vu_btn_edit"
                 android:onClick="vu_btn_edit"
-                android:layout_alignParentEnd="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_alignParentEnd="true" />
 
             <LinearLayout
                 android:id="@+id/vu_layout_header"
@@ -86,12 +87,14 @@
 
                 <Button
                     style="@style/BasicButton.BarButton"
+                    android:background="@drawable/tutorial_btn_bgd2"
                     android:text="@string/btn_cancel"
                     android:onClick="vu_btn_close">
                 </Button>
 
                 <Button
                     style="@style/BasicButton.BarButton"
+                    android:background="@drawable/tutorial_btn_bgd2"
                     android:text="@string/vu_btn_new"
                     android:onClick="vu_btn_new">
                 </Button>
@@ -100,5 +103,6 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+        </LinearLayout>
+
 </LinearLayout>

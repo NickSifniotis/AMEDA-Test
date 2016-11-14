@@ -25,7 +25,7 @@
             android:layout_margin="0dp"
             android:textSize="24sp"
             android:id="@+id/view_last_btn"
-            android:background="@drawable/small_button_bgd"
+            android:background="@drawable/tutorial_btn_bgd2"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:text="@string/amr_btn_view_last"
@@ -78,14 +78,14 @@
             style="@style/BasicButtonBar">
 
             <Button style="@style/BasicButton.BarButton"
-                android:background="@drawable/small_button_bgd"
+                android:background="@drawable/tutorial_btn_bgd2"
                 android:textSize="24sp"
                 android:text="@string/btn_cancel"
                 android:onClick="amr_btn_close">
             </Button>
 
             <Button style="@style/BasicButton.BarButton"
-                android:background="@drawable/small_button_bgd"
+                android:background="@drawable/tutorial_btn_bgd2"
                 android:textSize="24sp"
                 android:text="@string/btn_new"
                 android:onClick="amr_btn_new">

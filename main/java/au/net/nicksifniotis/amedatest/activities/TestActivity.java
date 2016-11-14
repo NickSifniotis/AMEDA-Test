@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -42,6 +41,7 @@ import au.net.nicksifniotis.amedatest.TestState;
 public class TestActivity extends AMEDAActivity
 {
     private static final int NUM_TESTS = 5;
+    private int test_number = 0;
 
     private int [] _test_questions;
     private int _current_question;
@@ -131,9 +131,9 @@ public class TestActivity extends AMEDAActivity
         Resources r = getResources();
         for (int i = 1; i <= 5; i ++)
         {
-            ImageButton button = (ImageButton) findViewById(r.getIdentifier("t_btn_excursion_" + i, "id", "au.net.nicksifniotis.amedatest"));
+            Button button = (Button) findViewById(r.getIdentifier("t_btn_excursion_" + i, "id", "au.net.nicksifniotis.amedatest"));
             if (button != null)
-                button.setContentDescription(getString(R.string.t_excursion_button, i));
+                button.setText(getString(R.string.t_excursion_button, i));
         }
 
         Toolbar bar = (Toolbar)findViewById(R.id.toolbar);
@@ -173,7 +173,7 @@ public class TestActivity extends AMEDAActivity
     private void _create_new_test(int user_id)
     {
         // randomly pick a standard test for this user, and load the answer key from the database.
-        int test_number = randomiser.nextInt(NUM_TESTS) + 1;
+        test_number = randomiser.nextInt(NUM_TESTS) + 1;
         String query = "SELECT * FROM " + DB.StandardTestTable.TABLE_NAME +
                 " WHERE " + DB.StandardTestTable._ID + "=" + test_number;
         SQLiteDatabase db = _database_helper.getReadableDatabase();
@@ -267,6 +267,18 @@ public class TestActivity extends AMEDAActivity
         for (int i = 0; i < _num_questions; i ++)
             _test_questions[i] = Integer.parseInt(answer_key.substring(i, i + 1));
 
+
+        // find the test id!
+        if (_test_questions[0] == 1)
+            test_number = 1;
+        else if (_test_questions[0] == 5 && _test_questions[2] == 2)
+            test_number = 2;
+        else if (_test_questions[0] == 3 && _test_questions[3] == 2)
+            test_number = 3;
+        else if (_test_questions[0] == 5)
+            test_number = 4;
+        else if (_test_questions[0] == 3)
+            test_number = 5;
 
         // Which was the last question that the user answered?
         query = "SELECT COUNT (*) AS answer_count FROM " + DB.QuestionTable.TABLE_NAME +
@@ -408,7 +420,7 @@ public class TestActivity extends AMEDAActivity
         else
         {
             _questions_progress.setText (getString(
-                    R.string.t_progress_counter, (_current_question + 1), _num_questions));
+                    R.string.t_progress_counter, (_current_question + 1), _num_questions, test_number));
             updateState(TestState.MIDDLE);
 
             _move_to_next_pos();

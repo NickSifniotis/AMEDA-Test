@@ -14,9 +14,7 @@
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
+            style="@style/Activity.BelowToolbar"
             android:orientation="vertical"
             tools:context=".activities.HomeActivity">
 
@@ -24,7 +22,8 @@
                     style="@style/BasicButton.HomeButton.Top"
                     android:text="@string/h_btn_tutorial"
                     android:id="@id/h_btn_tutorial"
-                    android:onClick="h_btn_tutorial" />
+                    android:onClick="h_btn_tutorial"
+                    android:layout_marginTop="75dp" />
 
                 <Button
                     style="@style/BasicButton.HomeButton"
@@ -127,24 +126,29 @@
                     android:onClick="h_d_exit" />
 
                 <View
+                    android:visibility="gone"
                     style="@style/MenuSliderBar" />
 
                 <TextView
                     style="@style/MenuSliderHeading"
+                    android:visibility="gone"
                     android:text="@string/h_d_t_desc" />
 
                 <TextView
                     style="@style/MenuSliderEntry"
+                    android:visibility="gone"
                     android:id="@id/h_d_t_address"
                     android:onClick="h_d_t_address" />
 
                 <TextView
                     style="@style/MenuSliderEntry"
+                    android:visibility="gone"
                     android:id="@id/h_d_t_debug"
                     android:onClick="h_d_t_debug" />
 
                 <TextView
                     style="@style/MenuSliderEntry"
+                    android:visibility="gone"
                     android:id="@id/h_d_t_shorttest"
                     android:onClick="h_d_t_shorttest" />
 

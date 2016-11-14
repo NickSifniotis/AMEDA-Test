@@ -68,11 +68,11 @@ public class ConnectionManager implements Runnable
     public ConnectionManager(Activity base_activity)
     {
         green  = base_activity.getResources().getDrawable
-                (R.drawable.liveness_green , base_activity.getTheme());
+                (R.drawable.green_connect , base_activity.getTheme());
         yellow = base_activity.getResources().getDrawable
-                (R.drawable.liveness_yellow, base_activity.getTheme());
+                (R.drawable.green_pump, base_activity.getTheme());
         red    = base_activity.getResources().getDrawable
-                (R.drawable.liveness_red   , base_activity.getTheme());
+                (R.drawable.red_disconnect   , base_activity.getTheme());
 
 
         activity_received = new Messenger(new Handler(new Handler.Callback()

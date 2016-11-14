@@ -43,7 +43,7 @@
     <string name="t_error_database_on_abort">Error updating test during abort operation. You will not be able to resume this test.</string>
     <string name="t_error_database_on_end">There has been an error recording that this test is finished.</string>
 
-    <string name="t_progress_counter">%1$d / %2$d</string>
+    <string name="t_progress_counter">%1$d / %2$d (%3$d)</string>
 
     <!-- Items that sit in the Test context menu -->
     <item type="id" name="t_mnu_pause" />
