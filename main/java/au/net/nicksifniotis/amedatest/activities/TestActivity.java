@@ -472,6 +472,40 @@ public class TestActivity extends AMEDAActivity
 
 
     /**
+     * Need to override the default behaviour of the timeout error.
+     */
+    public void TimeoutHandler()
+    {
+        if (current_state == TestState.MIDDLE)
+            _please_wait.dismiss();
+
+        AlertDialog.Builder builder;
+
+        builder = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.t_abort_title))
+                .setMessage("No response received from AMEDA after five seconds. Test progress is being saved here; please reconnect to the AMEDA and resume where you left off.")
+                .setPositiveButton(getString(R.string.btn_yes),
+                        new DialogInterface.OnClickListener()
+                        {
+                            /**
+                             * User wants to abort the test. So, do that.
+                             *
+                             * @param dialog Unused.
+                             * @param which Unused.
+                             */
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                Timeout_Reset();
+                                _abort_test();
+                            }
+                        });
+
+        builder.create().show();
+    }
+
+
+    /**
      * Button press event handlers.
      *
      * @param view Not used.

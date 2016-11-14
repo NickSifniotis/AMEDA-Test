@@ -52,8 +52,6 @@ public class ViewUserActivity extends NoConnectionActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_user_activity);
 
-        _database_helper = new DBOpenHelper(this);
-        _db = _database_helper.getReadableDatabase();
         _adaptor = new Test_RCA(this);
 
         _connect_gui();
@@ -75,6 +73,9 @@ public class ViewUserActivity extends NoConnectionActivity
     public void onStart()
     {
         super.onStart();
+
+        _database_helper = new DBOpenHelper(this);
+        _db = _database_helper.getReadableDatabase();
 
         String query = "SELECT * FROM " + DB.PersonTable.TABLE_NAME +
                 " WHERE " + DB.PersonTable._ID + " = " + _user_id;

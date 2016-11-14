@@ -388,6 +388,7 @@ public class ConnectionManager implements Runnable
      */
     public void activity_callback (Message msg)
     {
+        Globals.DebugToast.Send ("Manager received a packet from activity: " + ActivityMessage.Message(msg).toString());
         if (Connected)
         {
             switch (ActivityMessage.Message(msg))
@@ -397,6 +398,17 @@ public class ConnectionManager implements Runnable
                     _instruction_buffer.Enqueue(instruction);
 
                     _send_next_message();
+                    break;
+
+                case TIMEOUT_ABORT:
+                    // The activity is reporting that a message was dropped.
+                    // So terminate the connection and clear whatever is pending in the message queue.
+                    _instruction_buffer.Clear();
+                    _waiting_response = false;
+                    _timer = null;
+
+                    Disconnect();
+
                     break;
 
                 default:

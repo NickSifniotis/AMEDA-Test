@@ -10,6 +10,7 @@ import android.os.Message;
  */
 public enum ActivityMessage
 {
+    TIMEOUT_ABORT,      // Terminate the connection because the AMEDA is misbehaving.
     SEND;               // Sends a packet to the AMEDA device.
 
 

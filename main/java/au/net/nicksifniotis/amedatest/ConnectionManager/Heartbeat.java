@@ -7,6 +7,7 @@ import android.os.RemoteException;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
 import au.net.nicksifniotis.amedatest.Globals;
+import au.net.nicksifniotis.amedatest.Messages.ActivityMessage;
 import au.net.nicksifniotis.amedatest.Messages.ManagerMessage;
 import au.net.nicksifniotis.amedatest.Messages.Messages;
 
@@ -59,7 +60,7 @@ public class Heartbeat implements Runnable
 
                 try
                 {
-                    connection_data_out.send (Messages.Create (ManagerMessage.XMIT, instruction));
+                    connection_data_out.send (Messages.Create (ActivityMessage.SEND, instruction));
                 }
                 catch (RemoteException e)
                 {

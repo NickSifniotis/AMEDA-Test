@@ -108,6 +108,16 @@ public abstract class AMEDAActivity extends AppCompatActivity
 
 
     /**
+     * Contains the mechanisms needed to force the connection to reset.
+     */
+    public void Timeout_Reset()
+    {
+        Globals.DebugToast.Send("Timeout Reset called");
+        send_connection(Messages.Create(ActivityMessage.TIMEOUT_ABORT));
+    }
+
+
+    /**
      * Handles an AMEDA timeout event. The default action is to do nothing; activities may
      * override this default behaviour as they see fit.
      */
@@ -227,6 +237,8 @@ public abstract class AMEDAActivity extends AppCompatActivity
      */
     void RepeatInstruction()
     {
+        Globals.DebugToast.Send("Repeat instruction called");
+
         if (!Globals.ConnectionManager.Connected)
             return;
 
