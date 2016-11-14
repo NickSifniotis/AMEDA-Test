@@ -26,6 +26,9 @@ public class Globals
     /* TRUE if we are testing the app and want to cap test size to 10 questions */
     public static boolean SHORT_TESTS = false;
 
+    /* TRUE if you want the virtual connection to drop out occasionally. */
+    public static boolean BUGGY_CONNECTIONS = true;
+
 
     /* Services! */
     public static DebugToastService DebugToast;

@@ -211,7 +211,7 @@ public class ConnectionManager implements Runnable
             send_connection(Messages.Create(ManagerMessage.SHUTDOWN));
 
         // Fire up the connection.
-        _device_connection = new VirtualConnection(_current_activity);
+        _device_connection = new VirtualConnection(_current_activity, Globals.BUGGY_CONNECTIONS);
         _device_connection.UpdateCallback(connection_received);
 
         new Thread(_device_connection).start();

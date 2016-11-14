@@ -8,6 +8,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
+import java.util.Random;
+
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.Messages.ConnectionMessage;
 import au.net.nicksifniotis.amedatest.Messages.Messages;
@@ -16,39 +18,37 @@ import au.net.nicksifniotis.amedatest.R;
 
 
 /**
- * Created by Nick Sifniotis on 10/09/16.
+ * Created by Nick Sifniotis on 14/11/2016.
  *
  * A virtual AMEDA that listens to instructions sent out by the app, and responds
- * the same way that the actual AMEDA does.
+ * the same way that the actual AMEDA does. However, sometimes, it drops out for no reason.
+ *
+ * Arguably, that behaviour is a perfect imitation of the actual AMEDA device.
  *
  * The virtual device does not use the same codebase for interpreting instructions etc
  * as the main app, in order to preserve a certain separation of logic between the two.
  * After all, this app doesn't share code with the *actual* AMEDA device.
  */
-public class VirtualDevice implements Runnable, Handler.Callback
+public class BuggyVirtualDevice extends VirtualDevice
 {
     private int              _virtual_position;        // The make-believe position of the device.
     private Messenger        _inbound_message_buffer;  // Inbound commands are queued here.
     private Messenger        _outbound_message_buffer; // The virtual device's responses
     private Context          _context;                 // The context to beep at
+    private Random           _random;                  // The random number generator, to generate dropouts.
 
-
-    /**
-     * Unused constructor to make the inheritance thing not complain.
-     */
-    public VirtualDevice ()
-    {}
 
     /**
      * Constructor!
      *
      * Connect the two Messenger objects to the parent thread as well.
      */
-    public VirtualDevice(Context c, Messenger outbound)
+    public BuggyVirtualDevice(Context c, Messenger outbound)
     {
         _context = c;
         _virtual_position = 1;
         _outbound_message_buffer = outbound;
+        _random = new Random();
 
         Globals.DebugToast.Send("Virtual AMEDA constructed");
     }
@@ -96,7 +96,12 @@ public class VirtualDevice implements Runnable, Handler.Callback
                     return true;    // Not every message received requires a response.
 
                 // Transmit the data that's been received to the connection.
-                send(Messages.Create(VirtualAMEDAMessage.RCV_PACKET, response));
+                int are_you_feeling_lucky = _random.nextInt(10);
+
+                // Only transmit the data if you're feeling lucky, punk.
+                if (are_you_feeling_lucky != 0)
+                    send(Messages.Create(VirtualAMEDAMessage.RCV_PACKET, response));
+
                 break;
 
             default:

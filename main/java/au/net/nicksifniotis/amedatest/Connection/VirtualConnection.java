@@ -8,6 +8,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
+import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.BuggyVirtualDevice;
 import au.net.nicksifniotis.amedatest.Connection.VirtualAMEDA.VirtualDevice;
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.Messages.ConnectionMessage;
@@ -26,6 +27,7 @@ public class VirtualConnection extends Connection
 {
     // Members that deal with the connection to the device.
     private boolean _connected;
+    private boolean _buggy;
     private Context _context;
     private VirtualDevice _device;
     private Messenger _device_data_received;
@@ -38,9 +40,10 @@ public class VirtualConnection extends Connection
      *
      * @param c The context to send UI requests to.
      */
-    public VirtualConnection(Context c)
+    public VirtualConnection(Context c, boolean buggy)
     {
         _context = c;
+        _buggy = buggy;
     }
 
 
@@ -99,7 +102,10 @@ public class VirtualConnection extends Connection
             }
         }));
 
-        _device = new VirtualDevice(_context, _device_data_received);
+        if (_buggy)
+            _device = new BuggyVirtualDevice(_context, _device_data_received);
+        else
+            _device = new VirtualDevice(_context, _device_data_received);
 
         _connected = false;
         new Thread(_device).start();
