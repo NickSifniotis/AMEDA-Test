@@ -66,10 +66,10 @@ public class Test_RCA extends CursorAdapter
         double score = cursor.getDouble(cursor.getColumnIndex(DB.TestTable.SCORE));
         int interrupted = cursor.getInt(cursor.getColumnIndex(DB.TestTable.INTERRUPTED));
 
-//        String score_text = (interrupted == 1)
-//                ? context.getString(R.string.test_rca_incomplete)
-//                : context.getString(R.string.test_rca_score_template, score);
-        String score_text = context.getString(R.string.test_rca_score_template, score);
+        String score_text = (interrupted == 1)
+                ? context.getString(R.string.test_rca_incomplete)
+                : context.getString(R.string.test_rca_score_template, score);
+        ///String score_text = context.getString(R.string.test_rca_score_template, score);
 
         txt_test_date.setText(date);
         txt_test_score.setText(score_text);

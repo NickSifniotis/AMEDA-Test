@@ -273,7 +273,7 @@ public class TestActivity extends AMEDAActivity
             test_number = 1;
         else if (_test_questions[0] == 5 && _test_questions[2] == 2)
             test_number = 2;
-        else if (_test_questions[0] == 3 && _test_questions[3] == 2)
+        else if (_test_questions[0] == 2)
             test_number = 3;
         else if (_test_questions[0] == 5)
             test_number = 4;
