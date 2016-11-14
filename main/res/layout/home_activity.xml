@@ -112,6 +112,11 @@
 
                 <TextView
                     style="@style/MenuSliderEntry"
+                    android:text="@string/h_d_email"
+                    android:onClick="h_d_email" />
+
+                <TextView
+                    style="@style/MenuSliderEntry"
                     android:text="@string/h_d_calibrate"
                     android:onClick="h_d_calibrate" />
 

@@ -1,7 +1,10 @@
 package au.net.nicksifniotis.amedatest.activities;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -10,6 +13,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.ManageRecordsEnum;
@@ -127,6 +137,55 @@ public class HomeActivity extends NoConnectionActivity
     public void h_d_open(View view)
     {
         _launch_child_activity(ManageRecordsActivity.class, ManageRecordsEnum.VIEW_RECORD);
+    }
+
+    private  File copyFileToExternal(String fileName)
+    {
+        File path = getDatabasePath(fileName);
+
+        File file = null;
+        String newPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+        try {
+            FileInputStream fin = new FileInputStream (path.getAbsolutePath());
+            FileOutputStream fos = new FileOutputStream(newPath + fileName);
+            byte[] buffer = new byte[1024];
+            int len1 = 0;
+            while ((len1 = fin.read(buffer)) != -1) {
+                fos.write(buffer, 0, len1);
+            }
+            fin.close();
+            fos.close();
+            file = new File(newPath + fileName);
+            if (file.exists())
+                return file;
+        } catch (Exception e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+        }
+        return null;
+    }
+
+    private void sendEmail(String email) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String currentDateandTime = sdf.format(new Date());
+
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "AMEDA.db");
+        Uri path = Uri.fromFile(file);
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("application/octet-stream");
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "AMEDA Database Backup");
+        String to[] = { email };
+        intent.putExtra(Intent.EXTRA_EMAIL, to);
+        intent.putExtra(Intent.EXTRA_TEXT, "Copy of database taken on " + currentDateandTime);
+        intent.putExtra(Intent.EXTRA_STREAM, path);
+        startActivityForResult(Intent.createChooser(intent, "Send mail..."),
+                1222);
+    }
+
+    public void h_d_email(View view)
+    {
+        copyFileToExternal("AMEDA.db");
+        sendEmail("u5809912@anu.edu.au");
     }
 
     public void h_d_calibrate(View view)

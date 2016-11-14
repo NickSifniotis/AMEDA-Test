@@ -29,6 +29,7 @@
     <string name="h_d_familiarisation">Familiarisation</string>
     <string name="h_d_new">New</string>
     <string name="h_d_open">Open</string>
+    <string name="h_d_email">Email Database</string>
     <string name="h_d_calibrate">Calibrate</string>
     <string name="h_d_help">Help</string>
     <string name="h_d_exit">Exit</string>
