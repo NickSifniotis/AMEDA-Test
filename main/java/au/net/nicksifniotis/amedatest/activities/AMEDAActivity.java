@@ -87,6 +87,10 @@ public abstract class AMEDAActivity extends AppCompatActivity
                 ProcessAMEDAResponse(_instruction_buffer.Current(), response);
                 break;
 
+            case TIMEOUT:
+                TimeoutHandler();
+                break;
+
             case CONNECTION_DROPPED:
                 DisconnectionHandler();
                 FailButDontDie("Connection dropped. Please reconnect to continue.");
@@ -100,6 +104,16 @@ public abstract class AMEDAActivity extends AppCompatActivity
             default:
                 break;
         }
+    }
+
+
+    /**
+     * Handles an AMEDA timeout event. The default action is to do nothing; activities may
+     * override this default behaviour as they see fit.
+     */
+    public void TimeoutHandler()
+    {
+        FailButDontDie("AMEDA timed out.");
     }
 
 

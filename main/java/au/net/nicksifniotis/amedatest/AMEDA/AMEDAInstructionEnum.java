@@ -53,4 +53,19 @@ public enum AMEDAInstructionEnum
 
         return false;
     }
+
+
+    /**
+     * Returns whether or not the instruction represented by this enumeration is one that will
+     * trigger a response from the AMEDA device.
+     *
+     * If this function returns false for a particular instruction, there is no guarantee that
+     * the AMEDA device will receive and respond to it.
+     *
+     * @return True, or maybe false.
+     */
+    public boolean ExpectsResponse()
+    {
+        return (this._valid_responses.length != 0);
+    }
 }

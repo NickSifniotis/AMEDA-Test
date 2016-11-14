@@ -16,6 +16,7 @@ public enum ManagerMessage
     CONNECTION_RESUMED,     // inform the activity that the connection is (re)established
     CONNECT,                // instruct the connection to try connecting
     DISCONNECT,             // instruct the connection to disconnect
+    TIMEOUT,                // notify the activity that the AMEDA failed to respond to the last command
     SHUTDOWN;               // instruct the connection manager to shut down the connection.
 
 

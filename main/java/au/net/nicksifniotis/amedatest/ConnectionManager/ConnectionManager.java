@@ -22,6 +22,7 @@ import java.util.List;
 
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstruction;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionEnum;
+import au.net.nicksifniotis.amedatest.AMEDA.AMEDAInstructionQueue;
 import au.net.nicksifniotis.amedatest.AMEDA.AMEDAResponse;
 import au.net.nicksifniotis.amedatest.Connection.AMEDAConnection;
 import au.net.nicksifniotis.amedatest.Connection.Connection;
@@ -64,9 +65,21 @@ public class ConnectionManager implements Runnable
 
     private volatile boolean _alive;
 
+    // the management of messages to be sent to the AMEDA device has been shifted to the
+    // connection manager, which is also responsible for creating and destroying
+    // timeout threads.
+    private AMEDAInstructionQueue _instruction_buffer;
+    private boolean _waiting_response;
+    private Thread _timer;
+
 
     public ConnectionManager(Activity base_activity)
     {
+        _instruction_buffer = new AMEDAInstructionQueue();
+        _waiting_response = false;
+        _timer = null;
+
+
         green  = base_activity.getResources().getDrawable
                 (R.drawable.green_connect , base_activity.getTheme());
         yellow = base_activity.getResources().getDrawable
@@ -114,7 +127,7 @@ public class ConnectionManager implements Runnable
      * Update the reference to the current activity.
      *
      * UI interactions have to be run through an activity. Since this object exists for the
-     * lifetime of the application, it needs to be notified whenever a child activity is launced.
+     * lifetime of the application, it needs to be notified whenever a child activity is launched.
      * Otherwise, what happens is that a child activity might be active, but messages or UI
      * requests are being sent back to the parent - which may have stopped.
      *
@@ -272,6 +285,13 @@ public class ConnectionManager implements Runnable
             case RCVD:
                 // Data has been received from the AMEDA. Process it, and forward on to
                 // the right place.
+                if (_waiting_response)
+                {
+                    _timer.interrupt();
+                    _timer = null;
+                    _waiting_response = false;
+                }
+
                 AMEDAResponse response = Messages.GetResponse(m);
 
                 if (response.GetCode() == AMEDAResponse.Code.UNKNOWN_COMMAND)
@@ -280,6 +300,9 @@ public class ConnectionManager implements Runnable
                     heart_diastole();
                 else
                     send_activity(Messages.Create(ManagerMessage.RCVD, response));
+
+                _send_next_message();       // if there's another message on the queue, send it.
+
                 break;
 
             case MESSENGER_READY:
@@ -316,6 +339,49 @@ public class ConnectionManager implements Runnable
 
 
     /**
+     * Transmits the next message on the message queue to the device, and (if applicable) sets up
+     * the response timeout.
+     */
+    private void _send_next_message()
+    {
+        if (_waiting_response)
+            return;
+
+        if (!_instruction_buffer.HasNext())
+            return;
+
+        _instruction_buffer.Advance();
+
+        AMEDAInstruction instruction = _instruction_buffer.Current();
+        if (instruction.GetInstruction() == AMEDAInstructionEnum.HELLO)
+            heart_systole();
+
+        send_connection(Messages.Create(ManagerMessage.XMIT, instruction));
+
+        if (instruction.GetInstruction().ExpectsResponse())
+        {
+            _timer = new Thread(new Timeout());
+            _timer.start();
+
+            _waiting_response = true;
+        }
+        else
+        {
+            try
+            {
+                Thread.sleep (250);
+            }
+            catch (InterruptedException e)
+            {
+                // do nothing.
+            }
+
+            _send_next_message();       // this recursion will not roll too deep.
+        }
+    }
+
+
+    /**
      * Callback function for messages received from activities.
      *
      * @param msg The message that has been received.
@@ -328,10 +394,9 @@ public class ConnectionManager implements Runnable
             {
                 case SEND:
                     AMEDAInstruction instruction = Messages.GetInstruction(msg);
-                    if (instruction.GetInstruction() == AMEDAInstructionEnum.HELLO)
-                        heart_systole();
+                    _instruction_buffer.Enqueue(instruction);
 
-                    send_connection(Messages.Create(ManagerMessage.XMIT, instruction));
+                    _send_next_message();
                     break;
 
                 default:
@@ -491,5 +556,27 @@ public class ConnectionManager implements Runnable
         dialog.setTitle("Select Device");
 
         dialog.show();
+    }
+
+
+    /**
+     * A simple timeout class that will send the connection manager a warning when no response
+     * has been received from the AMEDA after five seconds.
+     */
+    private class Timeout implements Runnable
+    {
+        @Override
+        public void run()
+        {
+            try
+            {
+                Thread.sleep (5000);
+                send_activity(Messages.Create (ManagerMessage.TIMEOUT));
+            }
+            catch (InterruptedException e)
+            {
+                return;
+            }
+        }
     }
 }
