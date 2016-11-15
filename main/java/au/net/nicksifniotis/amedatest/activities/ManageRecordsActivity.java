@@ -99,6 +99,7 @@ public class ManageRecordsActivity extends NoConnectionActivity
         _record_cursor.moveToFirst();
 
         _adaptor.swapCursor(_record_cursor);
+        _adaptor.notifyDataSetChanged();
     }
 
 

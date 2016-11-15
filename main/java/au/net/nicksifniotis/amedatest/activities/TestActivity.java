@@ -54,6 +54,8 @@ public class TestActivity extends AMEDAActivity
     private DBOpenHelper _database_helper;
     private ProgressDialog _please_wait;
 
+    private long timer_start;
+
 
     /**
      * Create the GUI elements, data structures etc that this activity will use.
@@ -468,6 +470,9 @@ public class TestActivity extends AMEDAActivity
                     layout.setVisibility((current_state == t) ? View.VISIBLE : View.GONE);
             }
         }
+
+        if (current_state == TestState.ANSWERING)
+            timer_start = System.currentTimeMillis();
     }
 
 
@@ -570,11 +575,14 @@ public class TestActivity extends AMEDAActivity
             return;
         }
 
+        long time_taken = System.currentTimeMillis() - timer_start;
+
         // Ok then. Save the user's response to the database.
         ContentValues values = new ContentValues();
         values.put(DB.QuestionTable.QUESTION_NUMBER, _current_question);
         values.put(DB.QuestionTable.USER_ANSWER, response);
         values.put(DB.QuestionTable.TEST_ID, _current_test_id);
+        values.put(DB.QuestionTable.TIME_TO_ANSWER, time_taken);
 
         SQLiteDatabase db = _database_helper.getWritableDatabase();
         long record_id = db.insert(DB.QuestionTable.TABLE_NAME, null, values);

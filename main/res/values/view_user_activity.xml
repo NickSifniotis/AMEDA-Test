@@ -16,7 +16,7 @@
     <string name="vu_btn_new">New Test</string>
     <string name="vu_btn_edit">Edit ..</string>
     <string name="vu_selected_delete">Delete</string>
-    <string name="vu_selected_view">View Results</string>
+    <string name="vu_selected_view">Email Results</string>
     <string name="vu_selected_resume">Resume Test</string>
     <string name="vu_selected_desc">What would you like to do with this test?</string>
 

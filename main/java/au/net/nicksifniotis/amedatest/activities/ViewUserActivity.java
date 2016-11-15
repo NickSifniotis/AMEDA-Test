@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -198,20 +197,6 @@ public class ViewUserActivity extends NoConnectionActivity
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage (getString(R.string.vu_selected_resume))
-                .setPositiveButton(getString(R.string.vu_selected_view), new DialogInterface.OnClickListener()
-                {
-                    /**
-                     * View results. 'Not implemented yet'
-                     *
-                     * @param dialog Not used.
-                     * @param which Not used.
-                     */
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        _view_results(test_id);
-                    }
-                })
                 .setNegativeButton(getString(R.string.vu_selected_delete), new DialogInterface.OnClickListener()
                 {
                     /**
@@ -242,18 +227,61 @@ public class ViewUserActivity extends NoConnectionActivity
                     _resume_test(test_id);
                 }
             });
+        else
+            builder.setNeutralButton(getString(R.string.vu_selected_view), new DialogInterface.OnClickListener()
+            {
+                /**
+                 * View results. 'Not implemented yet'
+                 *
+                 * @param dialog Not used.
+                 * @param which Not used.
+                 */
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    _email_results(test_id);
+                }
+            });
 
         builder.create().show();
     }
 
 
     /**
-     * Launches a new activity that displays the results of the test in detail.
+     * Saves the test data into a CSV file, and emails that data out via some other application.
      *
-     * @param test_id The test who's results must be viewed.
+     * @param test_id The test to email.
      */
-    private void _view_results (int test_id)
+    private void _email_results(int test_id)
     {
+        String query = "SELECT t.* FROM " + DB.StandardTestTable.TABLE_NAME + " t, " +
+                DB.TestTable.TABLE_NAME + " d " +
+                " WHERE t." + DB.StandardTestTable._ID + " = d." + DB.TestTable.STANDARD_TEST_ID +
+                " AND d." + DB.TestTable._ID + " = " + test_id +
+                " AND d." + DB.TestTable.INTERRUPTED + " = 1";
+        SQLiteDatabase db = _database_helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery(query, null);
+        c.moveToFirst();
+        String answer_key = c.getString(c.getColumnIndexOrThrow(DB.StandardTestTable.ANSWER_KEY));
+        c.close();
+
+        // If we can't load the data from the database, whinge and close.
+        if (answer_key == null)
+        {
+            _database_helper.databaseError("Either test doesn't exist or it's not interrupted: " + test_id);
+            finish();
+            return;
+        }
+
+//        // load up the answer key.
+//        _num_questions = answer_key.length();
+//        _test_questions = new int[_num_questions];
+//        for (int i = 0; i < _num_questions; i ++)
+//            _test_questions[i] = Integer.parseInt(answer_key.substring(i, i + 1));
+
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.not_implemented_title)
                 .setMessage(R.string.not_implemented_desc)
