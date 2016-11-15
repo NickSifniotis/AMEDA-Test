@@ -8,6 +8,8 @@
     <item type="id" name="h_btn_tutorial" />
     <item type="id" name="h_btn_familiarisation" />
     <item type="id" name="h_btn_begintest" />
+    <item type="id" name="h_btn_new_user" />
+    <item type="id" name="h_btn_open_users" />
 
     <item type="id" name="h_drawer" />
     <item type="id" name="h_d_t_debug" />
@@ -27,8 +29,8 @@
 
     <string name="h_d_tutorial">Tutorial</string>
     <string name="h_d_familiarisation">Familiarisation</string>
-    <string name="h_d_new">New</string>
-    <string name="h_d_open">Open</string>
+    <string name="h_d_new">New User</string>
+    <string name="h_d_open">Open User</string>
     <string name="h_d_email">Email Database</string>
     <string name="h_d_calibrate">Calibrate</string>
     <string name="h_d_help">Help</string>

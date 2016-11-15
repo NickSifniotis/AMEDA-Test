@@ -124,19 +124,14 @@ public class HomeActivity extends NoConnectionActivity
         _launch_child_activity(FamiliarisationActivity.class);
     }
 
-    public void h_btn_begintest(View view)
+    public void h_new_user(View view)
     {
-        _launch_child_activity(ManageRecordsActivity.class, ManageRecordsEnum.START_TEST);
+        _launch_child_activity(EditUserActivity.class);
     }
 
-    public void h_d_new(View view)
+    public void h_open_users(View view)
     {
-        _launch_child_activity(ManageRecordsActivity.class, ManageRecordsEnum.START_TEST);
-    }
-
-    public void h_d_open(View view)
-    {
-        _launch_child_activity(ManageRecordsActivity.class, ManageRecordsEnum.VIEW_RECORD);
+        _launch_child_activity(ManageRecordsActivity.class);
     }
 
     private  File copyFileToExternal(String fileName)

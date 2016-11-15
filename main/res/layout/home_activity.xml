@@ -33,9 +33,15 @@
 
                 <Button
                     style="@style/BasicButton.HomeButton"
-                    android:text="@string/h_btn_new_test"
-                    android:id="@id/h_btn_begintest"
-                    android:onClick="h_btn_begintest" />
+                    android:text="@string/h_d_new"
+                    android:id="@id/h_btn_new_user"
+                    android:onClick="h_new_user" />
+
+                <Button
+                    style="@style/BasicButton.HomeButton"
+                    android:text="@string/h_d_open"
+                    android:id="@id/h_btn_open_users"
+                    android:onClick="h_open_users" />
 
         </LinearLayout>
 
@@ -100,12 +106,12 @@
                 <TextView
                     style="@style/MenuSliderEntry"
                     android:text="@string/h_d_new"
-                    android:onClick="h_d_new" />
+                    android:onClick="h_new_user" />
 
                 <TextView
                     style="@style/MenuSliderEntry"
                     android:text="@string/h_d_open"
-                    android:onClick="h_d_open" />
+                    android:onClick="h_open_users" />
 
                 <View
                     style="@style/MenuSliderBar" />
