@@ -204,10 +204,7 @@ public class ManageRecordsActivity extends NoConnectionActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            SQLiteCursor entry = (SQLiteCursor) parent.getAdapter().getItem(position);
-            int record_id = entry.getInt(entry.getColumnIndex(DB.PersonTable._ID));
-
-            _launch_newRecord_activity(record_id, _activity.Activity());
+            view.showContextMenu();
         }
     }
 
@@ -296,8 +293,6 @@ public class ManageRecordsActivity extends NoConnectionActivity
 
             db.update(DB.PersonTable.TABLE_NAME, values,
                     DB.PersonTable._ID + " = " + _user_id, null);
-
-            //db.close();
         }
 
         _refresh_data();
