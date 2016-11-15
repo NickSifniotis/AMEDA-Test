@@ -64,18 +64,11 @@
                     android:contentDescription="@string/t_excursion_desc"
                     android:id="@+id/t_exc_1" />
 
-                <ImageView
-                    style="@style/TestImage"
-                    android:contentDescription="@string/t_pic_middle_desc"
-                    android:src="@drawable/test_rotate_demo"
-                    android:id="@+id/t_exc_2"
-                    android:layout_below="@+id/t_exc_1" />
-
                 <Button
                     style="@style/BasicButton.TestButton"
                     android:onClick="t_btn_excursion_1"
                     android:id="@id/t_btn_excursion_1"
-                    android:layout_below="@+id/t_exc_2" />
+                    android:layout_below="@+id/t_exc_1" />
 
                 <Button
                     style="@style/BasicButton.TestButton"
