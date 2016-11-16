@@ -27,7 +27,7 @@ public class Globals
     public static boolean SHORT_TESTS = false;
 
     /* TRUE if you want the virtual connection to drop out occasionally. */
-    public static boolean BUGGY_CONNECTIONS = true;
+    public static boolean BUGGY_CONNECTIONS = false;
 
 
     /* Services! */

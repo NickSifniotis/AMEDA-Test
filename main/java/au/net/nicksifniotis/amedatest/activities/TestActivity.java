@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -691,12 +692,14 @@ public class TestActivity extends AMEDAActivity
 
         Cursor resultSet = db.rawQuery(query, null);
         resultSet.moveToFirst();
-        while (resultSet.moveToNext())
+        do
         {
             int answer = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.USER_ANSWER));
             int question_number = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.QUESTION_NUMBER));
             _answers[question_number] = answer;
         }
+        while (resultSet.moveToNext());
+
         resultSet.close();
         db.close();
 

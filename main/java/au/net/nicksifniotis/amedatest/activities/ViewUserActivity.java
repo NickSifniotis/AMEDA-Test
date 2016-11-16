@@ -6,14 +6,26 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import au.net.nicksifniotis.amedatest.Globals;
 import au.net.nicksifniotis.amedatest.LocalDB.DB;
 import au.net.nicksifniotis.amedatest.LocalDB.DBOpenHelper;
 import au.net.nicksifniotis.amedatest.LocalDB.Test_RCA;
@@ -197,6 +209,20 @@ public class ViewUserActivity extends NoConnectionActivity
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage (getString(R.string.vu_selected_resume))
+                .setPositiveButton(getString(R.string.vu_selected_view), new DialogInterface.OnClickListener()
+        {
+            /**
+             * View results. 'Not implemented yet'
+             *
+             * @param dialog Not used.
+             * @param which Not used.
+             */
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                        _email_results(test_id);
+                            }
+        })
                 .setNegativeButton(getString(R.string.vu_selected_delete), new DialogInterface.OnClickListener()
                 {
                     /**
@@ -227,21 +253,7 @@ public class ViewUserActivity extends NoConnectionActivity
                     _resume_test(test_id);
                 }
             });
-        else
-            builder.setNeutralButton(getString(R.string.vu_selected_view), new DialogInterface.OnClickListener()
-            {
-                /**
-                 * View results. 'Not implemented yet'
-                 *
-                 * @param dialog Not used.
-                 * @param which Not used.
-                 */
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    _email_results(test_id);
-                }
-            });
+
 
         builder.create().show();
     }
@@ -254,40 +266,20 @@ public class ViewUserActivity extends NoConnectionActivity
      */
     private void _email_results(int test_id)
     {
-        String query = "SELECT t.* FROM " + DB.StandardTestTable.TABLE_NAME + " t, " +
-                DB.TestTable.TABLE_NAME + " d " +
-                " WHERE t." + DB.StandardTestTable._ID + " = d." + DB.TestTable.STANDARD_TEST_ID +
-                " AND d." + DB.TestTable._ID + " = " + test_id +
-                " AND d." + DB.TestTable.INTERRUPTED + " = 1";
-        SQLiteDatabase db = _database_helper.getReadableDatabase();
+        String fileName = create_csv(test_id);
 
-        Cursor c = db.rawQuery(query, null);
-        c.moveToFirst();
-        String answer_key = c.getString(c.getColumnIndexOrThrow(DB.StandardTestTable.ANSWER_KEY));
-        c.close();
-
-        // If we can't load the data from the database, whinge and close.
-        if (answer_key == null)
-        {
-            _database_helper.databaseError("Either test doesn't exist or it's not interrupted: " + test_id);
-            finish();
-            return;
-        }
-
-//        // load up the answer key.
-//        _num_questions = answer_key.length();
-//        _test_questions = new int[_num_questions];
-//        for (int i = 0; i < _num_questions; i ++)
-//            _test_questions[i] = Integer.parseInt(answer_key.substring(i, i + 1));
-
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.not_implemented_title)
-                .setMessage(R.string.not_implemented_desc)
-                .setPositiveButton(R.string.btn_done, null);
-
-        builder.create().show();
+        // email the file out!
+        File file = new File(fileName);
+        Uri path = Uri.fromFile(file);
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("application/octet-stream");
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Test #" + test_id + " export");
+        String to[] = { "u5809912@anu.edu.au" };
+        intent.putExtra(Intent.EXTRA_EMAIL, to);
+        intent.putExtra(Intent.EXTRA_TEXT, "CSV file of test results attached.");
+        intent.putExtra(Intent.EXTRA_STREAM, path);
+        startActivityForResult(Intent.createChooser(intent, "Send mail..."),
+                1222);
     }
 
 
@@ -339,5 +331,105 @@ public class ViewUserActivity extends NoConnectionActivity
 
             _handle_test_selection(record_id, (interrupted == 1));
         }
+    }
+
+
+    /**
+     * Sends all this user's tests to an email address.
+     */
+    public void SendAllRecords()
+    {
+        //has to be an ArrayList
+        ArrayList<Uri> uris = new ArrayList<Uri>();
+        //convert from paths to Android friendly Parcelable Uri's
+        for (String file : filePaths)
+        {
+            File fileIn = new File(file);
+            Uri u = Uri.fromFile(fileIn);
+            uris.add(u);
+        }
+        emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+    }
+
+
+    private String create_csv(int test_id)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        String query = "SELECT t." + DB.StandardTestTable.ANSWER_KEY
+                + ", d.* FROM " + DB.StandardTestTable.TABLE_NAME + " t, " +
+                DB.TestTable.TABLE_NAME + " d " +
+                " WHERE t." + DB.StandardTestTable._ID + " = d." + DB.TestTable.STANDARD_TEST_ID +
+                " AND d." + DB.TestTable._ID + " = " + test_id;
+        SQLiteDatabase db = _database_helper.getReadableDatabase();
+
+        Cursor c = db.rawQuery(query, null);
+        c.moveToFirst();
+        String answer_key = c.getString(c.getColumnIndexOrThrow(DB.StandardTestTable.ANSWER_KEY));
+        int sequence_number = c.getInt(c.getColumnIndexOrThrow(DB.TestTable.STANDARD_TEST_ID));
+        long date = c.getLong(c.getColumnIndexOrThrow(DB.TestTable.DATE));
+        int person_id = c.getInt(c.getColumnIndexOrThrow(DB.TestTable.PERSON_ID));
+        int interrupted = c.getInt(c.getColumnIndex(DB.TestTable.INTERRUPTED));
+        c.close();
+
+        // If we can't load the data from the database, whinge and close.
+        if (answer_key == null)
+        {
+            _database_helper.databaseError("Error loading test " + test_id);
+            return "";
+        }
+
+        // load up the answer key.
+        int _num_questions = answer_key.length();
+        int [] _test_questions = new int[_num_questions];
+        int [] _times = new int[_num_questions];
+        for (int i = 0; i < _num_questions; i ++)
+            _test_questions[i] = Integer.parseInt(answer_key.substring(i, i + 1));
+
+
+        int [] _answers = new int [_num_questions];
+
+        query = "SELECT * FROM " + DB.QuestionTable.TABLE_NAME +
+                " WHERE " + DB.QuestionTable.TEST_ID + " = " + test_id;
+
+        Cursor resultSet = db.rawQuery(query, null);
+        resultSet.moveToFirst();
+        do
+        {
+            int time = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.TIME_TO_ANSWER));
+            int answer = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.USER_ANSWER));
+            int question_number = resultSet.getInt(resultSet.getColumnIndex(DB.QuestionTable.QUESTION_NUMBER));
+            _answers[question_number] = answer;
+            _times[question_number] = time;
+        }
+        while (resultSet.moveToNext());
+
+        resultSet.close();
+
+        String score = (interrupted == 1) ? "Interrupted" : String.valueOf(Globals.ScoreTest(_test_questions, _answers));
+
+        // build up the CSV file.
+        String newPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+        String fileName = test_id + ".csv";
+        try {
+            PrintWriter fos = new PrintWriter(newPath + fileName);
+
+            fos.println("DateTime," + sdf.format(new Date(date)));
+            fos.println("Person Id," + person_id);
+            fos.println("Sequence Number," + sequence_number);
+            fos.println("Score," + score);
+
+            fos.println("Response Time (Milliseconds),Correct Response,User Response");
+            for (int i = 0; i < _num_questions; i ++)
+                fos.println(_times[i] + "," + _test_questions[i] + "," + (_answers[i] > 0 ? _answers[i] : ""));
+
+            fos.close();
+
+        } catch (Exception e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+            return "";
+        }
+
+        return newPath + fileName;
     }
 }
